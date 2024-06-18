@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
+import GroupedNodeList from "./GroupedNodeList";
 import NodeList from "./NodeList";
 
 const NetworkGraph: React.FC = () => {
@@ -10,6 +11,7 @@ const NetworkGraph: React.FC = () => {
   const {
     network,
     nodes,
+    edges,
     selectedNodeId,
     addNode,
     setAction,
@@ -32,32 +34,47 @@ const NetworkGraph: React.FC = () => {
 
   return (
     <div style={{ display: "flex" }}>
-      <ControlPanel
-        newNodeLabel={newNodeLabel}
-        newNodeContent={newNodeContent}
-        newNodeColor={newNodeColor}
-        setNewNodeLabel={setNewNodeLabel}
-        setNewNodeContent={setNewNodeContent}
-        setNewNodeColor={setNewNodeColor}
-        addNode={handleAddNode}
-        setAction={setAction}
-        fitToScreen={fitToScreen}
+      <GroupedNodeList
+        nodes={nodes}
+        edges={edges}
+        selectedNodeId={selectedNodeId}
+        onNodeClick={handleNodeClick}
       />
       <div
-        ref={containerRef}
         style={{
-          height: "650px",
-          width: "1000px",
-          border: "1px solid black",
-          margin: "20px",
-          boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
         }}
-        onClick={() => {
-          if (selectedNodeId !== null) {
-            handleNodeClick(selectedNodeId);
-          }
-        }}
-      />
+      >
+        <div
+          ref={containerRef}
+          style={{
+            height: "650px",
+            width: "1000px",
+            border: "1px solid black",
+            margin: "20px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+          }}
+          onClick={() => {
+            if (selectedNodeId !== null) {
+              handleNodeClick(selectedNodeId);
+            }
+          }}
+        />
+        <ControlPanel
+          newNodeLabel={newNodeLabel}
+          newNodeContent={newNodeContent}
+          newNodeColor={newNodeColor}
+          setNewNodeLabel={setNewNodeLabel}
+          setNewNodeContent={setNewNodeContent}
+          setNewNodeColor={setNewNodeColor}
+          addNode={handleAddNode}
+          setAction={setAction}
+          fitToScreen={fitToScreen}
+        />
+      </div>
       <NodeList
         nodes={nodes}
         selectedNodeId={selectedNodeId}
