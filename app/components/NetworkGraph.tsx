@@ -16,13 +16,13 @@ const NetworkGraph: React.FC = () => {
   } = useNetwork(containerRef);
 
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
-  const [newNodeColor, setNewNodeColor] = useState<string>("#97C2FC");
+  const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
 
   const handleAddNode = () => {
     if (newNodeLabel) {
       addNode(newNodeLabel, newNodeColor);
       setNewNodeLabel("");
-      setNewNodeColor("#97C2FC");
+      setNewNodeColor("#5A5A5A");
     }
   };
 

@@ -112,7 +112,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
         nodes: new DataSet<Node>(
           nodes.map((node) => ({
             ...node,
-            color: node.id === selectedNodeId ? "red" : node.color,
+            color: node.id === selectedNodeId ? "#0CC95B" : node.color,
           }))
         ),
         edges: new DataSet<Edge>(edges),
