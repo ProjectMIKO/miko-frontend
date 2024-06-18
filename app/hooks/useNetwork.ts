@@ -121,10 +121,11 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
     }
   }, [network, nodes, edges, selectedNodeId]);
 
-  const addNode = (label: string, color: string) => {
+  const addNode = (label: string, content: string, color: string) => {
     const newNode: Node = {
       id: nextNodeId,
       label,
+      content,
       color,
     };
     setNodes([...nodes, newNode]);

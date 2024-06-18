@@ -18,12 +18,14 @@ const NetworkGraph: React.FC = () => {
   } = useNetwork(containerRef);
 
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
+  const [newNodeContent, setNewNodeContent] = useState<string>("");
   const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
 
   const handleAddNode = () => {
-    if (newNodeLabel) {
-      addNode(newNodeLabel, newNodeColor);
+    if (newNodeLabel && newNodeContent) {
+      addNode(newNodeLabel, newNodeContent, newNodeColor);
       setNewNodeLabel("");
+      setNewNodeContent("");
       setNewNodeColor("#5A5A5A");
     }
   };
@@ -32,8 +34,10 @@ const NetworkGraph: React.FC = () => {
     <div style={{ display: "flex" }}>
       <ControlPanel
         newNodeLabel={newNodeLabel}
+        newNodeContent={newNodeContent}
         newNodeColor={newNodeColor}
         setNewNodeLabel={setNewNodeLabel}
+        setNewNodeContent={setNewNodeContent}
         setNewNodeColor={setNewNodeColor}
         addNode={handleAddNode}
         setAction={setAction}

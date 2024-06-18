@@ -40,7 +40,15 @@ const NodeList: React.FC<NodeListProps> = ({
               marginBottom: "5px",
             }}
           >
-            {node.id}: {node.label}
+            <div>
+              <strong>ID:</strong> {node.id}
+            </div>
+            <div>
+              <strong>Label:</strong> {node.label}
+            </div>
+            <div>
+              <strong>Content:</strong> {node.content}
+            </div>
           </li>
         ))}
       </ul>
