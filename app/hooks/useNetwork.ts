@@ -45,6 +45,8 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
           setTempEdgeFrom(null);
           setAction(null);
         }
+      } else {
+        setSelectedNodeId(nodeId);
       }
     },
     [action, edges, nextEdgeId, tempEdgeFrom]
@@ -97,7 +99,6 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
       net.on("click", (params) => {
         if (params.nodes.length > 0) {
           const nodeId = params.nodes[0];
-          setSelectedNodeId(nodeId);
           handleNodeClick(nodeId);
         } else {
           setSelectedNodeId(null);

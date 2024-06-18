@@ -3,11 +3,13 @@
 import React, { useRef, useState } from "react";
 import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
+import NodeList from "./NodeList";
 
 const NetworkGraph: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const {
     network,
+    nodes,
     selectedNodeId,
     addNode,
     setAction,
@@ -27,7 +29,7 @@ const NetworkGraph: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{ display: "flex" }}>
       <ControlPanel
         newNodeLabel={newNodeLabel}
         newNodeColor={newNodeColor}
@@ -43,7 +45,7 @@ const NetworkGraph: React.FC = () => {
           height: "650px",
           width: "1000px",
           border: "1px solid black",
-          margin: "20px auto",
+          margin: "20px",
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
         }}
         onClick={() => {
@@ -51,6 +53,11 @@ const NetworkGraph: React.FC = () => {
             handleNodeClick(selectedNodeId);
           }
         }}
+      />
+      <NodeList
+        nodes={nodes}
+        selectedNodeId={selectedNodeId}
+        onNodeClick={handleNodeClick}
       />
     </div>
   );
