@@ -1,6 +1,7 @@
 export interface Node {
   id: number;
   label: string;
+  content: string;
   color?: string;
 }
 

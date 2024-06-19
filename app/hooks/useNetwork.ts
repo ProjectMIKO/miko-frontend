@@ -45,6 +45,8 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
           setTempEdgeFrom(null);
           setAction(null);
         }
+      } else {
+        setSelectedNodeId(nodeId);
       }
     },
     [action, edges, nextEdgeId, tempEdgeFrom]
@@ -97,7 +99,6 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
       net.on("click", (params) => {
         if (params.nodes.length > 0) {
           const nodeId = params.nodes[0];
-          setSelectedNodeId(nodeId);
           handleNodeClick(nodeId);
         } else {
           setSelectedNodeId(null);
@@ -112,7 +113,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
         nodes: new DataSet<Node>(
           nodes.map((node) => ({
             ...node,
-            color: node.id === selectedNodeId ? "red" : node.color,
+            color: node.id === selectedNodeId ? "#0CC95B" : node.color,
           }))
         ),
         edges: new DataSet<Edge>(edges),
@@ -120,10 +121,11 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
     }
   }, [network, nodes, edges, selectedNodeId]);
 
-  const addNode = (label: string, color: string) => {
+  const addNode = (label: string, content: string, color: string) => {
     const newNode: Node = {
       id: nextNodeId,
       label,
+      content,
       color,
     };
     setNodes([...nodes, newNode]);
