@@ -2,11 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 
-const STTComponent: React.FC = () => {
+interface STTComponentProps {
+    keywords?: string[];
+}
+
+const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords = [] }) => {
     const [isListening, setIsListening] = useState(false);
     const [transcript, setTranscript] = useState('');
     const [interimTranscript, setInterimTranscript] = useState('');
     const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+    const [keywords, setKeywords] = useState<string[]>(initialKeywords);
 
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -66,14 +71,53 @@ const STTComponent: React.FC = () => {
         }
     };
 
+    const extractKeywords = async () => {
+        try {
+            const response = await fetch('http://52.79.125.104:5000/keyword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: transcript }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('data:', data);
+            // keyword가 단일 문자열이라면 배열로 감싸서 상태에 설정
+            setKeywords([data.keyword]);
+            setTranscript('');  // 추출 후 STT 데이터 비우기
+        } catch (error) {
+            console.error('Error extracting keywords:', error);
+        }
+    };
+
     return (
         <div>
             <h1>Speech Recognition Example</h1>
             <button onClick={isListening ? stopListening : startListening}>
                 {isListening ? 'Stop Recognition' : 'Start Recognition'}
             </button>
+            <button onClick={extractKeywords} disabled={!transcript}>
+                Extract Keywords
+            </button>
             <p><strong>Transcript:</strong> {transcript}</p>
             <p><strong>Interim Transcript:</strong> {interimTranscript}</p>
+            <div>
+                <strong>Keywords:</strong>
+                <ul>
+                    {keywords.length > 0 ? (
+                        keywords.map((keyword, index) => (
+                            <li key={index}>{keyword}</li>
+                        ))
+                    ) : (
+                        <li>No keywords extracted</li>
+                    )}
+                </ul>
+            </div>
         </div>
     );
 };
