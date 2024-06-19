@@ -3,14 +3,21 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleGoogleLogin = () => {
     signIn("google");
   };
+
+  React.useEffect(() => {
+    if (session) {
+      router.push("/waiting");
+    }
+  }, [session, router]);
 
   return (
     <div style={styles.container}>
