@@ -1,14 +1,32 @@
-"use client";
+// app/page.tsx
 
-import NetworkGraph from "./components/NetworkGraph";
-import styles from "./Home.module.css";
+import React from "react";
+import Link from "next/link";
 
-export default function Home() {
+const HomePage: React.FC = () => {
   return (
-    <div className={styles.container}>
-      <div className={styles.innerContainer}>
-        <NetworkGraph />
-      </div>
+    <div style={{ padding: "20px", textAlign: "center" }}>
+      <h1>Welcome to MIKO</h1>
+      <p>MIKO</p>
+      <Link href="/main" legacyBehavior>
+        <a
+          style={{
+            display: "inline-block",
+            padding: "10px 20px",
+            margin: "20px 0",
+            backgroundColor: "#007BFF",
+            color: "#FFF",
+            borderRadius: "4px",
+            textDecoration: "none",
+            fontSize: "16px",
+            fontWeight: "bold",
+          }}
+        >
+          Go to Main Page
+        </a>
+      </Link>
     </div>
   );
-}
+};
+
+export default HomePage;
