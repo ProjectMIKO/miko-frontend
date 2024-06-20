@@ -40,6 +40,7 @@ const NetworkGraph: React.FC = () => {
     interimTranscript: string
   ) => {
     addNode(keyword, interimTranscript, newNodeColor);
+    setTranscript(""); // 키워드 추출 후 transcript 비우기
   };
 
   return (
