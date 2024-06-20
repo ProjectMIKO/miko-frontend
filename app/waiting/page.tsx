@@ -48,24 +48,24 @@ const WaitingPage: React.FC = () => {
 
   const createSession = async (sessionId: string) => {
     const response = await axios.post(
-      `${APPLICATION_SERVER_URL}api/sessions`,
+      `${APPLICATION_SERVER_URL}api/openvidu/sessions`,
       { customSessionId: sessionId },
       {
         headers: { "Content-Type": "application/json" },
       }
     );
-    return response.data; // 세션 ID
+    return response.data.sessionId; // 세션 ID
   };
 
   const createToken = async (sessionId: string) => {
     const response = await axios.post(
-      `${APPLICATION_SERVER_URL}api/sessions/${sessionId}/connections`,
+      `${APPLICATION_SERVER_URL}api/openvidu/sessions/${sessionId}/connections`,
       {},
       {
         headers: { "Content-Type": "application/json" },
       }
     );
-    return response.data; // 토큰
+    return response.data.token; // 토큰
   };
 
   return (
