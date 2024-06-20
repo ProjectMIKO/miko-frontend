@@ -4,13 +4,14 @@ import { OpenVidu } from 'openvidu-browser';
 import styles from './App.module.css'; // CSS 모듈을 사용하는 경우
 import UserVideoComponent from './UserVideoComponent';
 
-const APPLICATION_SERVER_URL = process.env.NEXT_OPENVIDU_URL; // 서버 URL 확인
+const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_OPENVIDU_URL; // 서버 URL 확인
 
 const App: React.FC = () => {
     const [mySessionId, setMySessionId] = useState<string>('SessionE');
     const [myUserName, setMyUserName] = useState<string>('OpenVidu_User_' + Math.floor(Math.random() * 100));
     const [token, setToken] = useState<string | undefined>(undefined);
     const [session, setSession] = useState<any>(undefined);
+    const [subscriber, setSubscriber] = useState<any>(undefined);
     const [publisher, setPublisher] = useState<any>(undefined);
     const [subscribers, setSubscribers] = useState<any[]>([]);
 
@@ -24,11 +25,13 @@ const App: React.FC = () => {
     const handlerLeaveSessionEvent = () => {
         console.log('Leave session');
         setSession(undefined);
+        session.disconnect();
+        session.unsubscribe(subscriber);
         setSubscribers([]);
-        if (publisher) {
-            publisher.stream.getMediaStream().getTracks().forEach((track: any) => track.stop());
-            setPublisher(undefined);
-        }
+        // if (publisher) {
+        //     publisher.stream.getMediaStream().getTracks().forEach((track: any) => track.stop());
+        //     setPublisher(undefined);
+        // }
     };
 
     const handlerErrorEvent = (error: any) => {
@@ -60,7 +63,8 @@ const App: React.FC = () => {
 
         mySession.on('streamCreated', (event: any) => {
             const subscriber = mySession.subscribe(event.stream, undefined);
-            setSubscribers(prevSubscribers => [...prevSubscribers, subscriber]);
+            setSubscriber(subscriber);
+            setSubscribers(prevSubscribers => [...prevSubscribers, subscriber]); 
         });
 
         mySession.on('streamDestroyed', (event: any) => {
