@@ -22,7 +22,7 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
   const [subscriber, setSubscriber] = useState<any>(undefined);
   const [publisher, setPublisher] = useState<any>(undefined);
   const [subscribers, setSubscribers] = useState<any[]>([]);
-
+  
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>(
     {}

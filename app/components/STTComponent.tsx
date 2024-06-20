@@ -3,14 +3,15 @@
 import React, { useState, useEffect } from 'react';
 
 interface STTComponentProps {
+    setTranscript: React.Dispatch<React.SetStateAction<string>>;
     keywords?: string[];
 }
 
-const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords = [] }) => {
+const STTComponent: React.FC<STTComponentProps> = ({ setTranscript, keywords: initialKeywords = [] }) => {
 
     const URL = process.env.NEXT_PUBLIC_NLP_SERVER_URL  || 'http://127.0.0.1:5000';
     const [isListening, setIsListening] = useState(false);
-    const [transcript, setTranscript] = useState('');
+    const [localTranscript, setLocalTranscript] = useState('');
     const [interimTranscript, setInterimTranscript] = useState('');
     const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
     const [keywords, setKeywords] = useState<string[]>(initialKeywords);
@@ -42,8 +43,9 @@ const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords =
                         interimTranscript += event.results[i][0].transcript;
                     }
                 }
-                setTranscript((prev) => prev + finalTranscript);
+                setLocalTranscript((prev) => prev + finalTranscript);
                 setInterimTranscript(interimTranscript);
+                setTranscript((prev) => prev + finalTranscript); // 상위 컴포넌트로 전달
                 console.log('음성 인식 결과:', finalTranscript, interimTranscript);
             };
 
@@ -55,7 +57,7 @@ const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords =
         } else {
             console.warn('Web Speech API is not supported in this browser.');
         }
-    }, []);
+    }, [setTranscript]);
 
     const startListening = () => {
         if (recognition) {
@@ -82,7 +84,7 @@ const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords =
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: transcript }),
+                body: JSON.stringify({ message: localTranscript }),
             });
 
             if (!response.ok) {
@@ -93,7 +95,7 @@ const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords =
             console.log('data:', data);
             // keyword가 단일 문자열이라면 배열로 감싸서 상태에 설정
             setKeywords([data.keyword]);
-            setTranscript('');  // 추출 후 STT 데이터 비우기
+            setLocalTranscript('');  // 추출 후 STT 데이터 비우기
         } catch (error) {
             console.error('Error extracting keywords:', error);
         }
@@ -105,10 +107,9 @@ const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords =
             <button onClick={isListening ? stopListening : startListening}>
                 {isListening ? 'Stop Recognition' : 'Start Recognition'}
             </button>
-            <button onClick={extractKeywords} disabled={!transcript}>
+            <button onClick={extractKeywords} disabled={!localTranscript}>
                 Extract Keywords
             </button>
-            <p><strong>Transcript:</strong> {transcript}</p>
             <p><strong>Interim Transcript:</strong> {interimTranscript}</p>
             <div>
                 <strong>Keywords:</strong>
