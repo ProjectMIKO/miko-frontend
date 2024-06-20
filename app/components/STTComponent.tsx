@@ -85,8 +85,8 @@ const STTComponent: React.FC<STTComponentProps> = ({
 
   const extractKeywords = async () => {
     try {
-      console.log(URL + "/api/keyword");
-      const response = await fetch(URL + "/api/keyword", {
+      console.log(URL + "api/middleware/summarize");
+      const response = await fetch(URL + "api/middleware/summarize", {
         method: "POST",
         mode: "cors",
         headers: {
