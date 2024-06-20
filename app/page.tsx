@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
@@ -8,7 +8,8 @@ import { signIn } from "next-auth/react";
 const LoginPage: React.FC = () => {
   const router = useRouter();
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = (e: FormEvent) => {
+    e.preventDefault();
     signIn("google");
   };
 
