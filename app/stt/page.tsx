@@ -6,7 +6,7 @@ const Home: React.FC = () => {
     return (
         <div>
             <h1>Welcome to MIKO</h1>
-            <STTComponent />
+            {/* <STTComponent /> */}
         </div>
     );
 };

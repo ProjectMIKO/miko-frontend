@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import NetworkGraph from "../components/NetworkGraph";
+import STTComponent from '../components/STTComponent';
 import App from "../components/App";
 import styles from "../Home.module.css";
 
