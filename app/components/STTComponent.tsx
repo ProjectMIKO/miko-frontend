@@ -7,6 +7,8 @@ interface STTComponentProps {
 }
 
 const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords = [] }) => {
+
+    const URL = process.env.NEXT_PUBLIC_NLP_SERVER_URL  || 'http://127.0.0.1:5000';
     const [isListening, setIsListening] = useState(false);
     const [transcript, setTranscript] = useState('');
     const [interimTranscript, setInterimTranscript] = useState('');
@@ -73,8 +75,10 @@ const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords =
 
     const extractKeywords = async () => {
         try {
-            const response = await fetch('http://52.79.125.104:5000/keyword', {
+            console.log(URL + "/api/keyword");
+            const response = await fetch(URL + "/api/keyword", {
                 method: 'POST',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -82,7 +86,7 @@ const STTComponent: React.FC<STTComponentProps> = ({ keywords: initialKeywords =
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
