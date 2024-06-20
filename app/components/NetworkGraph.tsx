@@ -1,3 +1,4 @@
+// app/components/NetworkGraph.tsx
 "use client";
 
 import React, { useRef, useState } from "react";
@@ -5,7 +6,7 @@ import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
 import NodeList from "./NodeList";
-import STTComponent from './STTComponent';
+import STTComponent from "./STTComponent";
 
 const NetworkGraph: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,6 +33,13 @@ const NetworkGraph: React.FC = () => {
       setNewNodeContent("");
       setNewNodeColor("#5A5A5A");
     }
+  };
+
+  const handleKeywordsExtracted = (
+    keyword: string,
+    interimTranscript: string
+  ) => {
+    addNode(keyword, interimTranscript, newNodeColor);
   };
 
   return (
@@ -76,7 +84,10 @@ const NetworkGraph: React.FC = () => {
           setAction={setAction}
           fitToScreen={fitToScreen}
         />
-        <STTComponent setTranscript={setTranscript} />
+        <STTComponent
+          setTranscript={setTranscript}
+          onKeywordsExtracted={handleKeywordsExtracted}
+        />
       </div>
       <NodeList
         nodes={nodes}
