@@ -60,12 +60,17 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
       };
       const options = {
         nodes: {
-          shape: "circle",
-          size: 30,
+          shape: "dot",
+          size: 13,
           font: {
-            vadjust: -20,
+            size: 14,
+            color: "#000000",
           },
-          labelHighlightBold: true,
+          shadow: true,
+        },
+        edges: {
+          width: 2,
+          shadow: true,
         },
         physics: {
           enabled: true,
@@ -105,7 +110,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
         }
       });
     }
-  }, [containerRef, network, handleNodeClick]);
+  }, [containerRef, network, handleNodeClick, nodes, edges]);
 
   useEffect(() => {
     if (network) {
