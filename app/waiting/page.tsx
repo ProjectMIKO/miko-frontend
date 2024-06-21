@@ -4,11 +4,13 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import styles from "../styles/Home.module.css"; // 적절한 경로로 수정
+import { useSocket } from "../components/SocketContext";
+
 
 const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_OPENVIDU_URL;
 
 const WaitingPage: React.FC = () => {
+  const { socket, connectSocket } = useSocket();
   const [mySessionId, setMySessionId] = useState<string>("SessionE");
   const [myUserName, setMyUserName] = useState<string>(
     "OpenVidu_User_" + Math.floor(Math.random() * 100)
@@ -33,6 +35,9 @@ const WaitingPage: React.FC = () => {
         sessionStorage.setItem("sessionId", mySessionId);
         sessionStorage.setItem("userName", myUserName);
         sessionStorage.setItem("token", token);
+        
+        connectSocket();
+
         router.push("/main");
       } catch (error) {
         console.error("Error joining session:", error);
