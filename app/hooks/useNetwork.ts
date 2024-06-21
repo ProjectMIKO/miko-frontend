@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Network, DataSet, IdType } from "vis-network/standalone";
+import { Network, DataSet } from "vis-network/standalone";
 import { Node, Edge } from "../types/types";
 
 const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
@@ -60,12 +60,17 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
       };
       const options = {
         nodes: {
-          shape: "circle",
-          size: 30,
+          shape: "dot",
+          size: 13,
           font: {
-            vadjust: -20,
+            size: 14,
+            color: "#000000",
           },
-          labelHighlightBold: true,
+          shadow: true,
+        },
+        edges: {
+          width: 2,
+          shadow: true,
         },
         physics: {
           enabled: true,
@@ -105,7 +110,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
         }
       });
     }
-  }, [containerRef, network, handleNodeClick]);
+  }, [containerRef, network, handleNodeClick, nodes, edges]);
 
   useEffect(() => {
     if (network) {
@@ -130,8 +135,6 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
     };
     setNodes([...nodes, newNode]);
     setNextNodeId(nextNodeId + 1);
-    debugger;
-    console.log(nodes);
   };
 
   const fitToScreen = () => {

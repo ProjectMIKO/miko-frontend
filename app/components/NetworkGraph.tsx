@@ -1,4 +1,3 @@
-// app/components/NetworkGraph.tsx
 "use client";
 
 import React, { useRef, useState } from "react";
@@ -11,7 +10,6 @@ import STTComponent from "./STTComponent";
 const NetworkGraph: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const {
-    network,
     nodes,
     edges,
     selectedNodeId,
