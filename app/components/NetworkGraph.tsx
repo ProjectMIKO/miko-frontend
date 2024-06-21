@@ -22,7 +22,6 @@ const NetworkGraph: React.FC = () => {
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
   const [newNodeContent, setNewNodeContent] = useState<string>("");
   const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
-  const [transcript, setTranscript] = useState<string>("");
 
   const handleAddNode = () => {
     if (newNodeLabel && newNodeContent) {
@@ -31,14 +30,6 @@ const NetworkGraph: React.FC = () => {
       setNewNodeContent("");
       setNewNodeColor("#5A5A5A");
     }
-  };
-
-  const handleKeywordsExtracted = (
-    keyword: string,
-    interimTranscript: string
-  ) => {
-    addNode(keyword, interimTranscript, newNodeColor);
-    setTranscript(""); // 키워드 추출 후 transcript 비우기
   };
 
   return (
@@ -83,16 +74,11 @@ const NetworkGraph: React.FC = () => {
           setAction={setAction}
           fitToScreen={fitToScreen}
         />
-        <STTComponent
-          setTranscript={setTranscript}
-          onKeywordsExtracted={handleKeywordsExtracted}
-        />
       </div>
       <NodeList
         nodes={nodes}
         selectedNodeId={selectedNodeId}
         onNodeClick={handleNodeClick}
-        transcript={transcript} // transcript 전달
       />
     </div>
   );

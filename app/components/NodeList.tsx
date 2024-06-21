@@ -1,18 +1,16 @@
 import React from "react";
-import { Node } from "../types/types";
+import { Node } from "../../types/types";
 
 interface NodeListProps {
   nodes: Node[];
   selectedNodeId: number | null;
   onNodeClick: (nodeId: number) => void;
-  transcript: string; // 추가된 props
 }
 
 const NodeList: React.FC<NodeListProps> = ({
   nodes,
   selectedNodeId,
   onNodeClick,
-  transcript, // 추가된 props
 }) => {
   return (
     <div
@@ -63,8 +61,6 @@ const NodeList: React.FC<NodeListProps> = ({
           </li>
         ))}
       </ul>
-      <h4>Transcripts:</h4>
-      <p>{transcript}</p> {/* transcript 추가 */}
     </div>
   );
 };
