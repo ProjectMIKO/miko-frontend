@@ -130,6 +130,8 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
     };
     setNodes([...nodes, newNode]);
     setNextNodeId(nextNodeId + 1);
+    debugger;
+    console.log(nodes);
   };
 
   const fitToScreen = () => {
