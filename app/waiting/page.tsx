@@ -1,17 +1,18 @@
-// waiting/page.tsx
-"use client"; // 클라이언트 컴포넌트로 설정
+"use client";
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import styles from "../styles/Home.module.css"; // 적절한 경로로 수정
+import { useSession, signIn, signOut } from "next-auth/react";
+import styles from "../styles/Home.module.css";
 
 const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_OPENVIDU_URL;
 
 const WaitingPage: React.FC = () => {
+  const { data: session } = useSession();
   const [mySessionId, setMySessionId] = useState<string>("SessionE");
   const [myUserName, setMyUserName] = useState<string>(
-    "OpenVidu_User_" + Math.floor(Math.random() * 100)
+    session?.user?.name || "OpenVidu_User_" + Math.floor(Math.random() * 100)
   );
   const router = useRouter();
 
@@ -75,6 +76,14 @@ const WaitingPage: React.FC = () => {
       <div id="join">
         <div id="join-dialog">
           <h1>비디오 세션에 참가하기</h1>
+          {session ? (
+            <div>
+              <p>로그인한 사용자: {session.user?.name}</p>
+              <p>이메일: {session.user?.email}</p>
+            </div>
+          ) : (
+            <p>로그인되지 않았습니다.</p>
+          )}
           <form onSubmit={joinSession}>
             <p>
               <label>참가자: </label>
