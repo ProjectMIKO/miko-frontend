@@ -5,7 +5,6 @@ import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
 import NodeList from "./NodeList";
-import STTComponent from "./STTComponent";
 
 const NetworkGraph: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -35,8 +34,8 @@ const NetworkGraph: React.FC = () => {
   return (
     <div style={{ display: "flex" }}>
       <GroupedNodeList
-        nodes={nodes}
-        edges={edges}
+        nodes={nodes.get()}
+        edges={edges.get()}
         selectedNodeId={selectedNodeId}
         onNodeClick={handleNodeClick}
       />
@@ -76,7 +75,7 @@ const NetworkGraph: React.FC = () => {
         />
       </div>
       <NodeList
-        nodes={nodes}
+        nodes={nodes.get()}
         selectedNodeId={selectedNodeId}
         onNodeClick={handleNodeClick}
       />

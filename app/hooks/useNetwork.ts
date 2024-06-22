@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { Network, DataSet, IdType } from "vis-network/standalone";
+import { Network, DataSet } from "vis-network/standalone";
 import { Node, Edge } from "../../types/types";
 
 const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
   const [network, setNetwork] = useState<Network | null>(null);
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
+  const [nodes, setNodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
+  const [edges, setEdges] = useState<DataSet<Edge>>(new DataSet<Edge>([]));
   const [selectedNodeId, setSelectedNodeId] = useState<number | null>(null);
   const [nextNodeId, setNextNodeId] = useState<number>(1);
   const [nextEdgeId, setNextEdgeId] = useState<number>(1);
@@ -23,7 +23,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
             from: tempEdgeFrom,
             to: nodeId,
           };
-          setEdges((prevEdges) => [...prevEdges, newEdge]);
+          edges.add(newEdge);
           setTempEdgeFrom(null);
           setNextEdgeId(nextEdgeId + 1);
           setAction(null);
@@ -32,15 +32,13 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
         if (tempEdgeFrom === null) {
           setTempEdgeFrom(nodeId);
         } else {
-          const edgeToRemove = edges.find(
-            (edge) =>
+          const edgeToRemove = edges.get({
+            filter: (edge) =>
               (edge.from === tempEdgeFrom && edge.to === nodeId) ||
-              (edge.from === nodeId && edge.to === tempEdgeFrom)
-          );
-          if (edgeToRemove) {
-            setEdges((prevEdges) =>
-              prevEdges.filter((edge) => edge.id !== edgeToRemove.id)
-            );
+              (edge.from === nodeId && edge.to === tempEdgeFrom),
+          });
+          if (edgeToRemove.length > 0) {
+            edges.remove(edgeToRemove[0].id);
           }
           setTempEdgeFrom(null);
           setAction(null);
@@ -55,8 +53,8 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
   useEffect(() => {
     if (containerRef.current && !network) {
       const data = {
-        nodes: new DataSet<Node>([]),
-        edges: new DataSet<Edge>([]),
+        nodes: nodes,
+        edges: edges,
       };
       const options = {
         nodes: {
@@ -79,7 +77,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
           solver: "forceAtlas2Based",
           forceAtlas2Based: {
             gravitationalConstant: -50,
-            centralGravity: 0.01,
+            centralGravity: 0.001,
             springLength: 200,
             springConstant: 0.08,
             damping: 0.4,
@@ -114,17 +112,14 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
 
   useEffect(() => {
     if (network) {
-      network.setData({
-        nodes: new DataSet<Node>(
-          nodes.map((node) => ({
-            ...node,
-            color: node.id === selectedNodeId ? "#0CC95B" : node.color,
-          }))
-        ),
-        edges: new DataSet<Edge>(edges),
-      });
+      nodes.update(
+        nodes.get().map((node) => ({
+          ...node,
+          color: node.id === selectedNodeId ? "#0CC95B" : node.color,
+        }))
+      );
     }
-  }, [network, nodes, edges, selectedNodeId]);
+  }, [network, nodes, selectedNodeId]);
 
   const addNode = (label: string, content: string, color: string) => {
     const newNode: Node = {
@@ -133,7 +128,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
       content,
       color,
     };
-    setNodes([...nodes, newNode]);
+    nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
   };
 
@@ -152,10 +147,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
     network,
     nodes,
     edges,
-    setNodes,
-    setEdges,
     selectedNodeId,
-    setSelectedNodeId,
     addNode,
     setAction,
     handleNodeClick,
