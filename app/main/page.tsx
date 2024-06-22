@@ -11,6 +11,7 @@ export default function Home() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [hasEnteredRoom, setHasEnteredRoom] = useState(false);
 
   const { socket, isConnected } = useSocket();
 
@@ -21,6 +22,13 @@ export default function Home() {
 
     if (isConnected) {
       console.log('Socket is connected!');
+
+      if (!hasEnteredRoom && storedSessionId) {
+        socket.emit('enter_room', [storedSessionId, () => {
+          console.log('Entered room:', storedSessionId);
+          setHasEnteredRoom(true); // Update the state to prevent re-entering the room
+        }]);
+      }
     } else {
       console.log('Socket is not connected.');
     }
@@ -39,8 +47,14 @@ export default function Home() {
       console.log('Received message from server:', message);
     });
 
+    socket.on('welcome', (nickname, memberCount) => {
+      console.log(`Welcome ${nickname}, there are ${memberCount} members in the room`);
+    });
+
     return () => {
-      socket.off('message');
+      socket.off('script');
+      socket.off('entered_room');
+      socket.off('welcome');
     };
   }, [socket, isConnected]);
 

@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useSession, signIn, signOut } from "next-auth/react";
-import styles from "../styles/Home.module.css";
 import { useSocket } from "../components/SocketContext";
 
 
@@ -12,7 +11,7 @@ const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_OPENVIDU_URL;
 
 const WaitingPage: React.FC = () => {
   const { data: session } = useSession();
-  const { socket, connectSocket } = useSocket();
+  const { socket, connectSocket, isConnected } = useSocket();
   const [mySessionId, setMySessionId] = useState<string>("SessionE");
   const [myUserName, setMyUserName] = useState<string>(
     session?.user?.name || "OpenVidu_User_" + Math.floor(Math.random() * 100)
@@ -46,6 +45,23 @@ const WaitingPage: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isConnected) {
+      socket.on('welcome', (nickname, memberCount) => {
+        console.log(`Welcome ${nickname}, there are ${memberCount} members in the room`);
+      });
+
+      socket.on('entered_room', () => {
+        console.log('Entered room event received');
+      });
+
+      return () => {
+        socket.off('welcome');
+        socket.off('entered_room');
+      };
+    }
+  }, [isConnected, socket]);
 
   const getToken = async () => {
     const sessionId = await createSession(mySessionId);

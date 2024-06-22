@@ -42,6 +42,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return () => {
       socket.off('connect');
       socket.off('disconnect');
+      socket.off('error');
     };
   }, []);
 
