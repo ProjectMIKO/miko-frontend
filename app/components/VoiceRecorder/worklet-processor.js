@@ -9,11 +9,11 @@ class SilenceDetectorProcessor extends AudioWorkletProcessor {
     this.port.onmessage = (event) => {
       if (event.data.threshold !== undefined) {
         this.silenceThreshold = event.data.threshold;
-        console.log(`Updated silence threshold: ${this.silenceThreshold}`);
+        // console.log(`Updated silence threshold: ${this.silenceThreshold}`);
       }
       if (event.data.duration !== undefined) {
         this.silenceDuration = event.data.duration;
-        console.log(`Updated silence duration: ${this.silenceDuration}`);
+        // console.log(`Updated silence duration: ${this.silenceDuration}`);
       }
     };
   }
