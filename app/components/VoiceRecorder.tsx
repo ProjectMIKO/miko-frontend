@@ -1,22 +1,27 @@
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
+import styles from './VoiceRecorder.module.css'; // CSS 모듈을 사용
 
 const VoiceRecorder = () => {
     const [error, setError] = useState<string | null>(null);
+    const [recordingMode, setRecordingMode] = useState<boolean>(false); // 녹음 모드 상태
     const [recording, setRecording] = useState<boolean>(false);
     const [audioURLs, setAudioURLs] = useState<string[]>([]);
+    const [silenceThreshold, setSilenceThreshold] = useState<number>(0.1); // 초기 임계값
+    const [silenceDuration, setSilenceDuration] = useState<number>(1000); // 초기 침묵 시간
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<BlobPart[]>([]);
     const audioContextRef = useRef<AudioContext | null>(null);
     const workletNodeRef = useRef<AudioWorkletNode | null>(null);
-    const isSilentRef = useRef<boolean>(false); // 침묵 상태를 추적
+    const mediaStreamRef = useRef<MediaStream | null>(null);
 
     useEffect(() => {
         async function init() {
             try {
                 console.log("Requesting microphone access...");
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaStreamRef.current = stream;
                 console.log("Microphone access granted:", stream);
 
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -33,30 +38,16 @@ const VoiceRecorder = () => {
                 }
 
                 const mediaStreamSource = audioContext.createMediaStreamSource(stream);
-                const workletNode = new AudioWorkletNode(audioContext, 'silence-detector-processor');
-                workletNodeRef.current = workletNode;
+                createWorkletNode(audioContext, silenceThreshold, silenceDuration);
 
-                workletNode.port.onmessage = (event) => {
-                    console.log('Silence detector event:', event.data);
-                    console.log(event.data.isSilent);
-                    if (event.data.isSilent) {
-                        isSilentRef.current = true;
-                        console.log('Detected silence, stopping recording...');
-                        stopRecording();
-                    } else {
-                        isSilentRef.current = false;
-                        console.log('Detected sound, starting recording...');
-                        startRecording();
-                    }
-                };
-
-                mediaStreamSource.connect(workletNode);
-                workletNode.connect(audioContext.destination);
+                mediaStreamSource.connect(workletNodeRef.current!);
+                workletNodeRef.current!.connect(audioContext.destination);
 
                 mediaRecorderRef.current = new MediaRecorder(stream);
                 mediaRecorderRef.current.ondataavailable = (event) => {
                     if (event.data.size > 0) {
                         audioChunksRef.current.push(event.data);
+                        console.log('Data available:', event.data);
                     }
                 };
 
@@ -66,6 +57,7 @@ const VoiceRecorder = () => {
                         const url = URL.createObjectURL(blob);
                         setAudioURLs(prev => [...prev, url]);
                         audioChunksRef.current = [];
+                        console.log('Recording saved:', url);
                     }
                 };
             } catch (err: any) {
@@ -109,6 +101,64 @@ const VoiceRecorder = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (workletNodeRef.current) {
+            workletNodeRef.current.port.postMessage({ threshold: silenceThreshold });
+            console.log(`Sent threshold to worklet: ${silenceThreshold}`);
+        }
+    }, [silenceThreshold]);
+
+    useEffect(() => {
+        if (workletNodeRef.current) {
+            workletNodeRef.current.port.postMessage({ duration: silenceDuration });
+            console.log(`Sent duration to worklet: ${silenceDuration}`);
+        }
+    }, [silenceDuration]);
+
+    useEffect(() => {
+        if (workletNodeRef.current) {
+            if (recordingMode) {
+                workletNodeRef.current.port.onmessage = (event) => {
+                    // console.log('Silence detector event:', event.data);
+                    if (event.data.isSilent) {
+                        // console.log('Detected silence, stopping recording...');
+                        stopRecording(true);
+                    } else {
+                        // console.log('Detected sound, starting recording...');
+                        startRecording();
+                    }
+                };
+            } else {
+                workletNodeRef.current.port.onmessage = null;
+            }
+        }
+    }, [recordingMode]);
+
+    const createWorkletNode = (audioContext: AudioContext, threshold: number, duration: number) => {
+        if (workletNodeRef.current) {
+            workletNodeRef.current.disconnect();
+        }
+
+        const workletNode = new AudioWorkletNode(audioContext, 'silence-detector-processor', {
+            processorOptions: { threshold, duration }
+        });
+
+        workletNode.port.onmessage = (event) => {
+            if (recordingMode) {
+                // console.log('Silence detector event:', event.data);
+                if (event.data.isSilent) {
+                    // console.log('Detected silence, stopping recording...');
+                    stopRecording(true);
+                } else {
+                    // console.log('Detected sound, starting recording...');
+                    startRecording();
+                }
+            }
+        };
+
+        workletNodeRef.current = workletNode;
+    };
+
     const startRecording = () => {
         if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'recording') {
             mediaRecorderRef.current.start();
@@ -117,23 +167,75 @@ const VoiceRecorder = () => {
         }
     };
 
-    const stopRecording = () => {
+    const stopRecording = (save: boolean = false) => {
         if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
             mediaRecorderRef.current.stop();
             setRecording(false);
-            console.log("Recording stopped and data saved");
+            console.log("Recording stopped");
+
+            if (save && audioChunksRef.current.length > 0) {
+                const blob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+                const url = URL.createObjectURL(blob);
+                setAudioURLs(prev => [...prev, url]);
+                audioChunksRef.current = [];
+                console.log("Recording saved");
+            } else {
+                audioChunksRef.current = [];  // Save false 시, 버퍼 비우기
+            }
         }
     };
 
+    const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSilenceThreshold(parseFloat(event.target.value));
+    };
+
+    const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSilenceDuration(parseInt(event.target.value));
+    };
+
+    const toggleRecordingMode = () => {
+        setRecordingMode(prev => !prev);
+    };
+
     return (
-        <div>
-            <h1>마이크 접근 테스트</h1>
+        <div className={styles.container}>
+            <h1>마이크 인식 테스트</h1>
             {error ? (
                 <p>{error}</p>
             ) : (
-                <div>
-                    <button onClick={startRecording} disabled={recording}>Start Recording</button>
-                    <button onClick={stopRecording} disabled={!recording}>Stop Recording</button>
+                <div className={styles.controls}>
+                    <label>
+                        음성 인식 감도:
+                        <input
+                            type="range"
+                            min="0.01"
+                            max="1"
+                            step="0.01"
+                            value={silenceThreshold}
+                            onChange={handleSliderChange}
+                        />
+                        {silenceThreshold}
+                    </label>
+                    <label>
+                        침묵 인식 시간 (초):
+                        <input
+                            type="range"
+                            min="0"
+                            max="5"
+                            step="0.5"
+                            value={silenceDuration / 1000}
+                            onChange={e => handleDurationChange({
+                                ...e,
+                                target: {
+                                    ...e.target,
+                                    value: (parseFloat(e.target.value) * 1000).toString()
+                                }
+                            })}
+                        />
+                        {silenceDuration / 1000}
+                    </label>
+                    <button onClick={toggleRecordingMode}>{recordingMode ? 'Stop Recording Mode' : 'Start Recording Mode'}</button>
+                    {recordingMode && recording && <p>Recording...</p>}
                     {audioURLs.map((url, index) => (
                         <audio key={index} src={url} controls />
                     ))}

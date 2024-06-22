@@ -1,40 +1,44 @@
 class SilenceDetectorProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
-    this._lastActiveTime = currentTime;
-    this._isSilent = true;
+    this.silenceThreshold = 0.1;
+    this.silenceDuration = 1000; // 기본 침묵 시간 1초
+    this.lastActiveTime = currentTime;
+    this.isSilent = true;
+
+    this.port.onmessage = (event) => {
+      if (event.data.threshold !== undefined) {
+        this.silenceThreshold = event.data.threshold;
+        console.log(`Updated silence threshold: ${this.silenceThreshold}`);
+      }
+      if (event.data.duration !== undefined) {
+        this.silenceDuration = event.data.duration;
+        console.log(`Updated silence duration: ${this.silenceDuration}`);
+      }
+    };
   }
 
   process(inputs, outputs, parameters) {
     const input = inputs[0];
     const channelData = input[0];
+
     let isSilent = true;
-
-    if (channelData) {
-      // 샘플의 RMS(root mean square)를 계산하여 소리 크기를 평가
-      let sumSquares = 0;
-      for (let i = 0; i < channelData.length; i++) {
-        sumSquares += channelData[i] * channelData[i];
-      }
-      const rms = Math.sqrt(sumSquares / channelData.length);
-
-      // 소리 크기가 임계값을 초과하면 소리 발생으로 간주
-      if (rms > 0.1) { // RMS 임계값 조정 가능
+    for (let i = 0; i < channelData.length; i++) {
+      if (Math.abs(channelData[i]) > this.silenceThreshold) {
         isSilent = false;
-        this._lastActiveTime = currentTime;
+        this.lastActiveTime = currentTime;
+        break;
       }
     }
 
-    if (currentTime - this._lastActiveTime > 3) { // 2초 침묵 감지
-      if (!this._isSilent) {
-        this._isSilent = true;
-        this.port.postMessage({ isSilent: true });
-      }
+    if (isSilent !== this.isSilent) {
+      this.isSilent = isSilent;
+    }
+
+    if (currentTime - this.lastActiveTime > this.silenceDuration / 1000) {
+      this.port.postMessage({ isSilent: true });
     } else {
-      if (this._isSilent) {
-        this._isSilent = false;
-        this.port.postMessage({ isSilent: false });
-      }
+      this.port.postMessage({ isSilent: false });
     }
 
     return true;
