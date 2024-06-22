@@ -5,16 +5,19 @@ import styles from './VoiceRecorder.module.css'; // CSS 모듈을 사용
 
 const VoiceRecorder = () => {
     const [error, setError] = useState<string | null>(null);
-    const [recordingMode, setRecordingMode] = useState<boolean>(false); // 녹음 모드 상태
     const [recording, setRecording] = useState<boolean>(false);
     const [audioURLs, setAudioURLs] = useState<string[]>([]);
-    const [silenceThreshold, setSilenceThreshold] = useState<number>(0.1); // 초기 임계값
-    const [silenceDuration, setSilenceDuration] = useState<number>(1000); // 초기 침묵 시간
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<BlobPart[]>([]);
     const audioContextRef = useRef<AudioContext | null>(null);
     const workletNodeRef = useRef<AudioWorkletNode | null>(null);
     const mediaStreamRef = useRef<MediaStream | null>(null);
+
+    const [recordingMode, setRecordingMode] = useState<boolean>(false); // 녹음 모드 상태
+    const [silenceThreshold, setSilenceThreshold] = useState<number>(0.1); // 초기 임계값
+    const [silenceDuration, setSilenceDuration] = useState<number>(3000); // 초기 침묵 시간
+    const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000); // 최대 녹음 시간 (밀리초 단위)
+    const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null); // 녹음 타임아웃
 
     useEffect(() => {
         async function init() {
@@ -29,7 +32,7 @@ const VoiceRecorder = () => {
 
                 try {
                     console.log("Loading AudioWorklet module...");
-                    await audioContext.audioWorklet.addModule('/worklet-processor.js');
+                    await audioContext.audioWorklet.addModule(new URL('./worklet-processor.js', import.meta.url).toString());
                     console.log("AudioWorklet module loaded successfully.");
                 } catch (err) {
                     console.error('Error loading AudioWorklet module:', err);
@@ -164,6 +167,15 @@ const VoiceRecorder = () => {
             mediaRecorderRef.current.start();
             setRecording(true);
             console.log("Recording started");
+
+            // 최대 녹음 시간 타이머 설정
+            if (recordingTimeoutRef.current) {
+                clearTimeout(recordingTimeoutRef.current);
+            }
+            recordingTimeoutRef.current = setTimeout(() => {
+                console.log("Max recording duration reached, stopping recording...");
+                stopRecording(true);
+            }, maxRecordingDuration);
         }
     };
 
@@ -199,7 +211,6 @@ const VoiceRecorder = () => {
 
     return (
         <div className={styles.container}>
-            <h1>마이크 인식 테스트</h1>
             {error ? (
                 <p>{error}</p>
             ) : (
@@ -234,8 +245,8 @@ const VoiceRecorder = () => {
                         />
                         {silenceDuration / 1000}
                     </label>
-                    <button onClick={toggleRecordingMode}>{recordingMode ? 'Stop Recording Mode' : 'Start Recording Mode'}</button>
-                    {recordingMode && recording && <p>Recording...</p>}
+                    <button onClick={toggleRecordingMode}>{recordingMode ? '음성인식 켜져있음' : '음성인식 꺼져있음'}</button>
+                    {recordingMode && recording && <p>음성 인식 중...</p>}
                     {audioURLs.map((url, index) => (
                         <audio key={index} src={url} controls />
                     ))}
