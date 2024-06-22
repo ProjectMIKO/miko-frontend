@@ -8,19 +8,20 @@ import styles from "../Home.module.css";
 import dynamic from 'next/dynamic';
 import { useSocket } from '../components/SocketContext';
 
+
 export default function Home() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  const { socket } = useSocket();
+  const { socket, isConnected } = useSocket();
 
   useEffect(() => {
 
     const storedSessionId = sessionStorage.getItem("sessionId");
     const storedUserName = sessionStorage.getItem("userName");
     const storedToken = sessionStorage.getItem("token");
-    if (socket.connected) {
+    if (isConnected) {
       console.log('Socket is connected!');
     } else {
       console.log('Socket is not connected.');
@@ -43,7 +44,7 @@ export default function Home() {
     return () => {
       socket.off('message');
     };
-  }, [socket]);
+  }, [socket, isConnected]);
 
   return (
     <div className={styles.container}>

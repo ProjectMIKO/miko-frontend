@@ -6,6 +6,7 @@ import socket from '../lib/socket';
 
 interface SocketContextProps {
   socket: Socket;
+  isConnected: boolean;
   connectSocket: () => void;
   disconnectSocket: () => void;
 }
@@ -49,7 +50,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   return (
-    <SocketContext.Provider value={{ socket, connectSocket, disconnectSocket }}>
+    <SocketContext.Provider value={{ socket, isConnected, connectSocket, disconnectSocket }}>
       {children}
     </SocketContext.Provider>
   );
