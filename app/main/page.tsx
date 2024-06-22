@@ -23,11 +23,15 @@ export default function Home() {
     if (isConnected) {
       console.log('Socket is connected!');
 
-      if (!hasEnteredRoom && storedSessionId) {
-        socket.emit('enter_room', [storedSessionId, () => {
+      if (isConnected && !hasEnteredRoom) {
+        console.log('Socket is connected!');
+  
+        socket.emit('enter_room', { roomName: storedSessionId });
+  
+        socket.on('entered_room', () => {
           console.log('Entered room:', storedSessionId);
           setHasEnteredRoom(true); // Update the state to prevent re-entering the room
-        }]);
+        });
       }
     } else {
       console.log('Socket is not connected.');
@@ -53,8 +57,8 @@ export default function Home() {
 
     return () => {
       socket.off('script');
-      socket.off('entered_room');
       socket.off('welcome');
+      socket.off('entered_room');
     };
   }, [socket, isConnected]);
 
@@ -67,7 +71,7 @@ export default function Home() {
           ) : (
             <p>Loading...</p>
           )}
-          <VoiceRecorder />
+          <VoiceRecorder sessionId={sessionId} />
         </div>
       ) : (
         <p>Socket is not connected. Please check your connection.</p>

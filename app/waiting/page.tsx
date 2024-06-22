@@ -52,13 +52,8 @@ const WaitingPage: React.FC = () => {
         console.log(`Welcome ${nickname}, there are ${memberCount} members in the room`);
       });
 
-      socket.on('entered_room', () => {
-        console.log('Entered room event received');
-      });
-
       return () => {
         socket.off('welcome');
-        socket.off('entered_room');
       };
     }
   }, [isConnected, socket]);

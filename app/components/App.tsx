@@ -37,9 +37,9 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
 
   const handlerLeaveSessionEvent = () => {
     console.log("Leave session");
-    setSession(undefined);
     session.disconnect();
     session.unsubscribe(subscriber);
+    setSession(undefined);
     setSubscribers([]);
     socket.disconnect();
   };
