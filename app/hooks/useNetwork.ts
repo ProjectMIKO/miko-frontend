@@ -7,6 +7,9 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
   const [nodes, setNodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
   const [edges, setEdges] = useState<DataSet<Edge>>(new DataSet<Edge>([]));
   const [selectedNodeId, setSelectedNodeId] = useState<number | null>(null);
+  const [prevSelectedNodeId, setPrevSelectedNodeId] = useState<number | null>(
+    null
+  );
   const [nextNodeId, setNextNodeId] = useState<number>(1);
   const [nextEdgeId, setNextEdgeId] = useState<number>(1);
   const [action, setAction] = useState<string | null>(null);
@@ -92,7 +95,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
         },
         interaction: {
           dragNodes: true,
-          dragView: true,
+          dragView: false,
           zoomView: true,
         },
       };
@@ -112,14 +115,21 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
 
   useEffect(() => {
     if (network) {
-      nodes.update(
-        nodes.get().map((node) => ({
-          ...node,
-          color: node.id === selectedNodeId ? "#0CC95B" : node.color,
-        }))
-      );
+      if (prevSelectedNodeId !== null) {
+        nodes.update({
+          id: prevSelectedNodeId,
+          color: "#5A5A5A",
+        });
+      }
+      if (selectedNodeId !== null) {
+        nodes.update({
+          id: selectedNodeId,
+          color: "#0CC95B",
+        });
+      }
+      setPrevSelectedNodeId(selectedNodeId);
     }
-  }, [network, nodes, selectedNodeId]);
+  }, [network, nodes, selectedNodeId, prevSelectedNodeId]);
 
   const addNode = (label: string, content: string, color: string) => {
     const newNode: Node = {
