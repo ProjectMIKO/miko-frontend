@@ -197,15 +197,15 @@ const VoiceRecorder = () => {
   const sendAudioToServer = (blob: Blob) => {
     const reader = new FileReader();
     reader.onload = function(event) {
-      const base64String = event.target?.result as string;
-      if (base64String) {
-        socket.emit('audioData', { file: base64String });
+      const arrayBuffer = event.target?.result;
+      if (arrayBuffer) {
+        socket.emit('audioData', { file: arrayBuffer });
         console.log("sending audioData");
       } else {
         console.error('Failed to read the blob');
       }
     };
-    reader.readAsDataURL(blob);
+    reader.readAsArrayBuffer(blob);
   };
 
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
