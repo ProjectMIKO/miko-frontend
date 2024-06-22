@@ -199,7 +199,7 @@ const VoiceRecorder = () => {
     reader.onload = function(event) {
       const arrayBuffer = event.target?.result;
       if (arrayBuffer) {
-        socket.emit('audioData', { file: arrayBuffer });
+        socket.emit('stt', { file: arrayBuffer });
         console.log("sending audioData");
       } else {
         console.error('Failed to read the blob');

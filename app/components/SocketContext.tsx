@@ -35,6 +35,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.log("disconnected");
     });
 
+    socket.on('error', (error) => {
+      console.error('Error from server:', error);
+    });
+
     return () => {
       socket.off('connect');
       socket.off('disconnect');
@@ -48,7 +52,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const disconnectSocket = () => {
     socket.disconnect();
   };
-
+  
   return (
     <SocketContext.Provider value={{ socket, isConnected, connectSocket, disconnectSocket }}>
       {children}
