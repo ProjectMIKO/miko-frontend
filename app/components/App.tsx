@@ -10,6 +10,7 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import styles from "./App.module.css"; // CSS 모듈을 사용하는 경우
 import UserVideoComponent from "./UserVideoComponent";
+import { useSocket } from "../components/SocketContext";
 
 interface Props {
   sessionId: string;
@@ -28,16 +29,22 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
     {}
   );
 
+  const { socket, disconnectSocket } = useSocket();
+
   const handlerJoinSessionEvent = () => {
     console.log("Join session");
   };
 
   const handlerLeaveSessionEvent = () => {
     console.log("Leave session");
+    if (session) {
+      session.disconnect();
+    }
     setSession(undefined);
     session.disconnect();
     session.unsubscribe(subscriber);
     setSubscribers([]);
+    disconnectSocket();
   };
 
   const handlerErrorEvent = (error: any) => {
