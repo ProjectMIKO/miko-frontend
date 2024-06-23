@@ -25,7 +25,7 @@ export default function Home() {
       console.log('Socket is connected!');
 
       if (!hasEnteredRoom) {
-        socket.emit('enter_room', { roomName: storedSessionId });
+        socket.emit('enter_room', sessionId);
   
         socket.on('entered_room', () => {
           console.log('Entered room:', storedSessionId);
