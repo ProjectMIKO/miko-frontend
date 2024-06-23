@@ -12,6 +12,7 @@ export default function Home() {
   const [userName, setUserName] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [hasEnteredRoom, setHasEnteredRoom] = useState(false);
+  // const [message, setMessage] = useState<string | null>(null);
 
   const { socket, isConnected } = useSocket();
 
@@ -23,9 +24,7 @@ export default function Home() {
     if (isConnected) {
       console.log('Socket is connected!');
 
-      if (isConnected && !hasEnteredRoom) {
-        console.log('Socket is connected!');
-  
+      if (!hasEnteredRoom) {
         socket.emit('enter_room', { roomName: storedSessionId });
   
         socket.on('entered_room', () => {
@@ -46,17 +45,11 @@ export default function Home() {
       window.location.href = "/waiting";
     }
 
-    // 예시: 서버에서 메시지 수신
-    socket.on('script', (message: string) => {
-      console.log('Received message from server:', message);
-    });
-
     socket.on('welcome', (nickname, memberCount) => {
       console.log(`Welcome ${nickname}, there are ${memberCount} members in the room`);
     });
 
     return () => {
-      socket.off('script');
       socket.off('welcome');
       socket.off('entered_room');
     };

@@ -7,7 +7,7 @@ import socket from '../lib/socket';
 interface SocketContextProps {
   socket: Socket;
   isConnected: boolean;
-  connectSocket: () => void;
+  connectSocket: (nickname: string) => void;
   disconnectSocket: () => void;
 }
 
@@ -46,7 +46,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, []);
 
-  const connectSocket = () => {
+  const connectSocket = (nickname: string) => {
+    socket.auth = { nickname };
     socket.connect();
   };
 

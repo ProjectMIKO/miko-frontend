@@ -36,8 +36,7 @@ const WaitingPage: React.FC = () => {
         sessionStorage.setItem("sessionId", mySessionId);
         sessionStorage.setItem("userName", myUserName);
         sessionStorage.setItem("token", token);
-        
-        connectSocket();
+        connectSocket(myUserName);
 
         router.push("/main");
       } catch (error) {
