@@ -1,11 +1,11 @@
-"use client";
+// "use client";
 
-import VoiceRecorder from '../components/VoiceRecorder/VoiceRecorder';
+// import VoiceRecorder from '../components/VoiceRecorder/VoiceRecorder';
 
-export default function Home() {
-    return (
-        <div>
-            <VoiceRecorder />
-        </div>
-    );
-}
+// export default function Home() {
+//     return (
+//         <div>
+//             <VoiceRecorder />
+//         </div>
+//     );
+// }
