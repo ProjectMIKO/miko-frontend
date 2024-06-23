@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL = "https://miko-server-894bf0dedc4e.herokuapp.com"; // 소켓 서버 URL
+const SOCKET_URL = "https://miko-dev-a7d3f7eaf040.herokuapp.com"; // 소켓 서버 URL
 
 const socket: Socket = io(SOCKET_URL, {
   autoConnect: false, // 자동 연결 비활성화
