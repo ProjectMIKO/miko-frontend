@@ -70,7 +70,11 @@ export default function Home() {
         <p>Socket is not connected. Please check your connection.</p>
       )}
       <div className={styles.networkGraphContainer}>
-        <NetworkGraph />
+        {sessionId ? (
+          <NetworkGraph sessionId={sessionId} />
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
     </div>
   );

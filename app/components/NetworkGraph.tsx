@@ -1,14 +1,18 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
+import { useSocket } from '../components/SocketContext';
 
+interface Props {
+  sessionId: string;
+}
+const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
 
-const NetworkGraph: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const {
     nodes,
@@ -24,13 +28,36 @@ const NetworkGraph: React.FC = () => {
   const [newNodeContent, setNewNodeContent] = useState<string>("");
   const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
 
+  const { socket } = useSocket();
+
   const handleAddNode = () => {
-    if (newNodeLabel && newNodeContent) {
       addNode(newNodeLabel, newNodeContent, newNodeColor);
       setNewNodeLabel("");
       setNewNodeContent("");
       setNewNodeColor("#5A5A5A");
+  };
+
+  useEffect(() => {
+    const handleSummarize = (data: { keyword: string, subtitle: string }) => {
+      setNewNodeLabel(data.keyword);
+      setNewNodeContent(data.subtitle);
+    };
+
+    socket.on("summarize", handleSummarize);
+
+    return () => {
+      socket.off("summarize", handleSummarize);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (newNodeLabel && newNodeContent) {
+      handleAddNode();
     }
+  }, [newNodeLabel, newNodeContent]);
+
+  const handleKeyword = () => {
+    socket.emit("summarize", sessionId);
   };
 
   return (
@@ -47,8 +74,25 @@ const NetworkGraph: React.FC = () => {
           flexDirection: "column",
           alignItems: "center",
           width: "100%",
+          position: "relative",
         }}
       >
+        <button
+          style={{
+            position: "absolute",
+            right: "170px",
+            bottom: "20px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onClick={handleKeyword}
+        >
+          keyword
+        </button>
         <div
           ref={containerRef}
           style={{
