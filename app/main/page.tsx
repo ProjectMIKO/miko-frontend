@@ -11,6 +11,8 @@ export default function Home() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [hasEnteredRoom, setHasEnteredRoom] = useState(false);
+  // const [message, setMessage] = useState<string | null>(null);
 
   const { socket, isConnected } = useSocket();
 
@@ -21,6 +23,15 @@ export default function Home() {
 
     if (isConnected) {
       console.log('Socket is connected!');
+
+      if (!hasEnteredRoom) {
+        socket.emit('enter_room', { roomName: storedSessionId });
+  
+        socket.on('entered_room', () => {
+          console.log('Entered room:', storedSessionId);
+          setHasEnteredRoom(true); // Update the state to prevent re-entering the room
+        });
+      }
     } else {
       console.log('Socket is not connected.');
     }
@@ -34,13 +45,13 @@ export default function Home() {
       window.location.href = "/waiting";
     }
 
-    // 예시: 서버에서 메시지 수신
-    socket.on('script', (message: string) => {
-      console.log('Received message from server:', message);
+    socket.on('welcome', (nickname, memberCount) => {
+      console.log(`Welcome ${nickname}, there are ${memberCount} members in the room`);
     });
 
     return () => {
-      socket.off('message');
+      socket.off('welcome');
+      socket.off('entered_room');
     };
   }, [socket, isConnected]);
 
@@ -53,7 +64,7 @@ export default function Home() {
           ) : (
             <p>Loading...</p>
           )}
-          <VoiceRecorder />
+          <VoiceRecorder sessionId={sessionId} />
         </div>
       ) : (
         <p>Socket is not connected. Please check your connection.</p>

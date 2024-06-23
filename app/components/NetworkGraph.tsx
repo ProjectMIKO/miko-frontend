@@ -5,6 +5,8 @@ import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
 import NodeList from "./NodeList";
+import Conversation from "./Conversation";
+
 
 const NetworkGraph: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -79,6 +81,7 @@ const NetworkGraph: React.FC = () => {
         selectedNodeId={selectedNodeId}
         onNodeClick={handleNodeClick}
       />
+      <Conversation />
     </div>
   );
 };

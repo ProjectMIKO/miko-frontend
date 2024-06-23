@@ -7,7 +7,7 @@ import socket from '../lib/socket';
 interface SocketContextProps {
   socket: Socket;
   isConnected: boolean;
-  connectSocket: () => void;
+  connectSocket: (nickname: string) => void;
   disconnectSocket: () => void;
 }
 
@@ -35,20 +35,26 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.log("disconnected");
     });
 
+    socket.on('error', (error) => {
+      console.error('Error from server:', error);
+    });
+
     return () => {
       socket.off('connect');
       socket.off('disconnect');
+      socket.off('error');
     };
   }, []);
 
-  const connectSocket = () => {
+  const connectSocket = (nickname: string) => {
+    socket.auth = { nickname };
     socket.connect();
   };
 
   const disconnectSocket = () => {
     socket.disconnect();
   };
-
+  
   return (
     <SocketContext.Provider value={{ socket, isConnected, connectSocket, disconnectSocket }}>
       {children}

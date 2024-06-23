@@ -4,7 +4,11 @@ import { useEffect, useState, useRef } from 'react';
 import styles from './VoiceRecorder.module.css';
 import { useSocket } from '../SocketContext';
 
-const VoiceRecorder = () => {
+interface VoiceRecorderProps {
+  sessionId: string | null;
+}
+
+const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
   const [error, setError] = useState<string | null>(null);
   const [recording, setRecording] = useState<boolean>(false);
   const [audioURLs, setAudioURLs] = useState<string[]>([]);
@@ -197,9 +201,10 @@ const VoiceRecorder = () => {
   const sendAudioToServer = (blob: Blob) => {
     const reader = new FileReader();
     reader.onload = function(event) {
-      const arrayBuffer = event.target?.result;
+      const arrayBuffer = event.target?.result as ArrayBuffer;
       if (arrayBuffer) {
-        socket.emit('audioData', { file: arrayBuffer });
+        console.log(arrayBuffer);
+        socket.emit('stt', [sessionId, arrayBuffer]);
         console.log("sending audioData");
       } else {
         console.error('Failed to read the blob');
