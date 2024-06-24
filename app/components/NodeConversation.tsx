@@ -64,7 +64,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
         borderRadius: "8px",
         fontFamily: "Arial, sans-serif",
         backgroundColor: "#F9F9F9",
-        maxHeight: "650px",
+        height: "100%",
         overflowY: "auto",
       }}
     >

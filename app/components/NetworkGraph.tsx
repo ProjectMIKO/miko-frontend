@@ -8,13 +8,14 @@ import NodeConversation from "./NodeConversation";
 import { useSocket } from "../components/SocketContext";
 import { Node } from "../../types/types";
 import SharingRoom from "./sharingRoom";
-import axios from 'axios';
+import axios from "axios";
 
 interface Props {
   sessionId: string;
 }
 
-const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
+const APPLICATION_SERVER_URL =
+  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
 const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,7 +84,11 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
 
   const handleSharingRoom = async () => {
     const token = await getToken();
-    const link = `${window.location.origin}/main?sessionId=${encodeURIComponent(sessionId)}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(token)}`;
+    const link = `${window.location.origin}/main?sessionId=${encodeURIComponent(
+      sessionId
+    )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
+      token
+    )}`;
     setRoomLink(link);
     setIsModalOpen(true);
   };
