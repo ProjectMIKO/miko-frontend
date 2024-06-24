@@ -1,59 +1,20 @@
+// app/main/page.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import NetworkGraph from "../components/NetworkGraph";
 import App from "../components/App";
-import VoiceRecorder from "../components/VoiceRecorder/VoiceRecorder";
 import styles from "../Home.module.css";
-import { useSocket } from '../components/SocketContext';
+import { SocketProvider, useSocketContext } from "../components/SocketProvider";
 
-export default function Home() {
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [hasEnteredRoom, setHasEnteredRoom] = useState(false);
-  // const [message, setMessage] = useState<string | null>(null);
+const HomeContent = () => {
+  const socketContext = useSocketContext();
 
-  const { socket, isConnected } = useSocket();
+  if (!socketContext) {
+    return <p>Error: Socket context is not available.</p>;
+  }
 
-  useEffect(() => {
-    const storedSessionId = sessionStorage.getItem("sessionId");
-    const storedUserName = sessionStorage.getItem("userName");
-    const storedToken = sessionStorage.getItem("token");
-
-    if (isConnected) {
-      console.log('Socket is connected!');
-
-      if (!hasEnteredRoom) {
-        socket.emit('enter_room', sessionId);
-  
-        socket.on('entered_room', () => {
-          console.log('Entered room:', storedSessionId);
-          setHasEnteredRoom(true); // Update the state to prevent re-entering the room
-        });
-      }
-    } else {
-      console.log('Socket is not connected.');
-    }
-
-    if (storedSessionId && storedUserName && storedToken) {
-      setSessionId(storedSessionId);
-      setUserName(storedUserName);
-      setToken(storedToken);
-    } else {
-      // 세션 정보가 없으면 대기 페이지로 이동
-      window.location.href = "/waiting";
-    }
-
-    socket.on('welcome', (nickname, memberCount) => {
-      console.log(`Welcome ${nickname}, there are ${memberCount} members in the room`);
-    });
-
-    return () => {
-      socket.off('welcome');
-      socket.off('entered_room');
-    };
-  }, [socket, isConnected]);
+  const { sessionId, userName, token, isConnected } = socketContext;
 
   return (
     <div className={styles.container}>
@@ -64,18 +25,25 @@ export default function Home() {
           ) : (
             <p>Loading...</p>
           )}
-          <VoiceRecorder sessionId={sessionId} />
         </div>
       ) : (
         <p>Socket is not connected. Please check your connection.</p>
       )}
-      <div className={styles.networkGraphContainer}>
-        {sessionId ? (
-          <NetworkGraph sessionId={sessionId} />
-        ) : (
-          <p>Loading...</p>
+      <div className={styles.layoutContainer}>
+        {sessionId && (
+          <>
+            <NetworkGraph sessionId={sessionId} />
+          </>
         )}
       </div>
     </div>
+  );
+};
+
+export default function Home() {
+  return (
+    <SocketProvider>
+      <HomeContent />
+    </SocketProvider>
   );
 }
