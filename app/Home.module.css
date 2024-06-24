@@ -1,3 +1,4 @@
+/* app/Home.module.css */
 .container {
   display: flex;
   flex-direction: column;
@@ -9,6 +10,13 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20px; /* Adjust this value as needed */
+}
+
+.layoutContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .networkGraphContainer {

@@ -25,13 +25,17 @@ const HomeContent = () => {
           ) : (
             <p>Loading...</p>
           )}
-          <VoiceRecorder sessionId={sessionId} />
         </div>
       ) : (
         <p>Socket is not connected. Please check your connection.</p>
       )}
-      <div className={styles.networkGraphContainer}>
-        {sessionId ? <NetworkGraph sessionId={sessionId} /> : <p>Loading...</p>}
+      <div className={styles.layoutContainer}>
+        {sessionId && (
+          <>
+            <NetworkGraph sessionId={sessionId} />
+            <VoiceRecorder sessionId={sessionId} />
+          </>
+        )}
       </div>
     </div>
   );
