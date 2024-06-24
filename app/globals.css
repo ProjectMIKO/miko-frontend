@@ -9,3 +9,17 @@ h1 {
   text-align: center;
   margin-top: 20px;
 }
+/* global.css */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#root,
+#__next {
+  height: 100%;
+  width: 100%;
+}

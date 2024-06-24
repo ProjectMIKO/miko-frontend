@@ -1,3 +1,4 @@
+// app/components/NetworkGraph.tsx
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
@@ -5,8 +6,6 @@ import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
 import NodeConversation from "./NodeConversation";
-import NodeList from "./NodeList";
-import Conversation from "./Conversation";
 import { useSocket } from "../components/SocketContext";
 import { Node } from "../../types/types";
 
@@ -63,7 +62,9 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
   };
 
   return (
-    <div style={{ display: "flex" }}>
+    <div
+      style={{ display: "flex", flexGrow: 1, width: "100%", height: "100%" }}
+    >
       <GroupedNodeList
         nodes={nodes.get()}
         edges={edges.get()}
@@ -77,6 +78,8 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
           alignItems: "center",
           width: "100%",
           position: "relative",
+          flexGrow: 1,
+          height: "100%" /* 전체 높이를 사용 */,
         }}
       >
         <button
@@ -98,11 +101,12 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
         <div
           ref={containerRef}
           style={{
-            height: "650px",
-            width: "1000px",
+            height: "100%" /* 부모 컨테이너의 높이에 맞춤 */,
+            width: "100%",
             border: "1px solid black",
             margin: "20px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            flexGrow: 1,
           }}
           onClick={() => {
             if (selectedNodeId !== null) {
