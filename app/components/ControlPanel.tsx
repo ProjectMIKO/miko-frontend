@@ -25,29 +25,23 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 }) => {
   return (
     <div>
-      <div>
-        <input
-          type="text"
-          placeholder="Node Label"
-          value={newNodeLabel}
-          onChange={(e) => setNewNodeLabel(e.target.value)}
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Node Content"
-          value={newNodeContent}
-          onChange={(e) => setNewNodeContent(e.target.value)}
-        />
-      </div>
-      <div>
-        <input
-          type="color"
-          value={newNodeColor}
-          onChange={(e) => setNewNodeColor(e.target.value)}
-        />
-      </div>
+      <input
+        type="text"
+        placeholder="Node Label"
+        value={newNodeLabel}
+        onChange={(e) => setNewNodeLabel(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Node Content"
+        value={newNodeContent}
+        onChange={(e) => setNewNodeContent(e.target.value)}
+      />
+      <input
+        type="color"
+        value={newNodeColor}
+        onChange={(e) => setNewNodeColor(e.target.value)}
+      />
       <button onClick={addNode}>Add Node</button>
       <button onClick={() => setAction("connect")}>Connect</button>
       <button onClick={() => setAction("disconnect")}>Disconnect</button>

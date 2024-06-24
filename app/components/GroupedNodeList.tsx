@@ -83,7 +83,8 @@ const GroupedNodeList: React.FC<GroupedNodeListProps> = ({
         borderRadius: "8px",
         fontFamily: "Arial, sans-serif",
         backgroundColor: "#F9F9F9",
-        height: "100%",
+        height: "95%",
+        maxHeight: "650px",
         overflowY: "auto",
       }}
     >

@@ -101,7 +101,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
         flexDirection: "column",
         flexGrow: 1,
         width: "100%",
-        height: "100vh",
+        height: "100%",
         position: "relative",
       }}
     >
@@ -110,8 +110,8 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
           display: "flex",
           flexGrow: 1,
           width: "100%",
+          height: "100%",
           overflow: "hidden",
-          paddingBottom: "100px",
         }}
       >
         <GroupedNodeList
@@ -128,7 +128,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
             width: "100%",
             position: "relative",
             flexGrow: 1,
-            height: "100%",
+            height: "95%",
             overflow: "hidden",
           }}
         >
@@ -138,7 +138,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
               height: "100%",
               width: "100%",
               border: "1px solid black",
-              margin: "20px",
+              margin: "10px",
               boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
               flexGrow: 1,
               overflow: "hidden",
@@ -190,10 +190,9 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
       </div>
       <div
         style={{
-          position: "fixed",
-          bottom: 0,
-          width: "100%",
-          backgroundColor: "#f8f8f8",
+          width: "100",
+          height: "15%",
+          backgroundColor: "#96A0FE",
           padding: "10px",
           boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.1)",
         }}
