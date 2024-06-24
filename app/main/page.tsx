@@ -3,7 +3,6 @@
 import React from "react";
 import NetworkGraph from "../components/NetworkGraph";
 import App from "../components/App";
-import VoiceRecorder from "../components/VoiceRecorder/VoiceRecorder";
 import styles from "../Home.module.css";
 import { SocketProvider, useSocketContext } from "../components/SocketProvider";
 
@@ -33,7 +32,6 @@ const HomeContent = () => {
         {sessionId && (
           <>
             <NetworkGraph sessionId={sessionId} />
-            <VoiceRecorder sessionId={sessionId} />
           </>
         )}
       </div>

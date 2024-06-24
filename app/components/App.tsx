@@ -1,15 +1,9 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  ChangeEvent,
-  FormEvent,
-} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { OpenVidu } from "openvidu-browser";
-import axios from "axios";
 import styles from "./App.module.css";
 import UserVideoComponent from "./UserVideoComponent";
 import { useSocket } from "../components/SocketContext";
+import VoiceRecorder from "./VoiceRecorder/VoiceRecorder";
 
 interface Props {
   sessionId: string;
@@ -28,7 +22,7 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
     {}
   );
 
-  const { socket, disconnectSocket } = useSocket();
+  const { socket } = useSocket();
 
   const handlerJoinSessionEvent = () => {
     console.log("Join session");
@@ -36,11 +30,12 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
 
   const handlerLeaveSessionEvent = () => {
     console.log("Leave session");
-    session.disconnect();
-    session.unsubscribe(subscriber);
-    setSession(undefined);
-    setSubscribers([]);
-    socket.disconnect();
+    if (session) {
+      session.disconnect();
+      setSession(undefined);
+      setSubscribers([]);
+      socket.disconnect();
+    }
   };
 
   const handlerErrorEvent = (error: any) => {
@@ -53,7 +48,6 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
 
     mySession.on("streamCreated", (event: any) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscriber(subscriber);
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
@@ -121,25 +115,30 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
         <div>Loading...</div>
       ) : (
         <div id={styles.session}>
-          <div id={styles["video-container"]}>
-            <div id={styles["local-video"]}>
-              <video ref={localVideoRef} autoPlay={true} />
+          <div id={styles["video-recorder-container"]}>
+            <div id={styles["video-container"]}>
+              <div id={styles["local-video"]}>
+                <video ref={localVideoRef} autoPlay={true} />
+              </div>
+              <div id={styles["remote-videos"]}>
+                {subscribers.map((sub) => (
+                  <UserVideoComponent
+                    key={sub.stream.streamId}
+                    streamManager={sub}
+                  />
+                ))}
+              </div>
             </div>
-            <div id={styles["remote-videos"]}>
-              {subscribers.map((sub) => (
-                <UserVideoComponent
-                  key={sub.stream.streamId}
-                  streamManager={sub}
-                />
-              ))}
+            <div id={styles["recorder-container"]}>
+              <VoiceRecorder sessionId={sessionId} />
+              <button
+                className={styles["leave-button"]}
+                onClick={handlerLeaveSessionEvent}
+              >
+                Leave session
+              </button>
             </div>
           </div>
-          <button
-            className={styles["leave-button"]}
-            onClick={handlerLeaveSessionEvent}
-          >
-            Leave session
-          </button>
         </div>
       )}
     </div>
