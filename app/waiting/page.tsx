@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect, CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useSocket } from "../components/SocketContext";
-
+import Image from 'next/image';
+import logo from '../../public/MIKO_LOGO_Square.png';
 
 const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
 const WaitingPage: React.FC = () => {
   const { data: session } = useSession();
   const { socket, connectSocket, isConnected } = useSocket();
-  const [mySessionId, setMySessionId] = useState<string>("SessionE");
+  const [mySessionId, setMySessionId] = useState<string>("방 제목을 입력하세요.");
   const [myUserName, setMyUserName] = useState<string>(
     session?.user?.name || "OpenVidu_User_" + Math.floor(Math.random() * 100)
   );
@@ -86,49 +87,129 @@ const WaitingPage: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: "20px", textAlign: "center" }}>
-      <h1>Welcome to MIKO</h1>
-      <p>MIKO</p>
-      <div id="join">
-        <div id="join-dialog">
-          <h1>비디오 세션에 참가하기</h1>
-          {session ? (
-            <div>
-              <p>로그인한 사용자: {session.user?.name}</p>
-              <p>이메일: {session.user?.email}</p>
-            </div>
-          ) : (
-            <p>로그인되지 않았습니다.</p>
-          )}
-          <form onSubmit={joinSession}>
-            <p>
-              <label>참가자: </label>
-              <input
-                type="text"
-                id="userName"
-                value={myUserName}
-                onChange={handleChangeUserName}
-                required
-              />
-            </p>
-            <p>
-              <label>세션: </label>
-              <input
-                type="text"
-                id="sessionId"
-                value={mySessionId}
-                onChange={handleChangeSessionId}
-                required
-              />
-            </p>
-            <p>
-              <input name="commit" type="submit" value="참가" />
-            </p>
-          </form>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <Image src={logo} alt="MIKO Logo" width={100} height={100} style={styles.logo}/>
+        <h1 style={styles.title}>Welcome to MIKO</h1>
+        <div id="join">
+          <div id="join-dialog">
+            {session ? (
+              <div>
+                <p style={styles.info}><span style={styles.bold}>{session.user?.name}</span>님 반갑습니다!</p>
+              </div>
+            ) : (
+              <p style={styles.info}>Not logged in</p>
+            )}
+            <form onSubmit={joinSession} style={styles.form}>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>이름</label>
+                <input
+                  type="text"
+                  id="userName"
+                  value={session?.user?.name || myUserName}
+                  onChange={handleChangeUserName}
+                  required
+                  style={styles.input}
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>방 제목</label>
+                <input
+                  type="text"
+                  id="sessionId"
+                  value={mySessionId}
+                  onChange={handleChangeSessionId}
+                  required
+                  style={styles.input}
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <input name="commit" type="submit" value="Join" style={styles.button} />
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   );
+};
+
+const styles: { [key: string]: CSSProperties } = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundColor: '#d3bff2', // 배경색 설정
+    margin: '0', // margin reset
+    fontFamily: 'Arial, sans-serif', // 폰트 설정
+  },
+  card: {
+    backgroundColor: 'white',
+    padding: '40px',
+    borderRadius: '12px', // 더 둥근 모서리
+    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)', // 그림자 수정
+    textAlign: 'center',
+    width: '100%',
+    maxWidth: '400px', // 최대 너비 설정
+  },
+  title: {
+    fontSize: '28px', // 더 큰 폰트 크기
+    marginBottom: '20px',
+    color: '#333', // 더 진한 글자 색
+  },
+  heading: {
+    fontSize: '22px',
+    color: '#555',
+    marginBottom: '20px',
+  },
+  info: {
+    fontSize: '16px',
+    color: '#777',
+    marginBottom: '10px',
+  },
+  bold: {
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  formGroup: {
+    width: '100%',
+    marginBottom: '15px',
+    textAlign: 'left',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '5px',
+    color: '#333',
+  },
+  input: {
+    width: '100%',
+    padding: '10px',
+    margin: '8px 0',
+    boxSizing: 'border-box',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    fontSize: '14px',
+  },
+  button: {
+    width: '100%',
+    padding: '10px 15px',
+    backgroundColor: '#4285F4',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    transition: 'background-color 0.3s ease',
+  },
+  buttonHover: {
+    backgroundColor: '#357ae8',
+  }
 };
 
 export default WaitingPage;
