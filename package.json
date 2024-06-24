@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "https": "node server.js"
+    "https": "node server.js",
+    "start:local": "cross-env NODE_ENV=development dotenv -e .env.local next dev",
+    "start:prod": "next build && cross-env NODE_ENV=production dotenv -e .env.production next start"
   },
   "dependencies": {
     "axios": "^1.7.2",
@@ -24,6 +26,8 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
