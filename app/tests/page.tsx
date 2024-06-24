@@ -11,10 +11,9 @@ const Home: React.FC = () => {
     const handleNewMessage = useRef((message: string) => {
         setMessages((prevMessages) => [...prevMessages, message]);
     });
-
+    const nickname = 'testUser';
+    const sessionId = 'testRoomName';
     useEffect(() => {
-        const nickname = 'testUser';
-        const sessionId = 'testRoomName';
 
         // 소켓 연결
         connectSocket(nickname);
@@ -28,6 +27,7 @@ const Home: React.FC = () => {
 
               });
         });
+
         const handleMessage = (message: string) => {
             console.log("Received message from server:", message);
             handleNewMessage.current(message);
@@ -43,8 +43,6 @@ const Home: React.FC = () => {
             socket.off("entered_room");
             socket.off("script");
             socket.off("enter_room");
-            
-            disconnectSocket();
         };
 
     }, [connectSocket, disconnectSocket]);
@@ -52,7 +50,7 @@ const Home: React.FC = () => {
     return (
         <div>
             <h1>Welcome to Voice Test</h1>
-            <VoiceComponent />
+            <VoiceComponent sessionId={sessionId}/>
             <div>
                 {messages.map((message, index) => (
                     <p key={index}>{message}</p>
