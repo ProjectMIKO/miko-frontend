@@ -40,13 +40,13 @@ const WaitingPage: React.FC = () => {
       try {
         const token = await getToken();
         console.log("Token received:", token);
-        console.log("myusername", myUserName);
-        sessionStorage.setItem("sessionId", mySessionId);
-        sessionStorage.setItem("userName", myUserName);
-        sessionStorage.setItem("token", token);
-        connectSocket(myUserName);
 
-        router.push("/main");
+        // sessionStorage.setItem("sessionId", mySessionId);
+        // sessionStorage.setItem("userName", myUserName);
+        // sessionStorage.setItem("token", token);
+        const url = `/main?sessionId=${encodeURIComponent(mySessionId)}&userName=${encodeURIComponent(myUserName)}&token=${encodeURIComponent(token)}`;
+
+        router.push(url);
       } catch (error) {
         console.error("Error joining session:", error);
       }

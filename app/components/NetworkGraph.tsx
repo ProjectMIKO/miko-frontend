@@ -7,12 +7,14 @@ import GroupedNodeList from "./GroupedNodeList";
 import NodeConversation from "./NodeConversation";
 import { useSocket } from "../components/SocketContext";
 import { Node } from "../../types/types";
+import SharingRoom from "./sharingRoom";
 
 interface Props {
   sessionId: string;
+  getToken: () => Promise<string>;
 }
 
-const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
+const NetworkGraph: React.FC<Props> = ({ sessionId, getToken }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const {
     nodes,
@@ -29,6 +31,9 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
   const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
 
   const { socket } = useSocket();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [roomLink, setRoomLink] = useState("");
 
   const handleAddNode = useCallback(() => {
     addNode(newNodeLabel, newNodeContent, newNodeColor);
@@ -58,6 +63,13 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
 
   const handleKeyword = () => {
     socket.emit("summarize", sessionId);
+  };
+
+  const handleSharingRoom = async () => {
+    const token = await getToken();
+    const link = `${window.location.origin}/main?sessionId=${encodeURIComponent(sessionId)}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(token)}`;
+    setRoomLink(link);
+    setIsModalOpen(true);
   };
 
   return (
@@ -124,11 +136,32 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
         >
           keyword
         </button>
+        <button
+          style={{
+            position: "absolute",
+            right: "25px",
+            bottom: "20px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onClick={handleSharingRoom}
+        >
+          Sharing a room
+        </button>
       </div>
       <NodeConversation
         nodes={nodes.get() as Node[]}
         selectedNodeId={selectedNodeId}
         onNodeClick={handleNodeClick}
+      />
+      <SharingRoom
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        roomLink={roomLink}
       />
     </div>
   );

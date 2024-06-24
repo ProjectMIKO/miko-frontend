@@ -25,12 +25,17 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [userName, setUserName] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [hasEnteredRoom, setHasEnteredRoom] = useState(false);
-  const { socket, isConnected } = useSocket();
+  const { socket, isConnected, connectSocket } = useSocket();
 
   useEffect(() => {
-    const storedSessionId = sessionStorage.getItem("sessionId");
-    const storedUserName = sessionStorage.getItem("userName");
-    const storedToken = sessionStorage.getItem("token");
+    const query = new URLSearchParams(window.location.search);
+    const storedSessionId = query.get("sessionId");
+    const storedUserName = query.get("userName");
+    const storedToken = query.get("token");
+
+    if (storedUserName) {
+      connectSocket(storedUserName);
+    }
 
     if (isConnected) {
       console.log("Socket is connected!");
