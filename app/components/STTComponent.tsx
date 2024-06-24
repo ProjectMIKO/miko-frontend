@@ -14,7 +14,7 @@ const STTComponent: React.FC<STTComponentProps> = ({
   onKeywordsExtracted,
   keywords: initialKeywords = [],
 }) => {
-  const URL = process.env.NEXT_PUBLIC_NLP_SERVER_URL || "http://127.0.0.1:5000";
+  const URL = process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://127.0.0.1:5000";
   const [isListening, setIsListening] = useState(false);
   const [localTranscript, setLocalTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
