@@ -54,24 +54,28 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   };
 
   return (
-    <div className={styles.nodeConversationContainer}>
-      <div className={styles.tabContainer}>
-        <button
-          className={activeTab === "nodes" ? styles.activeTab : styles.tab}
+    <div className={styles.nodeConversationWrapper}>
+      <div className={styles.chromeTabs}>
+        <div
+          className={
+            activeTab === "nodes" ? styles.chromeTabActive : styles.chromeTab
+          }
           onClick={() => setActiveTab("nodes")}
         >
           Node List
-        </button>
-        <button
+        </div>
+        <div
           className={
-            activeTab === "conversation" ? styles.activeTab : styles.tab
+            activeTab === "conversation"
+              ? styles.chromeTabActive
+              : styles.chromeTab
           }
           onClick={() => setActiveTab("conversation")}
         >
           Conversation
-        </button>
+        </div>
       </div>
-      <div className={styles.contentContainer}>{renderContent()}</div>
+      <div className={styles.nodeConversationContainer}>{renderContent()}</div>
     </div>
   );
 };
