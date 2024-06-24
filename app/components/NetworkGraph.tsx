@@ -47,7 +47,8 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
   useEffect(() => {
     const handleSummarize = (data: { keyword: string; subtitle: string }) => {
       setNewNodeLabel(data.keyword);
-      setNewNodeContent(data.subtitle);
+      setNewNodeContent(data.subtitle.replace(/\n/g, "<br>"));
+      console.log("subtitle", data.subtitle);
     };
 
     socket.on("summarize", handleSummarize);
@@ -67,7 +68,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
     socket.emit("summarize", sessionId);
   };
 
-  const getToken = useCallback(async () => {
+  const getToken = async () => {
     if (sessionId) {
       const response = await axios.post(
         `${APPLICATION_SERVER_URL}api/openvidu/sessions/${sessionId}/connections`,
@@ -79,7 +80,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
       return response.data.token; // 토큰 반환
     }
     return null;
-  }, [sessionId]);
+  };
 
   const handleSharingRoom = async () => {
     const token = await getToken();

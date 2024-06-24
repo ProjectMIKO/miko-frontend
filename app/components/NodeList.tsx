@@ -56,7 +56,8 @@ const NodeList: React.FC<NodeListProps> = ({
               <strong>Label:</strong> {node.label}
             </div>
             <div>
-              <strong>Content:</strong> {node.content}
+            <strong>Content:</strong>
+            <div dangerouslySetInnerHTML={{ __html: node.content }} />
             </div>
           </li>
         ))}
