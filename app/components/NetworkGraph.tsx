@@ -78,7 +78,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      return response.data.token; // 토큰 반환
+      return response.data.token;
     }
     return null;
   };
@@ -96,41 +96,107 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
 
   return (
     <div
-      style={{ display: "flex", flexGrow: 1, width: "100%", height: "650px" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        width: "100%",
+        height: "100%",
+        position: "relative",
+      }}
     >
-      <GroupedNodeList
-        nodes={nodes.get()}
-        edges={edges.get()}
-        selectedNodeId={selectedNodeId}
-        onNodeClick={handleNodeClick}
-      />
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          position: "relative",
           flexGrow: 1,
-          height: "100%" /* 전체 높이를 사용 */,
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
         }}
       >
-        <div
-          ref={containerRef}
-          style={{
-            height: "100%" /* 부모 컨테이너의 높이에 맞춤 */,
-            width: "100%",
-            border: "1px solid black",
-            margin: "20px",
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-            flexGrow: 1,
-          }}
-          onClick={() => {
-            if (selectedNodeId !== null) {
-              handleNodeClick(selectedNodeId);
-            }
-          }}
+        <GroupedNodeList
+          nodes={nodes.get()}
+          edges={edges.get()}
+          selectedNodeId={selectedNodeId}
+          onNodeClick={handleNodeClick}
         />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            position: "relative",
+            flexGrow: 1,
+            height: "95%",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            ref={containerRef}
+            style={{
+              height: "100%",
+              width: "100%",
+              border: "1px solid black",
+              margin: "10px",
+              boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+              flexGrow: 1,
+              overflow: "hidden",
+            }}
+            onClick={() => {
+              if (selectedNodeId !== null) {
+                handleNodeClick(selectedNodeId);
+              }
+            }}
+          />
+          <button
+            style={{
+              position: "absolute",
+              right: "170px",
+              bottom: "20px",
+              backgroundColor: "#007BFF",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+            onClick={handleKeyword}
+          >
+            keyword
+          </button>
+          <button
+            style={{
+              position: "absolute",
+              right: "25px",
+              bottom: "20px",
+              backgroundColor: "#007BFF",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+            onClick={handleSharingRoom}
+          >
+            Sharing a room
+          </button>
+        </div>
+        <NodeConversation
+          nodes={nodes.get() as Node[]}
+          selectedNodeId={selectedNodeId}
+          onNodeClick={handleNodeClick}
+        />
+      </div>
+      <div
+        style={{
+          width: "100",
+          height: "15%",
+          backgroundColor: "#96A0FE",
+          padding: "10px",
+          boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <ControlPanel
           newNodeLabel={newNodeLabel}
           newNodeContent={newNodeContent}
@@ -142,44 +208,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
           setAction={setAction}
           fitToScreen={fitToScreen}
         />
-        <button
-          style={{
-            position: "absolute",
-            right: "170px",
-            bottom: "20px",
-            backgroundColor: "#007BFF",
-            color: "white",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-          onClick={handleKeyword}
-        >
-          keyword
-        </button>
-        <button
-          style={{
-            position: "absolute",
-            right: "25px",
-            bottom: "20px",
-            backgroundColor: "#007BFF",
-            color: "white",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-          onClick={handleSharingRoom}
-        >
-          Sharing a room
-        </button>
       </div>
-      <NodeConversation
-        nodes={nodes.get() as Node[]}
-        selectedNodeId={selectedNodeId}
-        onNodeClick={handleNodeClick}
-      />
       <SharingRoom
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

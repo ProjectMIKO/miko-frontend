@@ -40,57 +40,42 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
     switch (activeTab) {
       case "nodes":
         return (
-          <div className={styles.tabContent}>
-            <NodeList
-              nodes={nodes}
-              selectedNodeId={selectedNodeId}
-              onNodeClick={onNodeClick}
-            />
-          </div>
+          <NodeList
+            nodes={nodes}
+            selectedNodeId={selectedNodeId}
+            onNodeClick={onNodeClick}
+          />
         );
       case "conversation":
-        return (
-          <div className={styles.tabContent}>
-            <Conversation messages={messages} />
-          </div>
-        );
+        return <Conversation messages={messages} />;
       default:
         return null;
     }
   };
 
   return (
-    <div
-      style={{
-        width: "600px",
-        margin: "5px",
-        border: "1px solid #CCC",
-        padding: "10px",
-        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-        borderRadius: "8px",
-        fontFamily: "Arial, sans-serif",
-        backgroundColor: "#F9F9F9",
-        height: "100%",
-        overflowY: "auto",
-      }}
-    >
-      <div className={styles.tabContainer}>
-        <button
-          className={activeTab === "nodes" ? styles.activeTab : styles.tab}
+    <div className={styles.nodeConversationWrapper}>
+      <div className={styles.chromeTabs}>
+        <div
+          className={
+            activeTab === "nodes" ? styles.chromeTabActive : styles.chromeTab
+          }
           onClick={() => setActiveTab("nodes")}
         >
           Node List
-        </button>
-        <button
+        </div>
+        <div
           className={
-            activeTab === "conversation" ? styles.activeTab : styles.tab
+            activeTab === "conversation"
+              ? styles.chromeTabActive
+              : styles.chromeTab
           }
           onClick={() => setActiveTab("conversation")}
         >
           Conversation
-        </button>
+        </div>
       </div>
-      {renderContent()}
+      <div className={styles.nodeConversationContainer}>{renderContent()}</div>
     </div>
   );
 };

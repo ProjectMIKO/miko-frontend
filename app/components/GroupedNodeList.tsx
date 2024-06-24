@@ -83,8 +83,9 @@ const GroupedNodeList: React.FC<GroupedNodeListProps> = ({
         borderRadius: "8px",
         fontFamily: "Arial, sans-serif",
         backgroundColor: "#F9F9F9",
-        height: "100%", // 최대 높이 설정
-        overflowY: "auto", // 수직 스크롤 추가
+        height: "95%",
+        maxHeight: "650px",
+        overflowY: "auto",
       }}
     >
       <h3 style={{ textAlign: "center", color: "#333" }}>Grouped Keys</h3>
