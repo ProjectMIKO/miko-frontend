@@ -1,4 +1,3 @@
-// app/components/NodeConversation.tsx
 import React, { useState, useEffect, useRef } from "react";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
