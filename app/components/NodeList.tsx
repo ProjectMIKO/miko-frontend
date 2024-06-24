@@ -1,4 +1,3 @@
-// app/components/NodeList.tsx
 import React from "react";
 import { Node } from "../../types/types";
 
@@ -14,7 +13,7 @@ const NodeList: React.FC<NodeListProps> = ({
   onNodeClick,
 }) => {
   return (
-    <ul style={{ listStyleType: "none", padding: 0 }}>
+    <ul style={{ listStyleType: "none", padding: 0, width: "100%" }}>
       {nodes.map((node) => (
         <li
           key={node.id}
@@ -31,6 +30,8 @@ const NodeList: React.FC<NodeListProps> = ({
             borderRadius: "4px",
             marginBottom: "5px",
             transition: "background-color 0.3s, color 0.3s",
+            width: "100%",
+            boxSizing: "border-box",
           }}
         >
           <strong>ID:</strong> {node.id} <br />

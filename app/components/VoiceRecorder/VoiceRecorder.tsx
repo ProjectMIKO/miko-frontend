@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
-import styles from './VoiceRecorder.module.css';
-import { useSocket } from '../SocketContext';
+import { useEffect, useState, useRef } from "react";
+import styles from "./VoiceRecorder.module.css";
+import { useSocket } from "../SocketContext";
 
 interface VoiceRecorderProps {
   sessionId?: string | null;
@@ -21,7 +21,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
   const [recordingMode, setRecordingMode] = useState<boolean>(false); // 녹음 모드 상태
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.1); // 초기 임계값
   const [silenceDuration, setSilenceDuration] = useState<number>(3000); // 초기 침묵 시간
-  const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000); // 최대 녹음 시간 (밀리초 단위)
+  const [maxRecordingDuration, setMaxRecordingDuration] =
+    useState<number>(20000); // 최대 녹음 시간 (밀리초 단위)
   const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null); // 녹음 타임아웃
 
   const { socket } = useSocket();
@@ -34,22 +35,25 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
           audio: {
             noiseSuppression: true,
             echoCancellation: true,
-            autoGainControl: true
-          }
+            autoGainControl: true,
+          },
         });
         mediaStreamRef.current = stream;
         console.log("Microphone access granted:", stream);
 
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
         audioContextRef.current = audioContext;
 
         try {
           console.log("Loading AudioWorklet module...");
-          await audioContext.audioWorklet.addModule(new URL('./worklet-processor.js', import.meta.url).toString());
+          await audioContext.audioWorklet.addModule(
+            new URL("./worklet-processor.js", import.meta.url).toString()
+          );
           console.log("AudioWorklet module loaded successfully.");
         } catch (err) {
-          console.error('Error loading AudioWorklet module:', err);
-          setError('Error loading AudioWorklet module');
+          console.error("Error loading AudioWorklet module:", err);
+          setError("Error loading AudioWorklet module");
           return;
         }
 
@@ -63,45 +67,55 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
         mediaRecorderRef.current.ondataavailable = (event) => {
           if (event.data.size > 0) {
             audioChunksRef.current.push(event.data);
-            console.log('Data available:', event.data);
+            console.log("Data available:", event.data);
           }
         };
 
         mediaRecorderRef.current.onstop = () => {
           if (audioChunksRef.current.length > 0) {
-            const blob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+            const blob = new Blob(audioChunksRef.current, {
+              type: "audio/wav",
+            });
             sendAudioToServer(blob);
             const url = URL.createObjectURL(blob);
-            setAudioURLs(prev => [...prev, url]);
+            setAudioURLs((prev) => [...prev, url]);
             audioChunksRef.current = [];
-            console.log('Recording saved:', url);
+            console.log("Recording saved:", url);
           }
         };
       } catch (err: any) {
-        console.error('Error accessing audio stream:', err);
+        console.error("Error accessing audio stream:", err);
         handleError(err);
       }
     }
 
     function handleError(err: any) {
       switch (err.name) {
-        case 'NotAllowedError':
-          setError('마이크 접근이 거부되었습니다. 설정에서 마이크 접근을 허용해주세요.');
+        case "NotAllowedError":
+          setError(
+            "마이크 접근이 거부되었습니다. 설정에서 마이크 접근을 허용해주세요."
+          );
           break;
-        case 'NotFoundError':
-          setError('마이크가 감지되지 않았습니다. 마이크가 연결되어 있는지 확인해주세요.');
+        case "NotFoundError":
+          setError(
+            "마이크가 감지되지 않았습니다. 마이크가 연결되어 있는지 확인해주세요."
+          );
           break;
-        case 'NotReadableError':
-          setError('마이크를 사용할 수 없습니다. 다른 프로그램에서 사용 중인지 확인해주세요.');
+        case "NotReadableError":
+          setError(
+            "마이크를 사용할 수 없습니다. 다른 프로그램에서 사용 중인지 확인해주세요."
+          );
           break;
-        case 'OverconstrainedError':
-          setError('요구된 오디오 제약 조건을 만족시키는 장치를 찾을 수 없습니다.');
+        case "OverconstrainedError":
+          setError(
+            "요구된 오디오 제약 조건을 만족시키는 장치를 찾을 수 없습니다."
+          );
           break;
-        case 'SecurityError':
-          setError('보안 오류로 인해 마이크 접근이 차단되었습니다.');
+        case "SecurityError":
+          setError("보안 오류로 인해 마이크 접근이 차단되었습니다.");
           break;
-        case 'AbortError':
-          setError('마이크 요청이 중단되었습니다. 다시 시도해주세요.');
+        case "AbortError":
+          setError("마이크 요청이 중단되었습니다. 다시 시도해주세요.");
           break;
         default:
           setError(`알 수 없는 오류가 발생했습니다: ${err.message}`);
@@ -148,14 +162,22 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
     }
   }, [recordingMode]);
 
-  const createWorkletNode = (audioContext: AudioContext, threshold: number, duration: number) => {
+  const createWorkletNode = (
+    audioContext: AudioContext,
+    threshold: number,
+    duration: number
+  ) => {
     if (workletNodeRef.current) {
       workletNodeRef.current.disconnect();
     }
 
-    const workletNode = new AudioWorkletNode(audioContext, 'silence-detector-processor', {
-      processorOptions: { threshold, duration }
-    });
+    const workletNode = new AudioWorkletNode(
+      audioContext,
+      "silence-detector-processor",
+      {
+        processorOptions: { threshold, duration },
+      }
+    );
 
     workletNode.port.onmessage = (event) => {
       if (recordingMode) {
@@ -171,7 +193,10 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
   };
 
   const startRecording = () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'recording') {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== "recording"
+    ) {
       mediaRecorderRef.current.start();
       setRecording(true);
       console.log("Recording started");
@@ -187,33 +212,36 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
   };
 
   const stopRecording = (save: boolean = false) => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state === "recording"
+    ) {
       mediaRecorderRef.current.stop();
       setRecording(false);
       console.log("Recording stopped");
 
       if (save && audioChunksRef.current.length > 0) {
-        const blob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        const blob = new Blob(audioChunksRef.current, { type: "audio/wav" });
         const url = URL.createObjectURL(blob);
-        setAudioURLs(prev => [...prev, url]);
+        setAudioURLs((prev) => [...prev, url]);
         audioChunksRef.current = [];
         console.log("Recording saved");
       } else {
-        audioChunksRef.current = [];  // Save false 시, 버퍼 비우기
+        audioChunksRef.current = []; // Save false 시, 버퍼 비우기
       }
     }
   };
 
   const sendAudioToServer = (blob: Blob) => {
     const reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function (event) {
       const arrayBuffer = event.target?.result as ArrayBuffer;
       if (arrayBuffer) {
         console.log(arrayBuffer);
-        socket.emit('stt', [sessionId, arrayBuffer]);
+        socket.emit("stt", [sessionId, arrayBuffer]);
         console.log("sending audioData");
       } else {
-        console.error('Failed to read the blob');
+        console.error("Failed to read the blob");
       }
     };
     reader.readAsArrayBuffer(blob);
@@ -228,7 +256,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
   };
 
   const toggleRecordingMode = () => {
-    setRecordingMode(prev => !prev);
+    setRecordingMode((prev) => !prev);
   };
 
   return (
@@ -257,18 +285,22 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
               max="5"
               step="0.5"
               value={silenceDuration / 1000}
-              onChange={e => handleDurationChange({
-                ...e,
-                target: {
-                  ...e.target,
-                  value: (parseFloat(e.target.value) * 1000).toString()
-                }
-              })}
+              onChange={(e) =>
+                handleDurationChange({
+                  ...e,
+                  target: {
+                    ...e.target,
+                    value: (parseFloat(e.target.value) * 1000).toString(),
+                  },
+                })
+              }
             />
             {silenceDuration / 1000}
           </label>
-          <button onClick={toggleRecordingMode}>{recordingMode ? '음성인식 켜져있음' : '음성인식 꺼져있음'}</button>
-          {recordingMode && recording && <p>음성 인식 중...</p>}
+          <button onClick={toggleRecordingMode}>
+            {recordingMode ? "음성인식 켜져있음" : "음성인식 꺼져있음"}
+          </button>
+          {/*recordingMode && recording && <p>음성 인식 중...</p>*/}
           {/* {audioURLs.map((url, index) => (
             <audio key={index} src={url} controls />
           ))} */}

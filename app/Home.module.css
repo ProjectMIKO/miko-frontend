@@ -38,7 +38,6 @@
   }
 }
 
-/* app/Home.module.css */
 .nodeConversationContainer {
   width: 600px;
   margin: 5px;
@@ -58,6 +57,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  width: 100%;
 }
 
 .tab {
@@ -70,6 +70,7 @@
   border-radius: 5px 5px 0 0;
   margin-right: 5px;
   transition: background-color 0.3s, color 0.3s;
+  width: 100%;
 }
 
 .tab:last-child {
@@ -86,6 +87,8 @@
   flex-grow: 1;
   overflow-y: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
 }
