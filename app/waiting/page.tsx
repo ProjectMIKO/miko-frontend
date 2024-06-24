@@ -117,7 +117,7 @@ const WaitingPage: React.FC = () => {
                 <input
                   type="text"
                   id="sessionId"
-                  value={mySessionId}
+                  placeholder={mySessionId}
                   onChange={handleChangeSessionId}
                   required
                   style={styles.input}
