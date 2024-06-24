@@ -62,16 +62,18 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   return (
     <div
       style={{
-        width: "600px",
+        width: "600px", // 넓이를 600px로 조정
         margin: "5px",
         border: "1px solid #CCC",
-        padding: "10px",
+        padding: "0px 10px 10px 10px",
         boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
         borderRadius: "8px",
         fontFamily: "Arial, sans-serif",
         backgroundColor: "#F9F9F9",
         height: "100%",
-        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
       }}
     >
       <div className={styles.tabContainer}>
@@ -90,7 +92,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
           Conversation
         </button>
       </div>
-      {renderContent()}
+      <div style={{ flexGrow: 1 }}>{renderContent()}</div>
     </div>
   );
 };
