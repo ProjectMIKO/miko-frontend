@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
-import NodeConversation from "./NodeCoversation";
+import NodeConversation from "./NodeConversation";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
 import { useSocket } from "../components/SocketContext";
