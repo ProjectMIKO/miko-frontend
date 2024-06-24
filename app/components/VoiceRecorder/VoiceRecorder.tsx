@@ -30,7 +30,13 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
     async function init() {
       try {
         console.log("Requesting microphone access...");
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            noiseSuppression: true,
+            echoCancellation: true,
+            autoGainControl: true
+          }
+        });
         mediaStreamRef.current = stream;
         console.log("Microphone access granted:", stream);
 

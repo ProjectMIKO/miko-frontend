@@ -1,4 +1,3 @@
-// app/components/NetworkGraph.tsx
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
@@ -63,7 +62,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
 
   return (
     <div
-      style={{ display: "flex", flexGrow: 1, width: "100%", height: "100%" }}
+      style={{ display: "flex", flexGrow: 1, width: "100%", height: "650px" }}
     >
       <GroupedNodeList
         nodes={nodes.get()}
@@ -82,22 +81,6 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
           height: "100%" /* 전체 높이를 사용 */,
         }}
       >
-        <button
-          style={{
-            position: "absolute",
-            right: "170px",
-            bottom: "20px",
-            backgroundColor: "#007BFF",
-            color: "white",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-          onClick={handleKeyword}
-        >
-          keyword
-        </button>
         <div
           ref={containerRef}
           style={{
@@ -125,6 +108,22 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
           setAction={setAction}
           fitToScreen={fitToScreen}
         />
+        <button
+          style={{
+            position: "absolute",
+            right: "170px",
+            bottom: "20px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onClick={handleKeyword}
+        >
+          keyword
+        </button>
       </div>
       <NodeConversation
         nodes={nodes.get() as Node[]}
