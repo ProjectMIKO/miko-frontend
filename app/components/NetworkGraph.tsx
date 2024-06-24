@@ -1,18 +1,20 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import ControlPanel from "./ControlPanel";
 import useNetwork from "../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
+import NodeConversation from "./NodeCoversation";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
-import { useSocket } from '../components/SocketContext';
+import { useSocket } from "../components/SocketContext";
+import { Node } from "../../types/types";
 
 interface Props {
   sessionId: string;
 }
-const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
 
+const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const {
     nodes,
@@ -30,15 +32,15 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
 
   const { socket } = useSocket();
 
-  const handleAddNode = () => {
-      addNode(newNodeLabel, newNodeContent, newNodeColor);
-      setNewNodeLabel("");
-      setNewNodeContent("");
-      setNewNodeColor("#5A5A5A");
-  };
+  const handleAddNode = useCallback(() => {
+    addNode(newNodeLabel, newNodeContent, newNodeColor);
+    setNewNodeLabel("");
+    setNewNodeContent("");
+    setNewNodeColor("#5A5A5A");
+  }, [newNodeLabel, newNodeContent, newNodeColor, addNode]);
 
   useEffect(() => {
-    const handleSummarize = (data: { keyword: string, subtitle: string }) => {
+    const handleSummarize = (data: { keyword: string; subtitle: string }) => {
       setNewNodeLabel(data.keyword);
       setNewNodeContent(data.subtitle);
     };
@@ -54,7 +56,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
     if (newNodeLabel && newNodeContent) {
       handleAddNode();
     }
-  }, [newNodeLabel, newNodeContent]);
+  }, [newNodeLabel, newNodeContent, handleAddNode]);
 
   const handleKeyword = () => {
     socket.emit("summarize", sessionId);
@@ -120,12 +122,11 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
           fitToScreen={fitToScreen}
         />
       </div>
-      <NodeList
-        nodes={nodes.get()}
+      <NodeConversation
+        nodes={nodes.get() as Node[]}
         selectedNodeId={selectedNodeId}
         onNodeClick={handleNodeClick}
       />
-      <Conversation />
     </div>
   );
 };
