@@ -7,7 +7,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { useSocket } from "../components/SocketContext";
 
 
-const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_OPENVIDU_URL;
+const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
 const WaitingPage: React.FC = () => {
   const { data: session } = useSession();
