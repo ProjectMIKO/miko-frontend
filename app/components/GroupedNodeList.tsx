@@ -83,7 +83,7 @@ const GroupedNodeList: React.FC<GroupedNodeListProps> = ({
         borderRadius: "8px",
         fontFamily: "Arial, sans-serif",
         backgroundColor: "#F9F9F9",
-        maxHeight: "650px", // 최대 높이 설정
+        height: "100%", // 최대 높이 설정
         overflowY: "auto", // 수직 스크롤 추가
       }}
     >

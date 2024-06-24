@@ -3,9 +3,9 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%; /* 전체 높이를 화면 높이에 맞춥니다 */
-  margin: 0; /* 중앙 정렬을 위해 margin을 자동으로 설정합니다 */
-  padding: 0; /* padding을 0으로 설정 */
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .appContainer {
@@ -13,15 +13,15 @@
   display: flex;
   justify-content: center;
   flex-grow: 1;
-  margin-bottom: 20px; /* 필요에 따라 조정 가능합니다 */
+  margin-bottom: 20px;
 }
 
 .layoutContainer {
   display: flex;
-  justify-content: space-between; /* 여백을 균등하게 분배합니다 */
+  justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  height: 100%; /* 전체 높이를 사용 */
+  height: 100%;
   flex-grow: 1;
 }
 
@@ -29,11 +29,48 @@
   display: flex;
   justify-content: center;
   flex-grow: 1;
-  height: 100%; /* 전체 높이를 사용 */
+  height: 100%;
 }
 
 @media (min-width: 1024px) {
   .container {
     max-width: 100%;
   }
+}
+
+.tabContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px 5px 0 0;
+  margin-right: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.tab:last-child {
+  margin-right: 0;
+}
+
+.activeTab {
+  background-color: #96a0fe;
+  color: white;
+  border: 1px solid #96a0fe;
+}
+
+.tabContent {
+  border: 1px solid #ccc;
+  border-top: none;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

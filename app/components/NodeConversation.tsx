@@ -40,14 +40,20 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
     switch (activeTab) {
       case "nodes":
         return (
-          <NodeList
-            nodes={nodes}
-            selectedNodeId={selectedNodeId}
-            onNodeClick={onNodeClick}
-          />
+          <div className={styles.tabContent}>
+            <NodeList
+              nodes={nodes}
+              selectedNodeId={selectedNodeId}
+              onNodeClick={onNodeClick}
+            />
+          </div>
         );
       case "conversation":
-        return <Conversation messages={messages} />;
+        return (
+          <div className={styles.tabContent}>
+            <Conversation messages={messages} />
+          </div>
+        );
       default:
         return null;
     }
@@ -56,7 +62,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   return (
     <div
       style={{
-        width: "300px",
+        width: "600px",
         margin: "5px",
         border: "1px solid #CCC",
         padding: "10px",
@@ -64,7 +70,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
         borderRadius: "8px",
         fontFamily: "Arial, sans-serif",
         backgroundColor: "#F9F9F9",
-        maxHeight: "650px",
+        height: "100%",
         overflowY: "auto",
       }}
     >
