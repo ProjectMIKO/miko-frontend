@@ -8,13 +8,15 @@ import NodeConversation from "./NodeConversation";
 import { useSocket } from "../components/SocketContext";
 import { Node } from "../../types/types";
 import SharingRoom from "./sharingRoom";
+import axios from 'axios';
 
 interface Props {
   sessionId: string;
-  getToken: () => Promise<string>;
 }
 
-const NetworkGraph: React.FC<Props> = ({ sessionId, getToken }) => {
+const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
+
+const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const {
     nodes,
@@ -64,6 +66,20 @@ const NetworkGraph: React.FC<Props> = ({ sessionId, getToken }) => {
   const handleKeyword = () => {
     socket.emit("summarize", sessionId);
   };
+
+  const getToken = useCallback(async () => {
+    if (sessionId) {
+      const response = await axios.post(
+        `${APPLICATION_SERVER_URL}api/openvidu/sessions/${sessionId}/connections`,
+        {},
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return response.data.token; // 토큰 반환
+    }
+    return null;
+  }, [sessionId]);
 
   const handleSharingRoom = async () => {
     const token = await getToken();
