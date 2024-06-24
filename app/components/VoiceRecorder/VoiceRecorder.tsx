@@ -5,7 +5,7 @@ import styles from './VoiceRecorder.module.css';
 import { useSocket } from '../SocketContext';
 
 interface VoiceRecorderProps {
-  sessionId: string | null;
+  sessionId?: string | null;
 }
 
 const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
