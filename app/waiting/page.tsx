@@ -14,10 +14,16 @@ const WaitingPage: React.FC = () => {
   const { data: session } = useSession();
   const { socket, connectSocket, isConnected } = useSocket();
   const [mySessionId, setMySessionId] = useState<string>("방 제목을 입력하세요.");
-  const [myUserName, setMyUserName] = useState<string>(
-    session?.user?.name || "OpenVidu_User_" + Math.floor(Math.random() * 100)
-  );
+  const [myUserName, setMyUserName] = useState<string>("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (session?.user?.name) {
+      setMyUserName(session.user.name);
+    } else {
+      setMyUserName("OpenVidu_User_" + Math.floor(Math.random() * 100));
+    }
+  }, [session]);
 
   const handleChangeSessionId = (e: ChangeEvent<HTMLInputElement>) => {
     setMySessionId(e.target.value);
@@ -34,6 +40,7 @@ const WaitingPage: React.FC = () => {
       try {
         const token = await getToken();
         console.log("Token received:", token);
+        console.log("myusername", myUserName);
         sessionStorage.setItem("sessionId", mySessionId);
         sessionStorage.setItem("userName", myUserName);
         sessionStorage.setItem("token", token);
@@ -106,7 +113,7 @@ const WaitingPage: React.FC = () => {
                 <input
                   type="text"
                   id="userName"
-                  value={session?.user?.name || myUserName}
+                  value={myUserName}
                   onChange={handleChangeUserName}
                   required
                   style={styles.input}
