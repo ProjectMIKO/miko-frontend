@@ -1,33 +1,33 @@
 #session {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #video-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 #video-container video {
-    width: 150px; /* 원하는 비디오 너비 */
-    height: 100px; /* 원하는 비디오 높이 */
-    margin: 0 5px; /* 비디오 사이의 간격 */
+  width: 150px; /* 원하는 비디오 너비 */
+  height: 100px; /* 원하는 비디오 높이 */
+  margin: 0 5px; /* 비디오 사이의 간격 */
 }
 
 #local-video {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 #remote-videos {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .leave-button {
-    margin-top: 20px;
+  margin-top: 20px;
 }

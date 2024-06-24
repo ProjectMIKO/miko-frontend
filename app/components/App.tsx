@@ -1,4 +1,3 @@
-// components/App.tsx
 import React, {
   useState,
   useEffect,
@@ -8,7 +7,7 @@ import React, {
 } from "react";
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
-import styles from "./App.module.css"; // CSS 모듈을 사용하는 경우
+import styles from "./App.module.css";
 import UserVideoComponent from "./UserVideoComponent";
 import { useSocket } from "../components/SocketContext";
 
@@ -23,7 +22,7 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
   const [subscriber, setSubscriber] = useState<any>(undefined);
   const [publisher, setPublisher] = useState<any>(undefined);
   const [subscribers, setSubscribers] = useState<any[]>([]);
-  
+
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>(
     {}
