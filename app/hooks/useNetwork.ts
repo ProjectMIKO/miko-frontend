@@ -79,8 +79,8 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
           minVelocity: 0.75,
           solver: "forceAtlas2Based",
           forceAtlas2Based: {
-            gravitationalConstant: -50,
-            centralGravity: 0.001,
+            gravitationalConstant: -45,
+            centralGravity: 0.007,
             springLength: 200,
             springConstant: 0.08,
             damping: 0.4,
