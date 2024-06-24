@@ -1,3 +1,4 @@
+// app/components/NodeConversation.tsx
 import React, { useState, useEffect, useRef } from "react";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
@@ -40,42 +41,21 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
     switch (activeTab) {
       case "nodes":
         return (
-          <div className={styles.tabContent}>
-            <NodeList
-              nodes={nodes}
-              selectedNodeId={selectedNodeId}
-              onNodeClick={onNodeClick}
-            />
-          </div>
+          <NodeList
+            nodes={nodes}
+            selectedNodeId={selectedNodeId}
+            onNodeClick={onNodeClick}
+          />
         );
       case "conversation":
-        return (
-          <div className={styles.tabContent}>
-            <Conversation messages={messages} />
-          </div>
-        );
+        return <Conversation messages={messages} />;
       default:
         return null;
     }
   };
 
   return (
-    <div
-      style={{
-        width: "600px", // 넓이를 600px로 조정
-        margin: "5px",
-        border: "1px solid #CCC",
-        padding: "0px 10px 10px 10px",
-        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-        borderRadius: "8px",
-        fontFamily: "Arial, sans-serif",
-        backgroundColor: "#F9F9F9",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-      }}
-    >
+    <div className={styles.nodeConversationContainer}>
       <div className={styles.tabContainer}>
         <button
           className={activeTab === "nodes" ? styles.activeTab : styles.tab}
@@ -92,7 +72,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
           Conversation
         </button>
       </div>
-      <div style={{ flexGrow: 1 }}>{renderContent()}</div>
+      <div className={styles.contentContainer}>{renderContent()}</div>
     </div>
   );
 };

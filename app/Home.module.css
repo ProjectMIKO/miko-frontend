@@ -38,6 +38,22 @@
   }
 }
 
+/* app/Home.module.css */
+.nodeConversationContainer {
+  width: 600px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  padding: 0 10px 10px 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .tabContainer {
   display: flex;
   justify-content: space-between;
@@ -61,16 +77,15 @@
 }
 
 .activeTab {
-  background-color: #96a0fe;
+  background-color: #007bff;
   color: white;
-  border: 1px solid #96a0fe;
+  border: 1px solid #007bff;
 }
 
-.tabContent {
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 0 0 5px 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  height: 100%;
+.contentContainer {
+  flex-grow: 1;
   overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
