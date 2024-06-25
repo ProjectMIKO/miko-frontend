@@ -300,7 +300,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
           <button onClick={toggleRecordingMode}>
             {recordingMode ? "음성인식 켜져있음" : "음성인식 꺼져있음"}
           </button>
-          {recordingMode && recording && <p>음성 인식 중...</p>}          
+          {recordingMode && recording && <span>음성 인식 중...</span>}          
           {/* {audioURLs.map((url, index) => (
             <audio key={index} src={url} controls />
           ))} */}
