@@ -9,13 +9,12 @@ h1 {
   text-align: center;
   margin-top: 20px;
 }
-/* global.css */
 html,
 body {
+  overflow: hidden; /* 전체 스크롤 방지 */
   height: 100%;
   margin: 0;
   padding: 0;
-  width: 100%;
 }
 
 #root,
