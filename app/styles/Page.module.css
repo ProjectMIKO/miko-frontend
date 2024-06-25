@@ -39,3 +39,32 @@
   padding: 1rem;
   text-align: center;
 }
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  text-align: center;
+}
+
+.tabButton:hover {
+  background-color: #f1f1f1;
+}
+
+.activeTab {
+  background-color: #96a0fe;
+  color: white;
+}
+
+.tabContent {
+  border: 1px solid #ddd;
+  padding: 1rem;
+}
