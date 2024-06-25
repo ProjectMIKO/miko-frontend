@@ -111,7 +111,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
           flexGrow: 1,
           width: "100%",
           height: "100%",
-          overflow: "hidden",
+          // overflow: "hidden",
         }}
       >
         <GroupedNodeList
@@ -129,7 +129,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
             position: "relative",
             flexGrow: 1,
             height: "95%",
-            overflow: "hidden",
+            // overflow: "hidden",
           }}
         >
           <div
@@ -141,7 +141,7 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
               margin: "10px",
               boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
               flexGrow: 1,
-              overflow: "hidden",
+              // overflow: "hidden",
             }}
             onClick={() => {
               if (selectedNodeId !== null) {
