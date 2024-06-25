@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  background-color: #96a0fe;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.left,
+.right {
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  margin: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .main {
+    flex-direction: row;
+  }
+}
+
+.footer {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  text-align: center;
+}
