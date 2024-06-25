@@ -1,5 +1,5 @@
 import React from "react";
-import { Node } from "../../types/types";
+import { Node } from "../types/types";
 
 interface NodeListProps {
   nodes: Node[];

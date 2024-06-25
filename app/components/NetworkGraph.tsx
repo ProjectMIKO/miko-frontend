@@ -6,7 +6,7 @@ import useNetwork from "../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
 import NodeConversation from "./NodeConversation";
 import { useSocket } from "../components/SocketContext";
-import { Node } from "../../types/types";
+import { Node } from "../types/types";
 import SharingRoom from "./sharingRoom";
 import axios from "axios";
 

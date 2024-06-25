@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
 import styles from "../Home.module.css";
-import { Node } from "../../types/types";
+import { Node } from "../types/types";
 import { useSocket } from "../components/SocketContext";
 
 interface NodeConversationProps {
