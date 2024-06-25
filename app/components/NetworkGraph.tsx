@@ -137,7 +137,8 @@ const NetworkGraph: React.FC<Props> = ({ sessionId }) => {
             style={{
               height: "100%",
               width: "100%",
-              border: "1px solid black",
+              border: "1px solid #CCC",
+              borderRadius: "8px",
               margin: "10px",
               boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
               flexGrow: 1,
