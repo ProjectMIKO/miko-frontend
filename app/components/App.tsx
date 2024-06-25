@@ -120,6 +120,7 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
             <div id={styles["video-container"]}>
               <div id={styles["local-video"]}>
                 <video ref={localVideoRef} autoPlay={true} />
+                <div className={styles.nicknameContainer}><span>나</span></div>
               </div>
               <div id={styles["remote-videos"]}>
                 {subscribers.map((sub) => (

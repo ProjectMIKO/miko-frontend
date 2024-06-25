@@ -56,3 +56,9 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.nicknameContainer {
+  text-align: center;
+  font-size: 1.2em; /* 글자 크기 조정 */
+  font-weight: bold; /* 글자 두껍게 */
+}
