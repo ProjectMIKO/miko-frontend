@@ -147,7 +147,7 @@ const styles: { [key: string]: CSSProperties } = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    backgroundColor: '#d3bff2', // 배경색 설정
+    backgroundColor: '#96A0FE', // 배경색 설정
     margin: '0', // margin reset
     fontFamily: 'Arial, sans-serif', // 폰트 설정
   },

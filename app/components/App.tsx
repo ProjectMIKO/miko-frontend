@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { OpenVidu } from "openvidu-browser";
+import { useRouter } from "next/navigation";
 import styles from "./App.module.css";
 import UserVideoComponent from "./UserVideoComponent";
 import { useSocket } from "../components/SocketContext";
@@ -16,7 +17,7 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
   const [subscriber, setSubscriber] = useState<any>(undefined);
   const [publisher, setPublisher] = useState<any>(undefined);
   const [subscribers, setSubscribers] = useState<any[]>([]);
-
+  const router = useRouter();
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>(
     {}
@@ -36,6 +37,7 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
       setSession(undefined);
       setSubscribers([]);
       socket.disconnect();
+      router.push('/result');
     }
   };
 

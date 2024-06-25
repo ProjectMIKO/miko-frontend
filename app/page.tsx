@@ -35,7 +35,7 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
-    backgroundColor: "#BDB2FF",
+    backgroundColor: "#96A0FE",
   },
   loginBox: {
     backgroundColor: "#FFF",
