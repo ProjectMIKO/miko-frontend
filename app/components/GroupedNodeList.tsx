@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Node, Edge } from "../../types/types";
+import { Node, Edge } from "../types/types";
 
 interface GroupedNodeListProps {
   nodes: Node[];
