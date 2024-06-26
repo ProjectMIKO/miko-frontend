@@ -50,7 +50,7 @@ const Home: React.FC = () => {
     return (
         <div>
             <h1>Welcome to Voice Test</h1>
-            <VoiceComponent sessionId={sessionId}/>
+            <VoiceComponent sessionId={sessionId} subscriber={null} publisher={null}/>
             <div>
                 {messages.map((message, index) => (
                     <p key={index}>{message}</p>
