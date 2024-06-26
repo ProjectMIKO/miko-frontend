@@ -258,6 +258,10 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
   };
 
   const toggleRecordingMode = () => {
+    if (!publisher) {
+      console.error("Publisher is not ready yet");
+      return;
+    }
     setRecordingMode((prev) => !prev);
     if (recordingMode === false) {
       publisher.publishAudio(false); 
