@@ -1,4 +1,3 @@
-// app/components/Conversation.tsx
 import React from "react";
 
 interface ConversationProps {

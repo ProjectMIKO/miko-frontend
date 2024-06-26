@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
-import styles from "../Home.module.css";
-import { Node } from "../types/types";
-import { useSocket } from "../components/SocketContext";
+import styles from "../../Home.module.css";
+import { Node } from "../../types/types";
+import { useSocket } from "../../components/SocketContext";
 
 interface NodeConversationProps {
   nodes: Node[];
@@ -16,7 +16,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   nodes,
   selectedNodeId,
   onNodeClick,
-  className
+  className,
 }) => {
   const [activeTab, setActiveTab] = useState<string>("nodes");
   const [messages, setMessages] = useState<string[]>([]);

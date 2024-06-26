@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import NetworkGraph from "../components/NetworkGraph";
+import NetworkGraph from "../components/Network/NetworkGraph";
 import App from "../components/App/App";
 import styles from "./Main.module.css";
 import { SocketProvider, useSocketContext } from "../components/SocketProvider";
