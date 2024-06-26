@@ -3,7 +3,7 @@ import NodeList from "./NodeList";
 import Conversation from "./Conversation";
 import styles from "../../main/Main.module.css";
 import { Node } from "../../types/types";
-import { useSocket } from "../../components/SocketContext";
+import { useSocket } from "../Socket/SocketContext";
 
 interface NodeConversationProps {
   nodes: Node[];

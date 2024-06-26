@@ -3,9 +3,9 @@
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import NetworkGraph from "../components/Network/NetworkGraph";
-import App from "../components/App/App";
+import App from "../components/Video/Video";
 import styles from "./Main.module.css";
-import { SocketProvider, useSocketContext } from "../components/SocketProvider";
+import { SocketProvider, useSocketContext } from "../components/Socket/SocketProvider";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 import axios from "axios";

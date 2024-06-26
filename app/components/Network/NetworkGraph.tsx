@@ -5,7 +5,7 @@ import ControlPanel from "./ControlPanel";
 import useNetwork from "../../hooks/useNetwork";
 import GroupedNodeList from "./GroupedNodeList";
 import NodeConversation from "./NodeConversation";
-import { useSocket } from "../../components/SocketContext";
+import { useSocket } from "../Socket/SocketContext";
 import { Node } from "../../types/types";
 import styles from "../../main/Main.module.css";
 

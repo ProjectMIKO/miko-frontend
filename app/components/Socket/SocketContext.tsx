@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
-import socket from '../lib/socket';
+import socket from '../../lib/socket';
 
 interface SocketContextProps {
   socket: Socket;
@@ -52,6 +52,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const disconnectSocket = () => {
+    socket.emit('disconnecting');
     socket.disconnect();
   };
   

@@ -5,7 +5,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import { useSocket } from "./SocketContext";
+import { useSocket } from "./Socket/SocketContext";
 
 interface SocketContextProps {
   sessionId: string | null;

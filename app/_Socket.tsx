@@ -1,5 +1,5 @@
 import { AppProps } from "next/app";
-import { SocketProvider } from "./SocketContext";
+import { SocketProvider } from "./components/Socket/SocketContext";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import { useRouter } from 'next/navigation';
-import styles from './App.module.css';
-import UserVideoComponent from '../UserVideoComponent';
-import { useSocket } from '../SocketContext';
+import styles from './Video.module.css';
+import UserVideoComponent from './UserVideoComponent';
+import { useSocket } from '../Socket/SocketContext';
 import VoiceRecorder from '../VoiceRecorder/VoiceRecorder';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
   token: string;
 }
 
-const App: React.FC<Props> = ({ sessionId, userName, token }) => {
+const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
   const [session, setSession] = useState<any>(undefined);
   const [subscriber, setSubscriber] = useState<any>(undefined);
   const [publisher, setPublisher] = useState<any>(undefined);
@@ -149,4 +149,4 @@ const App: React.FC<Props> = ({ sessionId, userName, token }) => {
   );
 };
 
-export default App;
+export default Video;

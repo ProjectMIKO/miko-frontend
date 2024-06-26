@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import VoiceComponent from '../components/VoiceRecorder/VoiceRecorder';
-import { SocketProvider, useSocket } from '../components/SocketContext';
+import { SocketProvider, useSocket } from '../components/Socket/SocketContext';
 import socket from '../lib/socket';
 
 const Home: React.FC = () => {

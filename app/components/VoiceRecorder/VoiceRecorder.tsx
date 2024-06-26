@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import styles from "./VoiceRecorder.module.css";
-import { useSocket } from "../SocketContext";
+import { useSocket } from "../Socket/SocketContext";
 
 interface VoiceRecorderProps {
   sessionId?: string | null;
