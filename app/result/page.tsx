@@ -123,14 +123,6 @@ const Page: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <Head>
-        <title>회의 결과 화면</title>
-        <meta name="description" content="회의 결과를 표시하는 화면" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <Header />
-
       <main className={styles.main}>
         <section className={styles.left}>노드 그래프 영역</section>
         <section className={styles.right}>

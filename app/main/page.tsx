@@ -1,23 +1,23 @@
 // app/main/page.tsx
-'use client';
+"use client";
 
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import NetworkGraph from '../components/NetworkGraph';
-import App from '../components/App';
-import styles from '../Home.module.css';
-import { SocketProvider, useSocketContext } from '../components/SocketProvider';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import axios from 'axios';
-import SharingRoom from '../components/sharingRoom';
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import NetworkGraph from "../components/NetworkGraph";
+import App from "../components/App";
+import styles from "../Home.module.css";
+import { SocketProvider, useSocketContext } from "../components/SocketProvider";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import axios from "axios";
+import SharingRoom from "../components/sharingRoom";
 
 const APPLICATION_SERVER_URL =
-  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || 'http://localhost:8080/';
+  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
 const HomeContent: React.FC = () => {
   const socketContext = useSocketContext();
 
-  const [roomLink, setRoomLink] = useState('');
+  const [roomLink, setRoomLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!socketContext) {
@@ -32,7 +32,7 @@ const HomeContent: React.FC = () => {
         `${APPLICATION_SERVER_URL}api/openvidu/sessions/${sessionId}/connections`,
         {},
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         }
       );
       return response.data.token;
@@ -48,21 +48,21 @@ const HomeContent: React.FC = () => {
           window.location.origin
         }/main?sessionId=${encodeURIComponent(
           sessionId
-        )}&userName=${encodeURIComponent('guest1')}&token=${encodeURIComponent(
+        )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
           token
         )}`;
         setRoomLink(link);
         setIsModalOpen(true);
       }
     } catch (error) {
-      console.error('Error generating room link:', error);
+      console.error("Error generating room link:", error);
     }
   };
 
   return (
     <div className={styles.container}>
       {/* header */}
-      <Header>miko</Header>
+      {/* <Header>MIKO</Header> */}
 
       {/* main */}
       {/* video chat */}
