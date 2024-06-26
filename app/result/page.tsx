@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
@@ -15,7 +16,16 @@ const Page: React.FC = () => {
       case "tab1":
         return <div></div>;
       case "tab2":
-        return <div>탭 2의 내용</div>;
+        return (
+          <div style={{ position: "relative", width: "100%", height: "100%" }}>
+            <Image
+              src="/key_word.png"
+              alt="Keyword Summary"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+        );
       case "tab3":
         return (
           <div>
@@ -103,7 +113,17 @@ const Page: React.FC = () => {
     <div className={styles.container}>
       <Header>MIKO</Header>
       <main className={styles.main}>
-        <section className={styles.left}>노드 그래프 영역</section>
+        <section className={styles.left}>
+          노드 그래프 영역
+          <div style={{ position: "relative", width: "100%", height: "500px" }}>
+            <Image
+              src="/temp_node.png"
+              alt="Node Graph"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+        </section>
         <section className={styles.right}>
           <div className={styles.tabs}>
             <button
