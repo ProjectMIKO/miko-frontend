@@ -7,7 +7,7 @@ import GroupedNodeList from "./GroupedNodeList";
 import NodeConversation from "./NodeConversation";
 import { useSocket } from "../../components/SocketContext";
 import { Node } from "../../types/types";
-import styles from "../../Home.module.css";
+import styles from "../../main/Main.module.css";
 
 interface Props {
   sessionId: string;

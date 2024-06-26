@@ -76,7 +76,7 @@ const GroupedNodeList: React.FC<GroupedNodeListProps> = ({
 
   return (
     <div className={className}>
-      <h3 style={{ textAlign: "center", color: "#333" }}>Grouped Keys</h3>
+      <h3 style={{ textAlign: "center", color: "#333" }}>그룹</h3>
       <ul style={{ listStyleType: "none", padding: 0 }}>
         {Object.keys(groupedNodes).map((groupId) => (
           <li key={groupId}>

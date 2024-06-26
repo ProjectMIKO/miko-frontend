@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
-import styles from "../../Home.module.css";
+import styles from "../../main/Main.module.css";
 import { Node } from "../../types/types";
 import { useSocket } from "../../components/SocketContext";
 
@@ -64,7 +64,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
           }
           onClick={() => setActiveTab("nodes")}
         >
-          Node List
+          키워드 요약
         </div>
         <div
           className={
@@ -74,7 +74,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
           }
           onClick={() => setActiveTab("conversation")}
         >
-          Conversation
+          음성 기록
         </div>
       </div>
       <div className={styles.nodeConversationContainer}>{renderContent()}</div>
