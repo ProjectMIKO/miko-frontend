@@ -2,27 +2,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+  height: 100vh; /* 화면 높이를 100% 사용 */
+  overflow: hidden; /* 스크롤 없애기 */
 }
 
 .appContainer {
-  width: 100%;
   display: flex;
-  justify-content: center;
-  flex-grow: 1;
-  margin-bottom: 10px;
+  flex-direction: column;
+  align-items: center;
+  flex:1,
 }
 
-.layoutContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.mainContainer {
   width: 100%;
-  height: 100%;
-  flex-grow: 1;
+  flex:10,
 }
 
 .networkGraphContainer {
@@ -39,20 +32,26 @@
   }
 }
 
-.nodeConversationWrapper {
-  width: 600px;
-  margin: 5px;
+.groupedNodeListWrapper {
+  position: relative;
   border: 1px solid #ccc;
-  padding: 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
-  height: 95%;
-  max-height: 650px;
+  flex: 1;
+}
+
+.nodeConversationWrapper {
+  position: relative;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  flex: 4;
 }
 
 .chromeTabs {

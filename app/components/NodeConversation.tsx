@@ -9,12 +9,14 @@ interface NodeConversationProps {
   nodes: Node[];
   selectedNodeId: number | null;
   onNodeClick: (nodeId: number) => void;
+  className?: string;
 }
 
 const NodeConversation: React.FC<NodeConversationProps> = ({
   nodes,
   selectedNodeId,
   onNodeClick,
+  className
 }) => {
   const [activeTab, setActiveTab] = useState<string>("nodes");
   const [messages, setMessages] = useState<string[]>([]);
@@ -54,7 +56,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   };
 
   return (
-    <div className={styles.nodeConversationWrapper}>
+    <div className={className}>
       <div className={styles.chromeTabs}>
         <div
           className={
