@@ -6,9 +6,11 @@ import { useSocket } from "../Socket/SocketContext";
 
 interface VoiceRecorderProps {
   sessionId?: string | null;
+  subscriber: any;
+  publisher: any;
 }
 
-const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
+const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, publisher }) => {
   const [error, setError] = useState<string | null>(null);
   const [recording, setRecording] = useState<boolean>(false);
   const [audioURLs, setAudioURLs] = useState<string[]>([]);
@@ -257,6 +259,11 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId }) => {
 
   const toggleRecordingMode = () => {
     setRecordingMode((prev) => !prev);
+    if (recordingMode === false) {
+      publisher.publishAudio(false); 
+    } else {
+      publisher.publishAudio(true); 
+    }
   };
 
   return (

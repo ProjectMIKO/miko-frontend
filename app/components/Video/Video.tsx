@@ -32,7 +32,7 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
   const handlerLeaveSessionEvent = () => {
     console.log('Leave session');
     if (session) {
-      session.disconnect();
+      session.disconnect(); 
       session.unsubscribe(subscriber);
       setSession(undefined);
       setSubscribers([]);
@@ -135,7 +135,7 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
             </div>
           </div>
           <div id={styles['recorder-container']}>
-            <VoiceRecorder sessionId={sessionId} />
+            <VoiceRecorder sessionId={sessionId} subscriber={subscriber} publisher={publisher}/>
             <button
               className={styles['leave-button']}
               onClick={handlerLeaveSessionEvent}
