@@ -6,8 +6,8 @@ import { useSocket } from "../Socket/SocketContext";
 
 interface VoiceRecorderProps {
   sessionId?: string | null;
-  subscriber: any;
-  publisher: any;
+  subscriber: any | null;
+  publisher: any | null;
 }
 
 const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, publisher }) => {
