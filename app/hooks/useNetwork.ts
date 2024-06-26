@@ -16,14 +16,14 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
   const [tempEdgeFrom, setTempEdgeFrom] = useState<number | null>(null);
 
   const handleNodeClick = useCallback(
-    (nodeId: number) => {
+    (nodeId: number | null) => {
       if (action === "connect") {
-        if (tempEdgeFrom === null) {
+        if (tempEdgeFrom === null && nodeId !== null) {
           setTempEdgeFrom(nodeId);
-        } else {
+        } else if (nodeId !== null) {
           const newEdge: Edge = {
             id: nextEdgeId,
-            from: tempEdgeFrom,
+            from: tempEdgeFrom!,
             to: nodeId,
           };
           edges.add(newEdge);
@@ -32,9 +32,9 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
           setAction(null);
         }
       } else if (action === "disconnect") {
-        if (tempEdgeFrom === null) {
+        if (tempEdgeFrom === null && nodeId !== null) {
           setTempEdgeFrom(nodeId);
-        } else {
+        } else if (nodeId !== null) {
           const edgeToRemove = edges.get({
             filter: (edge) =>
               (edge.from === tempEdgeFrom && edge.to === nodeId) ||
@@ -107,7 +107,7 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
           const nodeId = params.nodes[0];
           handleNodeClick(nodeId);
         } else {
-          setSelectedNodeId(null);
+          handleNodeClick(null);
         }
       });
     }
