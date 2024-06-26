@@ -1,14 +1,21 @@
-// app/main/page.tsx
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import NetworkGraph from "../components/Network/NetworkGraph";
+import ControlPanel from "../components/Network/ControlPanel";
+import GroupedNodeList from "../components/Network/GroupedNodeList";
+import NodeConversation from "../components/Network/NodeConversation";
 import App from "../components/Video/Video";
 import styles from "./Main.module.css";
-import { SocketProvider, useSocketContext } from "../components/Socket/SocketProvider";
+import {
+  SocketProvider,
+  useSocketContext,
+} from "../components/Socket/SocketProvider";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 import axios from "axios";
+import useNetwork from "../hooks/useNetwork";
+import { useSocket } from "../components/Socket/SocketContext";
 import SharingRoom from "../components/sharingRoom";
 
 const APPLICATION_SERVER_URL =
@@ -16,6 +23,52 @@ const APPLICATION_SERVER_URL =
 
 const HomeContent: React.FC = () => {
   const socketContext = useSocketContext();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    nodes,
+    edges,
+    selectedNodeId,
+    addNode,
+    setAction,
+    handleNodeClick,
+    fitToScreen,
+  } = useNetwork(containerRef);
+
+  const [newNodeLabel, setNewNodeLabel] = useState<string>("");
+  const [newNodeContent, setNewNodeContent] = useState<string>("");
+  const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
+  const { socket } = useSocket();
+
+  const handleAddNode = useCallback(() => {
+    addNode(newNodeLabel, newNodeContent, newNodeColor);
+    setNewNodeLabel("");
+    setNewNodeContent("");
+    setNewNodeColor("#5A5A5A");
+  }, [newNodeLabel, newNodeContent, newNodeColor, addNode]);
+
+  useEffect(() => {
+    const handleSummarize = (data: { keyword: string; subtitle: string }) => {
+      setNewNodeLabel(data.keyword);
+      setNewNodeContent(data.subtitle.replace(/\n/g, "<br>"));
+      console.log("subtitle", data.subtitle);
+    };
+
+    socket.on("summarize", handleSummarize);
+
+    return () => {
+      socket.off("summarize", handleSummarize);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (newNodeLabel && newNodeContent) {
+      handleAddNode();
+    }
+  }, [newNodeLabel, newNodeContent, handleAddNode]);
+
+  const handleKeyword = () => {
+    socket.emit("summarize", socketContext?.sessionId);
+  };
 
   const [roomLink, setRoomLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,11 +133,57 @@ const HomeContent: React.FC = () => {
 
       {/* keyword map */}
       <div className={styles.mainContainer}>
-        {sessionId && <NetworkGraph sessionId={sessionId} />}
+        <div style={{ display: "flex", width: "100%", height: "60vh" }}>
+          <GroupedNodeList
+            className={styles.groupedNodeListWrapper}
+            nodes={nodes.get()}
+            edges={edges.get()}
+            selectedNodeId={selectedNodeId}
+            onNodeClick={handleNodeClick}
+          />
+          <div style={{ flex: 8 }}>
+            <NetworkGraph
+              containerRef={containerRef}
+              selectedNodeId={selectedNodeId}
+              handleNodeClick={handleNodeClick}
+            />
+            <div style={{ display: "flex" }}>
+              <ControlPanel
+                newNodeLabel={newNodeLabel}
+                newNodeContent={newNodeContent}
+                newNodeColor={newNodeColor}
+                setNewNodeLabel={setNewNodeLabel}
+                setNewNodeContent={setNewNodeContent}
+                setNewNodeColor={setNewNodeColor}
+                addNode={handleAddNode}
+                setAction={setAction}
+                fitToScreen={fitToScreen}
+              />
+              <button
+                style={{
+                  backgroundColor: "#007BFF",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+                onClick={handleKeyword}
+              >
+                keyword
+              </button>
+            </div>
+          </div>
+          <NodeConversation
+            className={styles.nodeConversationWrapper}
+            nodes={nodes.get()}
+            selectedNodeId={selectedNodeId}
+            onNodeClick={handleNodeClick}
+          />
+        </div>
       </div>
 
       {/* footer */}
-
       <Footer>
         <button onClick={handleSharingRoom}>Sharing a room</button>
       </Footer>
