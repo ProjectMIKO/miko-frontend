@@ -1,6 +1,6 @@
 import React from 'react';
 import OpenViduVideoComponent from './OvVideo';
-import styles from './App/App.module.css';
+import styles from './Video.module.css';
 
 interface Props {
     streamManager: any;

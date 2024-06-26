@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { useSocket } from "../components/Socket/SocketContext";
 import Image from 'next/image';
 import logo from '../../public/MIKO_LOGO_Square.png';
-import styles from './waiting.module.css';
+import styles from './Waiting.module.css';
 
 const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
