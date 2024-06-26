@@ -3,11 +3,11 @@
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import NetworkGraph from "../components/NetworkGraph";
-import App from "../components/App";
-import styles from "../Home.module.css";
+import App from "../components/App/App";
+import styles from "./Main.module.css";
 import { SocketProvider, useSocketContext } from "../components/SocketProvider";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
 import axios from "axios";
 import SharingRoom from "../components/sharingRoom";
 

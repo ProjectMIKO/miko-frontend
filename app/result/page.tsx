@@ -3,8 +3,8 @@
 
 import React, { useState } from "react";
 import Head from "next/head";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
 import AudioPlayer from "../components/AudioPlayer";
 import styles from "./Page.module.css";
 

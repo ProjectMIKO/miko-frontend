@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import { useRouter } from 'next/navigation';
 import styles from './App.module.css';
-import UserVideoComponent from './UserVideoComponent';
-import { useSocket } from '../components/SocketContext';
-import VoiceRecorder from './VoiceRecorder/VoiceRecorder';
+import UserVideoComponent from '../UserVideoComponent';
+import { useSocket } from '../SocketContext';
+import VoiceRecorder from '../VoiceRecorder/VoiceRecorder';
 
 interface Props {
   sessionId: string;
