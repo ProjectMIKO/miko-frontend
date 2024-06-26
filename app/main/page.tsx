@@ -62,7 +62,7 @@ const HomeContent: React.FC = () => {
   return (
     <div className={styles.container}>
       {/* header */}
-      {/* <Header>MIKO</Header> */}
+      <Header>MIKO</Header>
 
       {/* main */}
       {/* video chat */}

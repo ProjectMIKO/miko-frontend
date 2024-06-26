@@ -20,7 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header>MIKO</Header>
         <SessionProvider>
           <SocketProvider>{children}</SocketProvider>
         </SessionProvider>

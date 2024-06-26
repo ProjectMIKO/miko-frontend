@@ -123,6 +123,7 @@ const Page: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      <Header>MIKO</Header>
       <main className={styles.main}>
         <section className={styles.left}>노드 그래프 영역</section>
         <section className={styles.right}>
