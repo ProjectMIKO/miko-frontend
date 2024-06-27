@@ -1,8 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import { handleMicrophoneError } from "../../utils/voiceErrorHandler";
+import { handleMicrophoneError } from "../_utils/voiceErrorHandler";
 
-const useMicrophone = (silenceThreshold: number, silenceDuration: number, recordingMode: boolean) => {
+const useMicrophone = (
+  silenceThreshold: number,
+  silenceDuration: number,
+  recordingMode: boolean
+) => {
   const [error, setError] = useState<string | null>(null);
+  const [recording, setRecording] = useState<boolean>(false);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const workletNodeRef = useRef<AudioWorkletNode | null>(null);
@@ -94,8 +99,10 @@ const useMicrophone = (silenceThreshold: number, silenceDuration: number, record
       if (recordingMode) {
         workletNodeRef.current.port.onmessage = (event) => {
           if (event.data.isSilent) {
+            setRecording(false);
             stopRecording(true);
           } else {
+            setRecording(true);
             startRecording();
           }
         };
@@ -105,20 +112,30 @@ const useMicrophone = (silenceThreshold: number, silenceDuration: number, record
     }
   }, [recordingMode]);
 
-  const createWorkletNode = (audioContext: AudioContext, threshold: number, duration: number) => {
+  const createWorkletNode = (
+    audioContext: AudioContext,
+    threshold: number,
+    duration: number
+  ) => {
     if (workletNodeRef.current) {
       workletNodeRef.current.disconnect();
     }
 
-    const workletNode = new AudioWorkletNode(audioContext, "silence-detector-processor", {
-      processorOptions: { threshold, duration },
-    });
+    const workletNode = new AudioWorkletNode(
+      audioContext,
+      "silence-detector-processor",
+      {
+        processorOptions: { threshold, duration },
+      }
+    );
 
     workletNode.port.onmessage = (event) => {
       if (recordingMode) {
         if (event.data.isSilent) {
+          setRecording(false);
           stopRecording(true);
         } else {
+          setRecording(true);
           startRecording();
         }
       }
@@ -141,7 +158,7 @@ const useMicrophone = (silenceThreshold: number, silenceDuration: number, record
     }
   };
 
-  return { error, startRecording, stopRecording, mediaRecorderRef, audioChunksRef };
+  return { error, mediaRecorderRef, audioChunksRef, startRecording, stopRecording, recording };
 };
 
 export default useMicrophone;

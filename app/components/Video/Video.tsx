@@ -101,13 +101,8 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
 
   useEffect(() => {
     subscribers.forEach((subscriber) => {
-      if (
-        remoteVideoRefs.current[subscriber.stream.streamId] &&
-        subscriber.stream.stream
-      ) {
-        subscriber.addVideoElement(
-          remoteVideoRefs.current[subscriber.stream.streamId]
-        );
+      if (remoteVideoRefs.current[subscriber.stream.streamId] && subscriber.stream.stream) {
+        subscriber.addVideoElement(remoteVideoRefs.current[subscriber.stream.streamId]);
       }
     });
   }, [subscribers]);

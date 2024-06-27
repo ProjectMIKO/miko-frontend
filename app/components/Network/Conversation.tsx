@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./Conversation.module.css";
 
 interface ConversationProps {
   messages: string[];
@@ -6,12 +7,9 @@ interface ConversationProps {
 
 const Conversation: React.FC<ConversationProps> = ({ messages }) => {
   return (
-    <ul style={{ listStyleType: "none", padding: 0, width: "100%" }}>
+    <ul className={styles.conversationList}>
       {messages.map((message, index) => (
-        <li
-          key={index}
-          style={{ padding: "8px", borderBottom: "1px solid #CCC" }}
-        >
+        <li key={index} className={styles.messageItem}>
           {message}
         </li>
       ))}
