@@ -1,6 +1,6 @@
 import React from "react";
 import { Node } from "../../types/types";
-import styles from "./NodeList.module.css";
+import styles from "./styles/NodeList.module.css";
 
 interface NodeListProps {
   nodes: Node[];

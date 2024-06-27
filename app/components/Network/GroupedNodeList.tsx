@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Node, Edge } from "../../types/types";
-import styles from "./GroupedNodeList.module.css";
+import styles from "./styles/GroupedNodeList.module.css";
 
 interface GroupedNodeListProps {
   nodes: Node[];

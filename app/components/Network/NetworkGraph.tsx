@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import useNetwork from "../../hooks/useNetwork";
-import styles from "./NetworkGraph.module.css";
+import styles from "./styles/NetworkGraph.module.css";
 
 interface Props {
   containerRef: React.RefObject<HTMLDivElement>;
