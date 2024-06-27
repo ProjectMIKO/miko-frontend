@@ -164,6 +164,16 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
     }
   }, [recordingMode]);
 
+  useEffect(() => {
+    if (!publisher) {
+        console.error("Publisher is not ready yet");
+        return;
+      }
+      if (publisher) {
+        publisher.publishAudio(recordingMode);
+      }
+  }, [recordingMode]);
+
   const createWorkletNode = (
     audioContext: AudioContext,
     threshold: number,
