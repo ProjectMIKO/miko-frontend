@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
-import socket from '../../lib/socket';
+import socket from '../../_lib/socket';
 
 interface SocketContextProps {
   socket: Socket;

@@ -4,7 +4,7 @@ import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useSocket } from "../components/Socket/SocketContext";
+import { useSocket } from "../_components/Socket/SocketContext";
 import Image from 'next/image';
 import logo from '../../public/MIKO_LOGO_Square.png';
 import styles from './Waiting.module.css';

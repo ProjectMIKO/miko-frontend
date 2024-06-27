@@ -1,5 +1,5 @@
 import React from "react";
-import { Node } from "../../types/types";
+import { Node } from "../../_types/types";
 import styles from "./styles/NodeList.module.css";
 
 interface NodeListProps {

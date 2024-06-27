@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import useNetwork from "../../hooks/useNetwork";
+import useNetwork from "../../_hooks/useNetwork";
 import styles from "./styles/NetworkGraph.module.css";
 
 interface Props {
