@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import useNetwork from "../../hooks/useNetwork";
+import styles from "./NetworkGraph.module.css";
 
 interface Props {
   containerRef: React.RefObject<HTMLDivElement>;
@@ -23,7 +24,7 @@ const NetworkGraph: React.FC<Props> = ({
           const nodeId = params.nodes[0];
           handleNodeClick(nodeId);
         } else {
-          handleNodeClick(null); // 수정된 부분
+          handleNodeClick(null);
         }
       });
     }
@@ -32,12 +33,7 @@ const NetworkGraph: React.FC<Props> = ({
   return (
     <div
       ref={containerRef}
-      style={{
-        border: "1px solid #CCC",
-        borderRadius: "8px",
-        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-        height: "100%",
-      }}
+      className={styles.container}
       onClick={() => {
         if (selectedNodeId !== null) {
           handleNodeClick(selectedNodeId);

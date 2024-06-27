@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Node, Edge } from "../../types/types";
+import styles from "./GroupedNodeList.module.css";
 
 interface GroupedNodeListProps {
   nodes: Node[];
@@ -75,60 +76,30 @@ const GroupedNodeList: React.FC<GroupedNodeListProps> = ({
   }, [nodes, edges]);
 
   return (
-    <div className={className}>
-      <h3 style={{ textAlign: "center", color: "#333" }}>그룹</h3>
-      <ul style={{ listStyleType: "none", padding: 0 }}>
+    <div className={`${styles.container} ${className}`}>
+      <h3 className={styles.heading}>그룹</h3>
+      <ul className={styles.groupList}>
         {Object.keys(groupedNodes).map((groupId) => (
           <li key={groupId}>
             <div
               onClick={() => toggleGroup(Number(groupId))}
-              style={{
-                cursor: "pointer",
-                padding: "10px",
-                backgroundColor: expandedGroups[Number(groupId)]
-                  ? "#96A0FE"
-                  : "#FFF",
-                color: expandedGroups[Number(groupId)] ? "#FFF" : "#96A0FE",
-                border: "1px solid #CCC",
-                borderRadius: "4px",
-                marginBottom: "5px",
-                transition: "background-color 0.3s, color 0.3s",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
+              className={`${styles.groupHeader} ${
+                expandedGroups[Number(groupId)] ? styles.groupHeaderExpanded : ""
+              }`}
               aria-expanded={expandedGroups[Number(groupId)]}
             >
               <span>Group {groupId}</span>
               <span>{expandedGroups[Number(groupId)] ? "-" : "+"}</span>
             </div>
             {expandedGroups[Number(groupId)] && (
-              <ul
-                style={{
-                  listStyleType: "none",
-                  padding: "0 10px",
-                  margin: 0,
-                  transition: "max-height 0.3s",
-                }}
-              >
+              <ul className={styles.nodeList}>
                 {groupedNodes[Number(groupId)].map((node) => (
                   <li
                     key={node.id}
                     onClick={() => onNodeClick(node.id)}
-                    style={{
-                      cursor: "pointer",
-                      padding: "8px",
-                      backgroundColor:
-                        node.id === selectedNodeId ? "#96A0FE" : "#FFF",
-                      color: node.id === selectedNodeId ? "#FFF" : "#333",
-                      border:
-                        node.id === selectedNodeId
-                          ? "1px solid #96A0FE"
-                          : "1px solid #CCC",
-                      borderRadius: "4px",
-                      marginBottom: "5px",
-                      transition: "background-color 0.3s, color 0.3s",
-                    }}
+                    className={`${styles.nodeItem} ${
+                      node.id === selectedNodeId ? styles.nodeItemSelected : ""
+                    }`}
                     data-selected={
                       node.id === selectedNodeId ? "true" : "false"
                     }

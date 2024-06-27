@@ -1,5 +1,6 @@
 import React from "react";
 import { Node } from "../../types/types";
+import styles from "./NodeList.module.css";
 
 interface NodeListProps {
   nodes: Node[];
@@ -13,26 +14,16 @@ const NodeList: React.FC<NodeListProps> = ({
   onNodeClick,
 }) => {
   return (
-    <ul style={{ listStyleType: "none", padding: 0, width: "100%" }}>
+    <ul className={styles.nodeList}>
       {nodes.map((node) => (
         <li
           key={node.id}
           onClick={() => onNodeClick(node.id)}
-          style={{
-            cursor: "pointer",
-            padding: "8px",
-            backgroundColor: node.id === selectedNodeId ? "#96A0FE" : "#FFF",
-            color: node.id === selectedNodeId ? "#FFF" : "#333",
-            border:
-              node.id === selectedNodeId
-                ? "1px solid #96A0FE"
-                : "1px solid #CCC",
-            borderRadius: "4px",
-            marginBottom: "5px",
-            transition: "background-color 0.3s, color 0.3s",
-            width: "100%",
-            boxSizing: "border-box",
-          }}
+          className={`${styles.nodeItem} ${
+            node.id === selectedNodeId
+              ? styles.nodeItemSelected
+              : styles.nodeItemNotSelected
+          }`}
         >
           <strong>ID:</strong> {node.id} <br />
           <strong>Label:</strong> {node.label} <br />
