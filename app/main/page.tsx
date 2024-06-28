@@ -18,9 +18,16 @@ import useNetwork from "../_hooks/useNetwork";
 import { useSocket } from "../_components/Socket/SocketContext";
 import SharingRoom from "../_components/sharingRoom";
 import { Edge } from "../_types/types";
+import { VideoProvider, useVideoContext } from "../_components/Video/VideoContext";
+import VoiceRecorder from "../_components/VoiceRecorder/VoiceRecorder";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
+
+const VoiceContent: React.FC<{ sessionId: string | null }> = ({ sessionId }) => {
+  const { publisher, subscriber } = useVideoContext();
+  return <VoiceRecorder sessionId={sessionId} publisher={publisher} subscriber={subscriber} />;
+};
 
 const HomeContent: React.FC = () => {
   const socketContext = useSocketContext();
@@ -113,13 +120,12 @@ const HomeContent: React.FC = () => {
     try {
       const token = await getToken();
       if (sessionId) {
-        const link = `${
-          window.location.origin
-        }/main?sessionId=${encodeURIComponent(
-          sessionId
-        )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
-          token
-        )}`;
+        const link = `${window.location.origin
+          }/main?sessionId=${encodeURIComponent(
+            sessionId
+          )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
+            token
+          )}`;
         setRoomLink(link);
         setIsModalOpen(true);
       }
@@ -136,13 +142,16 @@ const HomeContent: React.FC = () => {
       {/* main */}
       {/* video chat */}
       {isConnected ? (
-        <div className={styles.appContainer}>
-          {sessionId && userName && token ? (
-            <Video sessionId={sessionId} userName={userName} token={token} />
-          ) : (
-            <p>Loading...</p>
-          )}
-        </div>
+        <VideoProvider>
+          <div className={styles.appContainer}>
+            {sessionId && userName && token ? (
+              <Video sessionId={sessionId} userName={userName} token={token} />
+            ) : (
+              <p>Loading...</p>
+            )}
+          </div>
+          <VoiceContent sessionId={sessionId} />
+        </VideoProvider>
       ) : (
         <p>Socket is not connected. Please check your connection.</p>
       )}
