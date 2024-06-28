@@ -17,15 +17,26 @@ import axios from "axios";
 import useNetwork from "../_hooks/useNetwork";
 import { useSocket } from "../_components/Socket/SocketContext";
 import SharingRoom from "../_components/sharingRoom";
-import { VideoProvider, useVideoContext } from "../_components/Video/VideoContext";
+import {
+  VideoProvider,
+  useVideoContext,
+} from "../_components/Video/VideoContext";
 import VoiceRecorder from "../_components/VoiceRecorder/VoiceRecorder";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
-const VoiceContent: React.FC<{ sessionId: string | null }> = ({ sessionId }) => {
+const VoiceContent: React.FC<{ sessionId: string | null }> = ({
+  sessionId,
+}) => {
   const { publisher, subscriber } = useVideoContext();
-  return <VoiceRecorder sessionId={sessionId} publisher={publisher} subscriber={subscriber} />;
+  return (
+    <VoiceRecorder
+      sessionId={sessionId}
+      publisher={publisher}
+      subscriber={subscriber}
+    />
+  );
 };
 
 const HomeContent: React.FC = () => {
@@ -104,12 +115,13 @@ const HomeContent: React.FC = () => {
     try {
       const token = await getToken();
       if (sessionId) {
-        const link = `${window.location.origin
-          }/main?sessionId=${encodeURIComponent(
-            sessionId
-          )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
-            token
-          )}`;
+        const link = `${
+          window.location.origin
+        }/main?sessionId=${encodeURIComponent(
+          sessionId
+        )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
+          token
+        )}`;
         setRoomLink(link);
         setIsModalOpen(true);
       }
@@ -120,27 +132,25 @@ const HomeContent: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {/* header */}
       <Header>MIKO</Header>
-
-      {/* main */}
-      {/* video chat */}
-      {isConnected ? (
-        <VideoProvider>
-          <div className={styles.appContainer}>
-            {sessionId && userName && token ? (
-              <App sessionId={sessionId} userName={userName} token={token} />
-            ) : (
-              <p>Loading...</p>
-            )}
-          </div>
-          <VoiceContent sessionId={sessionId} />
-        </VideoProvider>
-      ) : (
-        <p>Socket is not connected. Please check your connection.</p>
-      )}
-
-      {/* keyword map */}
+      <div className={styles.appContainer}>
+        {isConnected ? (
+          <VideoProvider>
+            <div className={styles.appContainer}>
+              {sessionId && userName && token ? (
+                <App sessionId={sessionId} userName={userName} token={token} />
+              ) : (
+                <p>Loading...</p>
+              )}
+            </div>
+            <div className={styles.voiceRecorderContainer}>
+              <VoiceContent sessionId={sessionId} />
+            </div>
+          </VideoProvider>
+        ) : (
+          <p>Socket is not connected. Please check your connection.</p>
+        )}
+      </div>
       <div className={styles.mainContainer}>
         <div style={{ display: "flex", width: "100%", height: "60vh" }}>
           <GroupedNodeList
@@ -181,13 +191,9 @@ const HomeContent: React.FC = () => {
           />
         </div>
       </div>
-
-      {/* footer */}
       <Footer>
         <button onClick={handleSharingRoom}>Sharing a room</button>
       </Footer>
-
-      {/* modal */}
       <SharingRoom
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
