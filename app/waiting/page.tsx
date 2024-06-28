@@ -51,18 +51,6 @@ const WaitingPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (isConnected) {
-      socket.on('welcome', (nickname, memberCount) => {
-        console.log(`Welcome ${nickname}, there are ${memberCount} members in the room`);
-      });
-
-      return () => {
-        socket.off('welcome');
-      };
-    }
-  }, [isConnected, socket]);
-
   const getToken = async () => {
     const sessionId = await createSession(mySessionId);
     const token = await createToken(sessionId);

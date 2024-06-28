@@ -159,17 +159,7 @@ const HomeContent: React.FC = () => {
                 setAction={setAction}
                 fitToScreen={fitToScreen}
               />
-              <button
-                style={{
-                  backgroundColor: "#007BFF",
-                  color: "white",
-                  border: "none",
-                  padding: "10px 20px",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-                onClick={handleKeyword}
-              >
+              <button className={styles.keywordButton} onClick={handleKeyword}>
                 keyword
               </button>
             </div>
