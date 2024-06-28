@@ -1,43 +1,56 @@
-
 #video-recorder-container {
-  margin-top: 10px;
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#video-container {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   width: 100%;
 }
 
-#video-container {
-  margin: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 20px;
+.video-box {
+  position: relative;
+  margin: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  width: 200px; /* 비디오 박스 크기 조정 */
+  height: 150px; /* 비디오 박스 크기 조정 */
 }
 
-#video-container video {
-  width: 200px;
-  height: 123.6px;
-  margin: 0 5px;
+.video-box video {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-#local-video {
-  margin-bottom: 10px;
-}
-
-#remote-videos {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
+.nicknameContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
 }
 
 #recorder-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 20px; /* 비디오와 음성 녹음기 사이의 간격 */
+  margin-top: 20px;
 }
 
 .controls {
@@ -50,10 +63,17 @@
 .mic-button {
   margin-top: 10px;
   margin-bottom: 10px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
 }
 
-.nicknameContainer {
-  text-align: center;
-  font-size: 1.2em; /* 글자 크기 조정 */
-  font-weight: bold; /* 글자 두껍게 */
+.leave-button:hover,
+.mic-button:hover {
+  background-color: #0056b3;
 }
