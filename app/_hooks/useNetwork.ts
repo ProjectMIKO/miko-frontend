@@ -32,9 +32,15 @@ const useNetwork = (
             to: nodeId,
           };
           edges.add(newEdge);
-          
+          console.log("edge요청 보냄",nodeId, tempEdgeFrom);
           if (sessionId) {
-            socket.emit("edge", [sessionId, tempEdgeFrom, nodeId, '$push' ]);
+            console.log("edge요청 보냄",nodeId, tempEdgeFrom);
+            socket.emit("edge", [
+              `${sessionId}`,
+              `${tempEdgeFrom}`,
+              `${nodeId}`,
+              '$push'
+            ]);
           }
 
           setTempEdgeFrom(null);
@@ -140,10 +146,19 @@ const useNetwork = (
       setPrevSelectedNodeId(selectedNodeId);
     }
   }, [network, nodes, selectedNodeId, prevSelectedNodeId]);
+  
+  useEffect(() => {
+    if (network) {
+      network.setData({
+        nodes: nodes,
+        edges: edges,
+      });
+    }
+  }, [network, nodes, edges]);
 
-  const addNode = (label: string, content: string, color: string) => {
+  const addNode = (nid: any, label: string, content: string, color: string) => {
     const newNode: Node = {
-      id: nextNodeId,
+      id: nid || nextNodeId,
       label,
       content,
       color,
@@ -172,8 +187,6 @@ const useNetwork = (
     setAction,
     handleNodeClick,
     fitToScreen,
-    nextEdgeId,
-    setNextEdgeId,
   };
 };
 

@@ -20,6 +20,7 @@ import SharingRoom from "../_components/sharingRoom";
 import { Edge } from "../_types/types";
 import { VideoProvider, useVideoContext } from "../_components/Video/VideoContext";
 import VoiceRecorder from "../_components/VoiceRecorder/VoiceRecorder";
+import { DataSet } from "vis-network/standalone";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -41,6 +42,7 @@ const HomeContent: React.FC = () => {
   const { sessionId, userName, token, isConnected } = socketContext;
 
   const {
+    network,
     nodes,
     edges,
     selectedNodeId,
@@ -48,8 +50,6 @@ const HomeContent: React.FC = () => {
     setAction,
     handleNodeClick,
     fitToScreen,
-    nextEdgeId,
-    setNextEdgeId,
   } = useNetwork(containerRef, socket, sessionId);
 
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
@@ -57,46 +57,67 @@ const HomeContent: React.FC = () => {
   const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
   const [roomLink, setRoomLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nextId, setNextId] = useState("");
 
-  const handleAddNode = useCallback(() => {
-    addNode(newNodeLabel, newNodeContent, newNodeColor);
+  const handleAddNode = useCallback((id: any) => {
+    addNode(id, newNodeLabel, newNodeContent, newNodeColor);
+    setNextId("");
     setNewNodeLabel("");
     setNewNodeContent("");
     setNewNodeColor("#5A5A5A");
   }, [newNodeLabel, newNodeContent, newNodeColor, addNode]);
 
   useEffect(() => {
-    const handleSummarize = (data: { keyword: string; subtitle: string }) => {
+    const handleSummarize = (data: { contentId: string, keyword: string; subject: string, conversationIds: ([])}) => {
+      setNextId(data.contentId);
       setNewNodeLabel(data.keyword);
-      setNewNodeContent(data.subtitle.replace(/\n/g, "<br>"));
-      console.log("subtitle", data.subtitle);
+      setNewNodeContent(data.subject);
+      console.log("subtitle", data.subject);
     };
 
-    socket.on("summarize", handleSummarize);
+    socket.on("vertex", handleSummarize);
 
     return () => {
-      socket.off("summarize", handleSummarize);
+      socket.off("vertex", handleSummarize);
     };
   }, [socket]);
 
   useEffect(() => {
     if (newNodeLabel && newNodeContent) {
-      handleAddNode();
+      handleAddNode(nextId);
     }
-  }, [newNodeLabel, newNodeContent, handleAddNode]);
+  }, [newNodeLabel, newNodeContent, nextId, handleAddNode]);
 
   useEffect(() => {
-    const handleConnect = (data: {id: string, vertex1: number, vertex2: number, action: string}) => {
-      setNextEdgeId(nextEdgeId + 1);
+    const handleConnect = (data: { contentId: string, vertex1: number, vertex2: number, action: string }) => {
+      console.log('Edge Data =======', data);
       const newEdge: Edge = {
-        id: nextEdgeId,
+        id: data.contentId,
         from: data.vertex1,
         to: data.vertex2,
       };
-      edges.add(newEdge);
+  
+      if (nodes.get(data.vertex1) && nodes.get(data.vertex2)) { // 노드가 존재하는지 확인
+        if (!edges.get(newEdge.id)) {
+          edges.add(newEdge);
+          if (network) {
+            network.setData({ nodes, edges }); // 상태 업데이트
+          }
+        } else {
+          console.log(`Edge with id ${newEdge.id} already exists`);
+        }
+      } else {
+        console.log(`One or both nodes do not exist: ${data.vertex1}, ${data.vertex2}`);
+      }
     }
     socket.on("edge", handleConnect);
-  }, [socket]);
+  
+    // Cleanup function to remove the event listener
+    return () => {
+      socket.off("edge", handleConnect);
+    };
+  }, [socket, edges, nodes, network]);
+  
 
   const handleKeyword = () => {
     socket.emit("summarize", socketContext?.sessionId);
