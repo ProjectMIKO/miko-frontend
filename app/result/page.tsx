@@ -6,7 +6,7 @@ import Image from "next/image";
 import Header from "../_components/common/Header";
 import Footer from "../_components/common/Footer";
 import AudioPlayer from "../_components/AudioPlayer";
-import styles from "./Page.module.css";
+import styles from "./Result.module.css";
 
 const Page: React.FC = () => {
   const [activeTab, setActiveTab] = useState("tab1");
