@@ -26,21 +26,9 @@ import VoiceRecorder from "../_components/VoiceRecorder/VoiceRecorder";
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
-const VoiceContent: React.FC<{ sessionId: string | null }> = ({
-  sessionId,
-}) => {
-  const { publisher, subscriber } = useVideoContext();
-  return (
-    <VoiceRecorder
-      sessionId={sessionId}
-      publisher={publisher}
-      subscriber={subscriber}
-    />
-  );
-};
-
 const HomeContent: React.FC = () => {
   const socketContext = useSocketContext();
+  const { publisher, subscriber } = useVideoContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const {
     nodes,
@@ -67,7 +55,6 @@ const HomeContent: React.FC = () => {
   useEffect(() => {
     const handleSummarize = (data: { keyword: string; subtitle: string }) => {
       setNewNodeLabel(data.keyword);
-      setNewNodeContent(data.subtitle.replace(/\n/g, "<br>"));
       console.log("subtitle", data.subtitle);
     };
 
@@ -135,7 +122,7 @@ const HomeContent: React.FC = () => {
       <Header>MIKO</Header>
       <div className={styles.appContainer}>
         {isConnected ? (
-          <VideoProvider>
+          <>
             <div className={styles.appContainer}>
               {sessionId && userName && token ? (
                 <App sessionId={sessionId} userName={userName} token={token} />
@@ -143,10 +130,7 @@ const HomeContent: React.FC = () => {
                 <p>Loading...</p>
               )}
             </div>
-            <div className={styles.voiceRecorderContainer}>
-              <VoiceContent sessionId={sessionId} />
-            </div>
-          </VideoProvider>
+          </>
         ) : (
           <p>Socket is not connected. Please check your connection.</p>
         )}
@@ -193,6 +177,13 @@ const HomeContent: React.FC = () => {
       </div>
       <Footer>
         <button onClick={handleSharingRoom}>Sharing a room</button>
+        {sessionId && (
+          <VoiceRecorder
+            sessionId={sessionId}
+            publisher={publisher}
+            subscriber={subscriber}
+          />
+        )}
       </Footer>
       <SharingRoom
         isOpen={isModalOpen}
@@ -206,7 +197,9 @@ const HomeContent: React.FC = () => {
 export default function Home() {
   return (
     <SocketProvider>
-      <HomeContent />
+      <VideoProvider>
+        <HomeContent />
+      </VideoProvider>
     </SocketProvider>
   );
 }
