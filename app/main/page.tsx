@@ -55,6 +55,7 @@ const HomeContent: React.FC = () => {
   useEffect(() => {
     const handleSummarize = (data: { keyword: string; subtitle: string }) => {
       setNewNodeLabel(data.keyword);
+      setNewNodeContent(data.subtitle.replace(/\n/g, "<br>"));
       console.log("subtitle", data.subtitle);
     };
 
@@ -150,22 +151,6 @@ const HomeContent: React.FC = () => {
               selectedNodeId={selectedNodeId}
               handleNodeClick={handleNodeClick}
             />
-            <div style={{ display: "flex" }}>
-              <ControlPanel
-                newNodeLabel={newNodeLabel}
-                newNodeContent={newNodeContent}
-                newNodeColor={newNodeColor}
-                setNewNodeLabel={setNewNodeLabel}
-                setNewNodeContent={setNewNodeContent}
-                setNewNodeColor={setNewNodeColor}
-                addNode={handleAddNode}
-                setAction={setAction}
-                fitToScreen={fitToScreen}
-              />
-              <button className={styles.keywordButton} onClick={handleKeyword}>
-                keyword
-              </button>
-            </div>
           </div>
           <NodeConversation
             className={styles.nodeConversationWrapper}
@@ -176,14 +161,30 @@ const HomeContent: React.FC = () => {
         </div>
       </div>
       <Footer>
-        <button onClick={handleSharingRoom}>Sharing a room</button>
-        {sessionId && (
-          <VoiceRecorder
-            sessionId={sessionId}
-            publisher={publisher}
-            subscriber={subscriber}
+        <div className={styles.footerComponents}>
+          <button onClick={handleSharingRoom}>Sharing a room</button>
+          <ControlPanel
+            newNodeLabel={newNodeLabel}
+            newNodeContent={newNodeContent}
+            newNodeColor={newNodeColor}
+            setNewNodeLabel={setNewNodeLabel}
+            setNewNodeContent={setNewNodeContent}
+            setNewNodeColor={setNewNodeColor}
+            addNode={handleAddNode}
+            setAction={setAction}
+            fitToScreen={fitToScreen}
           />
-        )}
+          {sessionId && (
+            <VoiceRecorder
+              sessionId={sessionId}
+              publisher={publisher}
+              subscriber={subscriber}
+            />
+          )}
+          <button className={styles.keywordButton} onClick={handleKeyword}>
+            keyword
+          </button>
+        </div>
       </Footer>
       <SharingRoom
         isOpen={isModalOpen}
