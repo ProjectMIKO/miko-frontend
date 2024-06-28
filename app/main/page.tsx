@@ -20,7 +20,6 @@ import SharingRoom from "../_components/sharingRoom";
 import { Edge } from "../_types/types";
 import { VideoProvider, useVideoContext } from "../_components/Video/VideoContext";
 import VoiceRecorder from "../_components/VoiceRecorder/VoiceRecorder";
-import { DataSet } from "vis-network/standalone";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -31,14 +30,10 @@ const HomeContent: React.FC = () => {
   const { publisher, subscriber } = useVideoContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  if (!socketContext) {
-    return <p>Error: Socket context is not available.</p>;
-  }
-
-  const { sessionId, userName, token, isConnected } = socketContext;
+  // 훅들을 조건부 호출에서 벗어나게 수정
+  const { sessionId, userName, token, isConnected } = socketContext || {};
 
   const {
-    network,
     nodes,
     edges,
     selectedNodeId,
@@ -86,24 +81,17 @@ const HomeContent: React.FC = () => {
 
   useEffect(() => {
     const handleConnect = (data: { contentId: string, vertex1: number, vertex2: number, action: string }) => {
-      console.log('Edge Data =======', data);
+      console.log(data);
       const newEdge: Edge = {
         id: data.contentId,
         from: data.vertex1,
         to: data.vertex2,
       };
   
-      if (nodes.get(data.vertex1) && nodes.get(data.vertex2)) { // 노드가 존재하는지 확인
-        if (!edges.get(newEdge.id)) {
-          edges.add(newEdge);
-          if (network) {
-            network.setData({ nodes, edges }); // 상태 업데이트
-          }
-        } else {
-          console.log(`Edge with id ${newEdge.id} already exists`);
-        }
+      if (!edges.get(newEdge.id)) {
+        edges.add(newEdge);
       } else {
-        console.log(`One or both nodes do not exist: ${data.vertex1}, ${data.vertex2}`);
+        console.log(`Edge with id ${newEdge.id} already exists`);
       }
     }
     socket.on("edge", handleConnect);
@@ -112,7 +100,7 @@ const HomeContent: React.FC = () => {
     return () => {
       socket.off("edge", handleConnect);
     };
-  }, [socket, edges, nodes, network]);
+  }, [socket, edges]);
   
 
   const handleKeyword = () => {
@@ -151,6 +139,10 @@ const HomeContent: React.FC = () => {
       console.error("Error generating room link:", error);
     }
   };
+
+  if (!socketContext) {
+    return <p>Error: Socket context is not available.</p>;
+  }
 
   return (
     <div className={styles.container}>

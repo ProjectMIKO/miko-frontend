@@ -6,7 +6,7 @@ import { Socket } from "socket.io-client";
 const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
   socket: Socket, // 소켓 객체를 매개변수로 받습니다.
-  sessionId: string | null,
+  sessionId: string | null | undefined,
 ) => {
   const [network, setNetwork] = useState<Network | null>(null);
   const [nodes, setNodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
@@ -146,15 +146,6 @@ const useNetwork = (
       setPrevSelectedNodeId(selectedNodeId);
     }
   }, [network, nodes, selectedNodeId, prevSelectedNodeId]);
-  
-  useEffect(() => {
-    if (network) {
-      network.setData({
-        nodes: nodes,
-        edges: edges,
-      });
-    }
-  }, [network, nodes, edges]);
 
   const addNode = (nid: any, label: string, content: string, color: string) => {
     const newNode: Node = {
