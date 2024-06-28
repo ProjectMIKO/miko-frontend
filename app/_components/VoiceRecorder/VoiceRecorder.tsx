@@ -23,8 +23,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
   const mediaStreamRef = useRef<MediaStream | null>(null);
 
   const [recordingMode, setRecordingMode] = useState<boolean>(false); // 녹음 모드 상태
-  const [silenceThreshold, setSilenceThreshold] = useState<number>(0.1); // 초기 임계값
-  const [silenceDuration, setSilenceDuration] = useState<number>(3000); // 초기 침묵 시간
+  const [silenceThreshold, setSilenceThreshold] = useState<number>(0.07); // 초기 임계값
+  const [silenceDuration, setSilenceDuration] = useState<number>(1000); // 초기 침묵 시간
   const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000); // 최대 녹음 시간 (밀리초 단위)
   const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null); // 녹음 타임아웃
 

@@ -25,14 +25,10 @@ import { DataSet } from "vis-network/standalone";
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
-const VoiceContent: React.FC<{ sessionId: string | null }> = ({ sessionId }) => {
-  const { publisher, subscriber } = useVideoContext();
-  return <VoiceRecorder sessionId={sessionId} publisher={publisher} subscriber={subscriber} />;
-};
-
 const HomeContent: React.FC = () => {
   const socketContext = useSocketContext();
   const { socket } = useSocket();
+  const { publisher, subscriber } = useVideoContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
   if (!socketContext) {
@@ -141,12 +137,13 @@ const HomeContent: React.FC = () => {
     try {
       const token = await getToken();
       if (sessionId) {
-        const link = `${window.location.origin
-          }/main?sessionId=${encodeURIComponent(
-            sessionId
-          )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
-            token
-          )}`;
+        const link = `${
+          window.location.origin
+        }/main?sessionId=${encodeURIComponent(
+          sessionId
+        )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
+          token
+        )}`;
         setRoomLink(link);
         setIsModalOpen(true);
       }
@@ -157,27 +154,22 @@ const HomeContent: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {/* header */}
       <Header>MIKO</Header>
-
-      {/* main */}
-      {/* video chat */}
-      {isConnected ? (
-        <VideoProvider>
-          <div className={styles.appContainer}>
-            {sessionId && userName && token ? (
-              <Video sessionId={sessionId} userName={userName} token={token} />
-            ) : (
-              <p>Loading...</p>
-            )}
-          </div>
-          <VoiceContent sessionId={sessionId} />
-        </VideoProvider>
-      ) : (
-        <p>Socket is not connected. Please check your connection.</p>
-      )}
-
-      {/* keyword map */}
+      <div className={styles.appContainer}>
+        {isConnected ? (
+          <>
+            <div className={styles.appContainer}>
+              {sessionId && userName && token ? (
+                <Video sessionId={sessionId} userName={userName} token={token} />
+              ) : (
+                <p>Loading...</p>
+              )}
+            </div>
+          </>
+        ) : (
+          <p>Socket is not connected. Please check your connection.</p>
+        )}
+      </div>
       <div className={styles.mainContainer}>
         <div style={{ display: "flex", width: "100%", height: "60vh" }}>
           <GroupedNodeList
@@ -194,22 +186,6 @@ const HomeContent: React.FC = () => {
               handleNodeClick={handleNodeClick}
               socket={socket}
             />
-            <div style={{ display: "flex" }}>
-              <ControlPanel
-                newNodeLabel={newNodeLabel}
-                newNodeContent={newNodeContent}
-                newNodeColor={newNodeColor}
-                setNewNodeLabel={setNewNodeLabel}
-                setNewNodeContent={setNewNodeContent}
-                setNewNodeColor={setNewNodeColor}
-                addNode={handleAddNode}
-                setAction={setAction}
-                fitToScreen={fitToScreen}
-              />
-              <button className={styles.keywordButton} onClick={handleKeyword}>
-                keyword
-              </button>
-            </div>
           </div>
           <NodeConversation
             className={styles.nodeConversationWrapper}
@@ -219,13 +195,32 @@ const HomeContent: React.FC = () => {
           />
         </div>
       </div>
-
-      {/* footer */}
       <Footer>
-        <button onClick={handleSharingRoom}>Sharing a room</button>
+        <div className={styles.footerComponents}>
+          <button onClick={handleSharingRoom}>Sharing a room</button>
+          <ControlPanel
+            newNodeLabel={newNodeLabel}
+            newNodeContent={newNodeContent}
+            newNodeColor={newNodeColor}
+            setNewNodeLabel={setNewNodeLabel}
+            setNewNodeContent={setNewNodeContent}
+            setNewNodeColor={setNewNodeColor}
+            addNode={handleAddNode}
+            setAction={setAction}
+            fitToScreen={fitToScreen}
+          />
+          {sessionId && (
+            <VoiceRecorder
+              sessionId={sessionId}
+              publisher={publisher}
+              subscriber={subscriber}
+            />
+          )}
+          <button className={styles.keywordButton} onClick={handleKeyword}>
+            keyword
+          </button>
+        </div>
       </Footer>
-
-      {/* modal */}
       <SharingRoom
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -238,7 +233,9 @@ const HomeContent: React.FC = () => {
 export default function Home() {
   return (
     <SocketProvider>
-      <HomeContent />
+      <VideoProvider>
+        <HomeContent />
+      </VideoProvider>
     </SocketProvider>
   );
 }

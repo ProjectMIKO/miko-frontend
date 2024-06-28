@@ -1,58 +1,57 @@
 /* GroupedNodeList.module.css */
 .container {
-    width: 100%;
-  }
-  
-  .heading {
-    text-align: center;
-    color: #333;
-  }
-  
-  .groupList {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .groupHeader {
-    cursor: pointer;
-    padding: 10px;
-    background-color: #fff;
-    color: #96a0fe;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    transition: background-color 0.3s, color 0.3s;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .groupHeaderExpanded {
-    background-color: #96a0fe;
-    color: #fff;
-  }
-  
-  .nodeList {
-    list-style-type: none;
-    padding: 0 10px;
-    margin: 0;
-    transition: max-height 0.3s;
-  }
-  
-  .nodeItem {
-    cursor: pointer;
-    padding: 8px;
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .nodeItemSelected {
-    background-color: #96a0fe;
-    color: #fff;
-    border: 1px solid #96a0fe;
-  }
-  
+  width: 100%;
+}
+
+.heading {
+  text-align: center;
+  color: #333;
+}
+
+.groupList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.groupHeader {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #fff;
+  color: #96a0fe;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.groupHeaderExpanded {
+  background-color: #96a0fe;
+  color: #fff;
+}
+
+.nodeList {
+  list-style-type: none;
+  padding: 0 10px;
+  margin: 0;
+  transition: max-height 0.3s;
+}
+
+.nodeItem {
+  cursor: pointer;
+  padding: 8px;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nodeItemSelected {
+  background-color: #96a0fe;
+  color: #fff;
+  border: 1px solid #96a0fe;
+}
