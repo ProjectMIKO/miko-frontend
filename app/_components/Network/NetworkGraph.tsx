@@ -3,19 +3,22 @@
 import React, { useRef, useEffect } from "react";
 import useNetwork from "../../_hooks/useNetwork";
 import styles from "./styles/NetworkGraph.module.css";
+import { Socket } from "socket.io-client";
 
 interface Props {
   containerRef: React.RefObject<HTMLDivElement>;
   selectedNodeId: number | null;
   handleNodeClick: (nodeId: number | null) => void;
+  socket: Socket;
 }
 
 const NetworkGraph: React.FC<Props> = ({
   containerRef,
   selectedNodeId,
   handleNodeClick,
+  socket,
 }) => {
-  const { network, nodes, edges } = useNetwork(containerRef);
+  const { network, nodes, edges } = useNetwork(containerRef, socket, null);
 
   useEffect(() => {
     if (network) {

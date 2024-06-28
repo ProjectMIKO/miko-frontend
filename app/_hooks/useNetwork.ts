@@ -1,8 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Network, DataSet } from "vis-network/standalone";
 import { Node, Edge } from "../_types/types";
+import { Socket } from "socket.io-client";
 
-const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
+const useNetwork = (
+  containerRef: React.RefObject<HTMLDivElement>,
+  socket: Socket, // 소켓 객체를 매개변수로 받습니다.
+  sessionId: string | null,
+) => {
   const [network, setNetwork] = useState<Network | null>(null);
   const [nodes, setNodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
   const [edges, setEdges] = useState<DataSet<Edge>>(new DataSet<Edge>([]));
@@ -27,6 +32,11 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
             to: nodeId,
           };
           edges.add(newEdge);
+          
+          if (sessionId) {
+            socket.emit("edge", [sessionId, tempEdgeFrom, nodeId, '$push' ]);
+          }
+
           setTempEdgeFrom(null);
           setNextEdgeId(nextEdgeId + 1);
           setAction(null);
@@ -162,6 +172,8 @@ const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
     setAction,
     handleNodeClick,
     fitToScreen,
+    nextEdgeId,
+    setNextEdgeId,
   };
 };
 

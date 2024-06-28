@@ -5,7 +5,7 @@ import NetworkGraph from "../_components/Network/NetworkGraph";
 import ControlPanel from "../_components/Network/ControlPanel";
 import GroupedNodeList from "../_components/Network/GroupedNodeList";
 import NodeConversation from "../_components/Network/NodeConversation";
-import App from "../_components/Video/Video";
+import Video from "../_components/Video/Video";
 import styles from "./Main.module.css";
 import {
   SocketProvider,
@@ -17,13 +17,22 @@ import axios from "axios";
 import useNetwork from "../_hooks/useNetwork";
 import { useSocket } from "../_components/Socket/SocketContext";
 import SharingRoom from "../_components/sharingRoom";
+import { Edge } from "../_types/types";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
 const HomeContent: React.FC = () => {
   const socketContext = useSocketContext();
+  const { socket } = useSocket();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  if (!socketContext) {
+    return <p>Error: Socket context is not available.</p>;
+  }
+
+  const { sessionId, userName, token, isConnected } = socketContext;
+
   const {
     nodes,
     edges,
@@ -32,12 +41,15 @@ const HomeContent: React.FC = () => {
     setAction,
     handleNodeClick,
     fitToScreen,
-  } = useNetwork(containerRef);
+    nextEdgeId,
+    setNextEdgeId,
+  } = useNetwork(containerRef, socket, sessionId);
 
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
   const [newNodeContent, setNewNodeContent] = useState<string>("");
   const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
-  const { socket } = useSocket();
+  const [roomLink, setRoomLink] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddNode = useCallback(() => {
     addNode(newNodeLabel, newNodeContent, newNodeColor);
@@ -66,18 +78,22 @@ const HomeContent: React.FC = () => {
     }
   }, [newNodeLabel, newNodeContent, handleAddNode]);
 
+  useEffect(() => {
+    const handleConnect = (data: {id: string, vertex1: number, vertex2: number, action: string}) => {
+      setNextEdgeId(nextEdgeId + 1);
+      const newEdge: Edge = {
+        id: nextEdgeId,
+        from: data.vertex1,
+        to: data.vertex2,
+      };
+      edges.add(newEdge);
+    }
+    socket.on("edge", handleConnect);
+  }, [socket]);
+
   const handleKeyword = () => {
     socket.emit("summarize", socketContext?.sessionId);
   };
-
-  const [roomLink, setRoomLink] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  if (!socketContext) {
-    return <p>Error: Socket context is not available.</p>;
-  }
-
-  const { sessionId, userName, token, isConnected } = socketContext;
 
   const getToken = async () => {
     if (sessionId) {
@@ -122,7 +138,7 @@ const HomeContent: React.FC = () => {
       {isConnected ? (
         <div className={styles.appContainer}>
           {sessionId && userName && token ? (
-            <App sessionId={sessionId} userName={userName} token={token} />
+            <Video sessionId={sessionId} userName={userName} token={token} />
           ) : (
             <p>Loading...</p>
           )}
@@ -146,6 +162,7 @@ const HomeContent: React.FC = () => {
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
               handleNodeClick={handleNodeClick}
+              socket={socket}
             />
             <div style={{ display: "flex" }}>
               <ControlPanel

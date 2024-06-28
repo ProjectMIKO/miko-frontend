@@ -13,7 +13,6 @@ const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http:
 
 const WaitingPage: React.FC = () => {
   const { data: session } = useSession();
-  const { socket, connectSocket, isConnected } = useSocket();
   const [mySessionId, setMySessionId] = useState<string>("방 제목을 입력하세요.");
   const [myUserName, setMyUserName] = useState<string>("");
   const router = useRouter();
