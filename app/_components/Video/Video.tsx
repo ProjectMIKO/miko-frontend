@@ -5,6 +5,7 @@ import styles from './Video.module.css';
 import UserVideoComponent from './UserVideoComponent';
 import { useSocket } from '../Socket/SocketContext';
 import VoiceRecorder from '../VoiceRecorder/VoiceRecorder';
+import { useVideoContext } from '../Video/VideoContext';
 
 interface Props {
   sessionId: string;
@@ -14,9 +15,6 @@ interface Props {
 
 const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
   const [session, setSession] = useState<any>(undefined);
-  const [subscriber, setSubscriber] = useState<any>(undefined);
-  const [publisher, setPublisher] = useState<any>(undefined);
-  const [subscribers, setSubscribers] = useState<any[]>([]);
   const router = useRouter();
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>(
@@ -24,6 +22,8 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
   );
 
   const { socket } = useSocket();
+  const { publisher, subscriber, setPublisher, setSubscriber } = useVideoContext();
+  const [subscribers, setSubscribers] = useState<any[]>([]);
 
   const handlerJoinSessionEvent = () => {
     console.log('Join session');
@@ -112,31 +112,20 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
       {session === undefined ? (
         <div>Loading...</div>
       ) : (
-        <div id={styles['video-recorder-container']}>
-          <div id={styles['video-container']}>
-            <div id={styles['local-video']}>
-              <video ref={localVideoRef} autoPlay={true} />
-              <div className={styles.nicknameContainer}>
-                <span>나</span>
-              </div>
-            </div>
-            <div id={styles['remote-videos']}>
-              {subscribers.map((sub) => (
-                <UserVideoComponent
-                  key={sub.stream.streamId}
-                  streamManager={sub}
-                />
-              ))}
+        <div id={styles['video-container']}>
+          <div id={styles['local-video']}>
+            <video ref={localVideoRef} autoPlay={true} />
+            <div className={styles.nicknameContainer}>
+              <span>나</span>
             </div>
           </div>
-          <div id={styles['recorder-container']}>
-            <VoiceRecorder sessionId={sessionId} subscriber={subscriber} publisher={publisher}/>
-            <button
-              className={styles['leave-button']}
-              onClick={handlerLeaveSessionEvent}
-            >
-              Leave session
-            </button>
+          <div id={styles['remote-videos']}>
+            {subscribers.map((sub) => (
+              <UserVideoComponent
+                key={sub.stream.streamId}
+                streamManager={sub}
+              />
+            ))}
           </div>
         </div>
       )}
