@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./styles/ControlPanel.module.css"; // CSS 모듈을 가져옵니다.
 
 interface ControlPanelProps {
   newNodeLabel: string;
@@ -24,28 +25,39 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   fitToScreen,
 }) => {
   return (
-    <div>
+    <div className={styles.controlPanel}>
       <input
         type="text"
         placeholder="Node Label"
         value={newNodeLabel}
         onChange={(e) => setNewNodeLabel(e.target.value)}
+        className={styles.input}
       />
       <input
         type="text"
         placeholder="Node Content"
         value={newNodeContent}
         onChange={(e) => setNewNodeContent(e.target.value)}
+        className={styles.input}
       />
       <input
         type="color"
         value={newNodeColor}
         onChange={(e) => setNewNodeColor(e.target.value)}
+        className={styles.colorInput}
       />
-      <button onClick={addNode}>Add Node</button>
-      <button onClick={() => setAction("connect")}>Connect</button>
-      <button onClick={() => setAction("disconnect")}>Disconnect</button>
-      <button onClick={fitToScreen}>Fit to Screen</button>
+      <button onClick={addNode} className={styles.button}>
+        ➕ Add Node
+      </button>
+      <button onClick={() => setAction("connect")} className={styles.button}>
+        🔗 Connect
+      </button>
+      <button onClick={() => setAction("disconnect")} className={styles.button}>
+        ❌ Disconnect
+      </button>
+      <button onClick={fitToScreen} className={styles.button}>
+        📏 Fit to Screen
+      </button>
     </div>
   );
 };
