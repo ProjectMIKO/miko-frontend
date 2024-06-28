@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Network, DataSet } from "vis-network/standalone";
-import { Node, Edge } from "../types/types";
+import { Node, Edge } from "../_types/types";
 
 const useNetwork = (containerRef: React.RefObject<HTMLDivElement>) => {
   const [network, setNetwork] = useState<Network | null>(null);

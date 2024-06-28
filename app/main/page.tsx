@@ -1,22 +1,22 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import NetworkGraph from "../components/Network/NetworkGraph";
-import ControlPanel from "../components/Network/ControlPanel";
-import GroupedNodeList from "../components/Network/GroupedNodeList";
-import NodeConversation from "../components/Network/NodeConversation";
-import App from "../components/Video/Video";
+import NetworkGraph from "../_components/Network/NetworkGraph";
+import ControlPanel from "../_components/Network/ControlPanel";
+import GroupedNodeList from "../_components/Network/GroupedNodeList";
+import NodeConversation from "../_components/Network/NodeConversation";
+import App from "../_components/Video/Video";
 import styles from "./Main.module.css";
 import {
   SocketProvider,
   useSocketContext,
-} from "../components/Socket/SocketProvider";
-import Header from "../components/common/Header";
-import Footer from "../components/common/Footer";
+} from "../_components/Socket/SocketProvider";
+import Header from "../_components/common/Header";
+import Footer from "../_components/common/Footer";
 import axios from "axios";
-import useNetwork from "../hooks/useNetwork";
-import { useSocket } from "../components/Socket/SocketContext";
-import SharingRoom from "../components/sharingRoom";
+import useNetwork from "../_hooks/useNetwork";
+import { useSocket } from "../_components/Socket/SocketContext";
+import SharingRoom from "../_components/sharingRoom";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -159,17 +159,7 @@ const HomeContent: React.FC = () => {
                 setAction={setAction}
                 fitToScreen={fitToScreen}
               />
-              <button
-                style={{
-                  backgroundColor: "#007BFF",
-                  color: "white",
-                  border: "none",
-                  padding: "10px 20px",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-                onClick={handleKeyword}
-              >
+              <button className={styles.keywordButton} onClick={handleKeyword}>
                 keyword
               </button>
             </div>

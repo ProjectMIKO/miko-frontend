@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-import Header from "../components/common/Header";
-import Footer from "../components/common/Footer";
-import AudioPlayer from "../components/AudioPlayer";
+import Header from "../_components/common/Header";
+import Footer from "../_components/common/Footer";
+import AudioPlayer from "../_components/AudioPlayer";
 import styles from "./Page.module.css";
 
 const Page: React.FC = () => {

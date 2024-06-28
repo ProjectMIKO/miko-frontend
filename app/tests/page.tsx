@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from 'react';
-import VoiceComponent from '../components/VoiceRecorder/VoiceRecorder';
-import { SocketProvider, useSocket } from '../components/Socket/SocketContext';
-import socket from '../lib/socket';
+import VoiceComponent from '../_components/VoiceRecorder/VoiceRecorder';
+import { SocketProvider, useSocket } from '../_components/Socket/SocketContext';
+import socket from '../_lib/socket';
 
 const Home: React.FC = () => {
     const { connectSocket, disconnectSocket } = useSocket();
