@@ -6,7 +6,7 @@ export interface Node {
 }
 
 export interface Edge {
-  id: number;
+  id: number | string;
   from: number;
   to: number;
 }

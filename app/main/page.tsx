@@ -5,7 +5,7 @@ import NetworkGraph from "../_components/Network/NetworkGraph";
 import ControlPanel from "../_components/Network/ControlPanel";
 import GroupedNodeList from "../_components/Network/GroupedNodeList";
 import NodeConversation from "../_components/Network/NodeConversation";
-import App from "../_components/Video/Video";
+import Video from "../_components/Video/Video";
 import styles from "./Main.module.css";
 import {
   SocketProvider,
@@ -17,10 +17,8 @@ import axios from "axios";
 import useNetwork from "../_hooks/useNetwork";
 import { useSocket } from "../_components/Socket/SocketContext";
 import SharingRoom from "../_components/sharingRoom";
-import {
-  VideoProvider,
-  useVideoContext,
-} from "../_components/Video/VideoContext";
+import { Edge } from "../_types/types";
+import { VideoProvider, useVideoContext } from "../_components/Video/VideoContext";
 import VoiceRecorder from "../_components/VoiceRecorder/VoiceRecorder";
 
 const APPLICATION_SERVER_URL =
@@ -28,8 +26,13 @@ const APPLICATION_SERVER_URL =
 
 const HomeContent: React.FC = () => {
   const socketContext = useSocketContext();
+  const { socket } = useSocket();
   const { publisher, subscriber } = useVideoContext();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // 훅들을 조건부 호출에서 벗어나게 수정
+  const { sessionId, userName, token, isConnected } = socketContext || {};
+
   const {
     nodes,
     edges,
@@ -38,52 +41,71 @@ const HomeContent: React.FC = () => {
     setAction,
     handleNodeClick,
     fitToScreen,
-  } = useNetwork(containerRef);
+  } = useNetwork(containerRef, socket, sessionId);
 
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
   const [newNodeContent, setNewNodeContent] = useState<string>("");
   const [newNodeColor, setNewNodeColor] = useState<string>("#5A5A5A");
-  const { socket } = useSocket();
+  const [roomLink, setRoomLink] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nextId, setNextId] = useState("");
 
-  const handleAddNode = useCallback(() => {
-    addNode(newNodeLabel, newNodeContent, newNodeColor);
+  const handleAddNode = useCallback((id: any) => {
+    addNode(id, newNodeLabel, newNodeContent, newNodeColor);
+    setNextId("");
     setNewNodeLabel("");
     setNewNodeContent("");
     setNewNodeColor("#5A5A5A");
   }, [newNodeLabel, newNodeContent, newNodeColor, addNode]);
 
   useEffect(() => {
-    const handleSummarize = (data: { keyword: string; subtitle: string }) => {
+    const handleSummarize = (data: { contentId: string, keyword: string; subject: string, conversationIds: ([])}) => {
+      setNextId(data.contentId);
       setNewNodeLabel(data.keyword);
-      setNewNodeContent(data.subtitle.replace(/\n/g, "<br>"));
-      console.log("subtitle", data.subtitle);
+      setNewNodeContent(data.subject);
+      console.log("subtitle", data.subject);
     };
 
-    socket.on("summarize", handleSummarize);
+    socket.on("vertex", handleSummarize);
 
     return () => {
-      socket.off("summarize", handleSummarize);
+      socket.off("vertex", handleSummarize);
     };
   }, [socket]);
 
   useEffect(() => {
     if (newNodeLabel && newNodeContent) {
-      handleAddNode();
+      handleAddNode(nextId);
     }
-  }, [newNodeLabel, newNodeContent, handleAddNode]);
+  }, [newNodeLabel, newNodeContent, nextId, handleAddNode]);
+
+  useEffect(() => {
+    const handleConnect = (data: { contentId: string, vertex1: number, vertex2: number, action: string }) => {
+      console.log(data);
+      const newEdge: Edge = {
+        id: data.contentId,
+        from: data.vertex1,
+        to: data.vertex2,
+      };
+  
+      if (!edges.get(newEdge.id)) {
+        edges.add(newEdge);
+      } else {
+        console.log(`Edge with id ${newEdge.id} already exists`);
+      }
+    }
+    socket.on("edge", handleConnect);
+  
+    // Cleanup function to remove the event listener
+    return () => {
+      socket.off("edge", handleConnect);
+    };
+  }, [socket, edges]);
+  
 
   const handleKeyword = () => {
     socket.emit("summarize", socketContext?.sessionId);
   };
-
-  const [roomLink, setRoomLink] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  if (!socketContext) {
-    return <p>Error: Socket context is not available.</p>;
-  }
-
-  const { sessionId, userName, token, isConnected } = socketContext;
 
   const getToken = async () => {
     if (sessionId) {
@@ -118,6 +140,10 @@ const HomeContent: React.FC = () => {
     }
   };
 
+  if (!socketContext) {
+    return <p>Error: Socket context is not available.</p>;
+  }
+
   return (
     <div className={styles.container}>
       <Header>MIKO</Header>
@@ -126,7 +152,7 @@ const HomeContent: React.FC = () => {
           <>
             <div className={styles.appContainer}>
               {sessionId && userName && token ? (
-                <App sessionId={sessionId} userName={userName} token={token} />
+                <Video sessionId={sessionId} userName={userName} token={token} />
               ) : (
                 <p>Loading...</p>
               )}
@@ -150,6 +176,7 @@ const HomeContent: React.FC = () => {
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
               handleNodeClick={handleNodeClick}
+              socket={socket}
             />
           </div>
           <NodeConversation

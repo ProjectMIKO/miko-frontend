@@ -8,7 +8,7 @@ interface ControlPanelProps {
   setNewNodeLabel: (label: string) => void;
   setNewNodeContent: (content: string) => void;
   setNewNodeColor: (color: string) => void;
-  addNode: () => void;
+  addNode: (id: any) => void;
   setAction: (action: string) => void;
   fitToScreen: () => void;
 }
