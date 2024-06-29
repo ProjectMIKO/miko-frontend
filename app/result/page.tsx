@@ -154,8 +154,7 @@ const Page: React.FC = () => {
           <div className={styles.tabContent}>{renderTabContent()}</div>
         </section>
       </main>
-
-      <Footer>
+      <Footer isFixed>
         <AudioPlayer />
       </Footer>
     </div>
