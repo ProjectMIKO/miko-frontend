@@ -46,6 +46,7 @@ const HomeContent: React.FC = () => {
   const [roomLink, setRoomLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nextId, setNextId] = useState("");
+  const [isListOpen, setIsListOpen] = useState(false);
 
   useSocketHandlers(edges, addNode);
 
@@ -103,13 +104,11 @@ const HomeContent: React.FC = () => {
     }
   };
 
-  const handleLeaveSession = () => {
-    if (leaveSessionCallback) {
-      leaveSessionCallback();
-    }
+  // 그룹 리스트 토글 함수
+  const toggleList = () => {
+    setIsListOpen(!isListOpen);
+    console.log(isListOpen);
   };
-  
-  const [leaveSessionCallback, setLeaveSessionCallback] = useState<(() => void) | null>(null);
 
   if (!socketContext) {
     return <p>Error: Socket context is not available.</p>;
@@ -118,57 +117,59 @@ const HomeContent: React.FC = () => {
   return (
     <div className={styles.container}>
       <Header>MIKO</Header>
-      <div className={styles.appContainer}>
-        {isConnected ? (
-          <>
-            <div className={styles.appContainer}>
-              {sessionId && userName && token ? (
-                <Video
-                  sessionId={sessionId}
-                  userName={userName}
-                  token={token}
-                  setLeaveSessionCallback={setLeaveSessionCallback}
-                />
-              ) : (
-                <p>Loading...</p>
-              )}
-            </div>
-          </>
-        ) : (
-          <p>Socket is not connected. Please check your connection.</p>
-        )}
-      </div>
       <div className={styles.mainContainer}>
-        <div style={{ display: "flex", width: "100%", height: "60vh" }}>
-          <GroupedNodeList
-            className={styles.groupedNodeListWrapper}
-            nodes={nodes.get()}
-            edges={edges.get()}
-            selectedNodeId={selectedNodeId}
-            onNodeClick={handleNodeClick}
-          />
-          <div style={{ flex: 6 }}>
-            <NetworkGraph
+        <div className={styles.networkGraphContainer}>
+          <NetworkGraph
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
               handleNodeClick={handleNodeClick}
               socket={socket}
-            />
-          </div>
-          <NodeConversation
-            className={styles.nodeConversationWrapper}
-            nodes={nodes.get()}
-            selectedNodeId={selectedNodeId}
-            onNodeClick={handleNodeClick}
           />
+        </div>
+
+        <div className={styles.appContainer}>
+          {isConnected ? (
+              <>
+                <div className={styles.appContainer}>
+                  {sessionId && userName && token ? (
+                      <Video
+                          sessionId={sessionId}
+                          userName={userName}
+                          token={token}
+                      />
+                  ) : (
+                      <p>Loading...</p>
+                  )}
+                </div>
+              </>
+          ) : (
+              <p>Socket is not connected. Please check your connection.</p>
+          )}
+        </div>
+        <div className={styles.nodeConversationWrapper}>
+          <NodeConversation
+              nodes={nodes.get()}
+              selectedNodeId={selectedNodeId}
+              onNodeClick={handleNodeClick}
+          />
+        </div>
+        <div className={`${styles.groupedNodeListWrapper} ${isListOpen ? styles.open : ''}`}>
+          <GroupedNodeList
+              nodes={nodes.get()}
+              edges={edges.get()}
+              selectedNodeId={selectedNodeId}
+              onNodeClick={handleNodeClick}
+          />
+          <button className={styles.groupedNodeListButton} onClick={toggleList}>
+          </button>
         </div>
       </div>
       <Footer>
         <div className={styles.footerComponents}>
           <button onClick={handleSharingRoom}>Sharing a room</button>
           <ControlPanel
-            newNodeLabel={controlNodeLabel}
-            newNodeContent={controlNodeContent}
+              newNodeLabel={controlNodeLabel}
+              newNodeContent={controlNodeContent}
             newNodeColor={controlNodeColor}
             setNewNodeLabel={setControlNodeLabel}
             setNewNodeContent={setControlNodeContent}
