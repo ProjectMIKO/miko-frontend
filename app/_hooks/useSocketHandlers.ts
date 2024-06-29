@@ -46,7 +46,6 @@ const useSocketHandlers = (
 
   useEffect(() => {
     const handleConnect = (data: { _id: string; vertex1: number; vertex2: number; action: string }) => {
-      console.log(data);
       const newEdge: Edge = {
         id: data._id,
         from: data.vertex1,
@@ -55,15 +54,28 @@ const useSocketHandlers = (
 
       if (!edges.get(newEdge.id)) {
         edges.add(newEdge);
-      } else {
-        console.log(`Edge with id ${newEdge.id} already exists`);
-      }
+      };
     };
 
     socket.on("edge", handleConnect);
 
     return () => {
       socket.off("edge", handleConnect);
+    };
+  }, [socket, edges]);
+
+  useEffect(() => {
+    const handledDisConnect = (data: { _id: string; vertex1: number; vertex2: number; action: string }) => {
+      if (edges.get(data._id)) {
+        edges.remove(data._id);
+      } else {
+        console.log(`Edge with id ${data._id} already exists`);
+      }
+    }
+    socket.on("del_edge", handledDisConnect);
+
+    return () => {
+      socket.off("edge", handledDisConnect);
     };
   }, [socket, edges]);
 

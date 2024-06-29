@@ -54,13 +54,7 @@ const HomeContent: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nextId, setNextId] = useState("");
 
-  const {
-    newNodeLabel,
-    newNodeContent,
-    nextNodeId,
-    setNewNodeLabel,
-    setNewNodeContent,
-  } = useSocketHandlers(edges, addNode);
+  useSocketHandlers(edges, addNode);
 
   const handleAddNode = useCallback(
     (id: any) => {
