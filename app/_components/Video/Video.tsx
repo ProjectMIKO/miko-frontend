@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { OpenVidu } from "openvidu-browser";
 import { useRouter } from "next/navigation";
 import styles from "./Video.module.css";
@@ -10,9 +10,10 @@ interface Props {
   sessionId: string;
   userName: string;
   token: string;
+  setLeaveSessionCallback: (callback: () => void) => void;
 }
 
-const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
+const Video: React.FC<Props> = ({ sessionId, userName, token, setLeaveSessionCallback }) => {
   const [session, setSession] = useState<any>(undefined);
   const router = useRouter();
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -30,7 +31,7 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
     console.log("Join session");
   };
 
-  const handlerLeaveSessionEvent = () => {
+  const handlerLeaveSessionEvent = useCallback(() => {
     console.log("Leave session");
     if (session) {
       session.disconnect();
@@ -40,7 +41,7 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
       socket.disconnect();
       router.push("/result");
     }
-  };
+  }, [session, subscriber, socket, router]);
 
   const handlerErrorEvent = (error: any) => {
     console.log("Error in session", error);
@@ -112,6 +113,11 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
       }
     });
   }, [subscribers]);
+
+  useEffect(() => {
+    setLeaveSessionCallback(() => handlerLeaveSessionEvent);
+  }, [setLeaveSessionCallback, handlerLeaveSessionEvent]);
+
 
   const handleNextPage = () => {
     if (currentPage < Math.ceil(subscribers.length / 5)) {
