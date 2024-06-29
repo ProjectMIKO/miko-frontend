@@ -7,21 +7,14 @@ import GroupedNodeList from "../_components/Network/GroupedNodeList";
 import NodeConversation from "../_components/Network/NodeConversation";
 import Video from "../_components/Video/Video";
 import styles from "./Main.module.css";
-import {
-  RoomSocketProvider,
-  RoomuseSocketContext,
-} from "../_components/Socket/SocketProvider";
+import { RoomSocketProvider, RoomuseSocketContext } from "../_components/Socket/SocketProvider";
 import Header from "../_components/common/Header";
 import Footer from "../_components/common/Footer";
 import axios from "axios";
 import useNetwork from "../_hooks/useNetwork";
 import { useSocket } from "../_components/Socket/SocketContext";
 import SharingRoom from "../_components/sharingRoom";
-import { Edge } from "../_types/types";
-import {
-  VideoProvider,
-  useVideoContext,
-} from "../_components/Video/VideoContext";
+import { VideoProvider, useVideoContext } from "../_components/Video/VideoContext";
 import VoiceRecorder from "../_components/VoiceRecorder/VoiceRecorder";
 import useSocketHandlers from "../_hooks/useSocketHandlers";
 
@@ -110,6 +103,14 @@ const HomeContent: React.FC = () => {
     }
   };
 
+  const handleLeaveSession = () => {
+    if (leaveSessionCallback) {
+      leaveSessionCallback();
+    }
+  };
+  
+  const [leaveSessionCallback, setLeaveSessionCallback] = useState<(() => void) | null>(null);
+
   if (!socketContext) {
     return <p>Error: Socket context is not available.</p>;
   }
@@ -126,6 +127,7 @@ const HomeContent: React.FC = () => {
                   sessionId={sessionId}
                   userName={userName}
                   token={token}
+                  setLeaveSessionCallback={setLeaveSessionCallback}
                 />
               ) : (
                 <p>Loading...</p>
@@ -185,6 +187,7 @@ const HomeContent: React.FC = () => {
           <button className={styles.keywordButton} onClick={handleKeyword}>
             keyword
           </button>
+          <button onClick={handleLeaveSession}>Leave Session</button>
         </div>
       </Footer>
       <SharingRoom
