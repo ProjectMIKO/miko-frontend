@@ -1,9 +1,10 @@
 .footer {
-  background-color: #f1f1f1;
   padding: 1rem;
   text-align: center;
   width: 100%;
   z-index: 1000;
+  background-color: rgba(249,249,249,0.70);
+  backdrop-filter: blur(1px);
 }
 
 .fixed {
