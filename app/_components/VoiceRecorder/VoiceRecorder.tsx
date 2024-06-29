@@ -5,6 +5,12 @@ import SettingsSlider from "./SettingSlider";
 import styles from "./VoiceRecorder.module.css";
 import { useSocket } from "../Socket/SocketContext";
 import { handleMicrophoneError } from "../../_utils/voiceErrorHandler";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMicrophone,
+  faMicrophoneSlash,
+  faCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface VoiceRecorderProps {
   sessionId?: string | null;
@@ -12,7 +18,11 @@ interface VoiceRecorderProps {
   publisher: any | null;
 }
 
-const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, publisher }) => {
+const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
+  sessionId,
+  subscriber,
+  publisher,
+}) => {
   const [error, setError] = useState<string | null>(null);
   const [recording, setRecording] = useState<boolean>(false);
   const [audioURLs, setAudioURLs] = useState<string[]>([]);
@@ -22,18 +32,19 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
   const workletNodeRef = useRef<AudioWorkletNode | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
 
-  const [recordingMode, setRecordingMode] = useState<boolean>(false); // 녹음 모드 상태
-  const [silenceThreshold, setSilenceThreshold] = useState<number>(0.07); // 초기 임계값
-  const [silenceDuration, setSilenceDuration] = useState<number>(1000); // 초기 침묵 시간
-  const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000); // 최대 녹음 시간 (밀리초 단위)
-  const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null); // 녹음 타임아웃
+  const [recordingMode, setRecordingMode] = useState<boolean>(false);
+  const [silenceThreshold, setSilenceThreshold] = useState<number>(0.1);
+  const [silenceDuration, setSilenceDuration] = useState<number>(3000);
+  const [maxRecordingDuration, setMaxRecordingDuration] =
+    useState<number>(20000);
+  const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { socket } = useSocket();
 
   useEffect(() => {
     async function init() {
       try {
-        console.log("Requesting microphone access...");
+        console.log("마이크 접근 요청 중...");
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: {
             noiseSuppression: true,
@@ -42,20 +53,21 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
           },
         });
         mediaStreamRef.current = stream;
-        console.log("Microphone access granted:", stream);
+        console.log("마이크 접근 허용됨:", stream);
 
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
         audioContextRef.current = audioContext;
 
         try {
-          console.log("Loading AudioWorklet module...");
+          console.log("AudioWorklet 모듈 로드 중...");
           await audioContext.audioWorklet.addModule(
             new URL("./worklet-processor.js", import.meta.url).toString()
           );
-          console.log("AudioWorklet module loaded successfully.");
+          console.log("AudioWorklet 모듈 로드 성공.");
         } catch (err) {
-          console.error("Error loading AudioWorklet module:", err);
-          setError("Error loading AudioWorklet module");
+          console.error("AudioWorklet 모듈 로드 에러:", err);
+          setError("AudioWorklet 모듈 로드 에러");
           return;
         }
 
@@ -69,7 +81,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
         mediaRecorderRef.current.ondataavailable = (event) => {
           if (event.data.size > 0) {
             audioChunksRef.current.push(event.data);
-            console.log("Data available:", event.data);
+            console.log("데이터 수신:", event.data);
           }
         };
 
@@ -82,11 +94,11 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
             const url = URL.createObjectURL(blob);
             setAudioURLs((prev) => [...prev, url]);
             audioChunksRef.current = [];
-            console.log("Recording saved:", url);
+            console.log("녹음 저장됨:", url);
           }
         };
       } catch (err: any) {
-        console.error("Error accessing audio stream:", err);
+        console.error("오디오 스트림 접근 에러:", err);
         handleMicrophoneError(err, setError);
       }
     }
@@ -130,7 +142,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
 
   useEffect(() => {
     if (!publisher) {
-      console.error("Publisher is not ready yet");
+      console.error("퍼블리셔가 아직 준비되지 않았습니다");
       return;
     }
     publisher.publishAudio(recordingMode);
@@ -173,13 +185,13 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
     ) {
       mediaRecorderRef.current.start();
       setRecording(true);
-      console.log("Recording started");
+      console.log("녹음 시작됨");
 
       if (recordingTimeoutRef.current) {
         clearTimeout(recordingTimeoutRef.current);
       }
       recordingTimeoutRef.current = setTimeout(() => {
-        console.log("Max recording duration reached, stopping recording...");
+        console.log("최대 녹음 시간 도달, 녹음 중지...");
         stopRecording(true);
       }, maxRecordingDuration);
     }
@@ -192,14 +204,14 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
     ) {
       mediaRecorderRef.current.stop();
       setRecording(false);
-      console.log("Recording stopped");
+      console.log("녹음 중지됨");
 
       if (save && audioChunksRef.current.length > 0) {
         const blob = new Blob(audioChunksRef.current, { type: "audio/wav" });
         const url = URL.createObjectURL(blob);
         setAudioURLs((prev) => [...prev, url]);
         audioChunksRef.current = [];
-        console.log("Recording saved");
+        console.log("녹음 저장됨");
       } else {
         audioChunksRef.current = []; // Save false 시, 버퍼 비우기
       }
@@ -213,9 +225,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
       if (arrayBuffer) {
         console.log(arrayBuffer);
         socket.emit("stt", [sessionId, arrayBuffer]);
-        console.log("sending audioData");
+        console.log("오디오 데이터 전송 중");
       } else {
-        console.error("Failed to read the blob");
+        console.error("블롭을 읽는데 실패했습니다");
       }
     };
     reader.readAsArrayBuffer(blob);
@@ -231,14 +243,14 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
 
   const toggleRecordingMode = () => {
     if (!publisher) {
-      console.error("Publisher is not ready yet");
+      console.error("퍼블리셔가 아직 준비되지 않았습니다");
       return;
     }
     setRecordingMode((prev) => !prev);
     if (recordingMode === false) {
-      publisher.publishAudio(false); 
+      publisher.publishAudio(false);
     } else {
-      publisher.publishAudio(true); 
+      publisher.publishAudio(true);
     }
   };
 
@@ -248,37 +260,51 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ sessionId, subscriber, pu
         <p>{error}</p>
       ) : (
         <div className={styles.controls}>
-          <SettingsSlider
-            label="음성 인식 감도:"
-            min={0.01}
-            max={1}
-            step={0.01}
-            value={silenceThreshold}
-            onChange={handleSliderChange}
-          />
-          <SettingsSlider
-            label="침묵 인식 시간 (초):"
-            min={0}
-            max={5}
-            step={0.5}
-            value={silenceDuration / 1000}
-            onChange={(e) =>
-              handleDurationChange({
-                ...e,
-                target: {
-                  ...e.target,
-                  value: (parseFloat(e.target.value) * 1000).toString(),
-                },
-              })
-            }
-          />
-          <button onClick={toggleRecordingMode}>
-            {recordingMode ? "음성인식 켜져있음" : "음성인식 꺼져있음"}
-          </button>
-          {recordingMode && recording && <span>음성 인식 중...</span>}          
-          {/* {audioURLs.map((url, index) => (
-            <audio key={index} src={url} controls />
-          ))} */}
+          <div className={styles.sliderContainer}>
+            <SettingsSlider
+              label="음성 인식 감도:"
+              min={0.01}
+              max={1}
+              step={0.01}
+              value={silenceThreshold}
+              onChange={handleSliderChange}
+            />
+            <SettingsSlider
+              label="침묵 인식 시간 (초):"
+              min={0}
+              max={5}
+              step={0.5}
+              value={silenceDuration / 1000}
+              onChange={(e) =>
+                handleDurationChange({
+                  ...e,
+                  target: {
+                    ...e.target,
+                    value: (parseFloat(e.target.value) * 1000).toString(),
+                  },
+                })
+              }
+            />
+          </div>
+          <div className={styles.recordingControl}>
+            <button
+              className={styles.recordingButton}
+              onClick={toggleRecordingMode}
+            >
+              <FontAwesomeIcon
+                icon={recordingMode ? faMicrophone : faMicrophoneSlash}
+              />
+            </button>
+            {recordingMode && recording && (
+              <span className={styles.recordingIndicator}>
+                <FontAwesomeIcon
+                  icon={faCircle}
+                  className={styles.recordingIcon}
+                />
+                음성 인식 중...
+              </span>
+            )}
+          </div>
         </div>
       )}
     </div>

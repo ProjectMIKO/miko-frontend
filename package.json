@@ -12,6 +12,9 @@
     "start:prod": "cross-env NODE_ENV=production dotenv -e .env.production next build && next start"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.7.2",
     "next": "^14.2.4",
     "next-auth": "^4.24.7",
