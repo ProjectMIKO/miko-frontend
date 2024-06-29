@@ -8,6 +8,6 @@ export interface Node {
 
 export interface Edge {
   id: number | string;
-  from: number | string;
-  to: number | string;
+  from: number;
+  to: number;
 }
