@@ -56,7 +56,21 @@ const useNetwork = (
               (edge.from === nodeId && edge.to === tempEdgeFrom),
           });
           if (edgeToRemove.length > 0) {
-            edges.remove(edgeToRemove[0].id);
+            // edges.remove(edgeToRemove[0].id);
+            const newEdge: Edge = {
+              id: nextEdgeId,
+              from: tempEdgeFrom!,
+              to: nodeId,
+            };
+            console.log("edge요청 보냄",nodeId, tempEdgeFrom);
+            if (sessionId) {
+              socket.emit("edge", [
+                `${sessionId}`,
+                `${tempEdgeFrom}`,
+                `${nodeId}`,
+                "$pull",
+              ]);
+            }
           }
           setTempEdgeFrom(null);
           setAction(null);

@@ -73,7 +73,7 @@ const Video: React.FC<Props> = ({ sessionId, userName, token }) => {
       const publisher = openvidu.initPublisher(undefined, {
         audioSource: undefined,
         videoSource: undefined,
-        publishAudio: true,
+        publishAudio: false,
         publishVideo: true,
         resolution: "640x480",
         frameRate: 30,
