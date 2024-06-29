@@ -33,17 +33,7 @@ const NetworkGraph: React.FC<Props> = ({
     }
   }, [network, handleNodeClick]);
 
-  return (
-    <div
-      ref={containerRef}
-      className={styles.container}
-      onClick={() => {
-        if (selectedNodeId !== null) {
-          handleNodeClick(selectedNodeId);
-        }
-      }}
-    />
-  );
+  return <div ref={containerRef} className={styles.container} />;
 };
 
 export default NetworkGraph;
