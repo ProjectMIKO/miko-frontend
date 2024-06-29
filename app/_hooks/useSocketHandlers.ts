@@ -24,11 +24,11 @@ const useSocketHandlers = (
   );
 
   useEffect(() => {
-    const handleSummarize = (data: { contentId: string; keyword: string; subject: string; conversationIds: [] }) => {
-        setNextNodeId(data.contentId);
+    const handleSummarize = (data: { _id: string; keyword: string; subject: string; conversationIds: [] }) => {
+      setNextNodeId(data._id);
       setNewNodeLabel(data.keyword);
       setNewNodeContent(data.subject);
-      console.log("subtitle", data.subject);
+      console.log("subtitle", data);
     };
 
     socket.on("vertex", handleSummarize);
@@ -45,10 +45,10 @@ const useSocketHandlers = (
   }, [newNodeLabel, newNodeContent, nextNodeId, handleAddNode]);
 
   useEffect(() => {
-    const handleConnect = (data: { contentId: string; vertex1: number; vertex2: number; action: string }) => {
+    const handleConnect = (data: { _id: string; vertex1: number; vertex2: number; action: string }) => {
       console.log(data);
       const newEdge: Edge = {
-        id: data.contentId,
+        id: data._id,
         from: data.vertex1,
         to: data.vertex2,
       };
