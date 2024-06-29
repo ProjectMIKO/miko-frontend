@@ -47,7 +47,7 @@
   border-radius: 8px;
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
-  flex: 2;
+  flex: 1;
 }
 
 .nodeConversationWrapper {
@@ -59,7 +59,7 @@
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
-  flex: 4;
+  flex: 1.5;
 }
 
 .keywordButton {

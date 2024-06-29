@@ -18,7 +18,10 @@ import useNetwork from "../_hooks/useNetwork";
 import { useSocket } from "../_components/Socket/SocketContext";
 import SharingRoom from "../_components/sharingRoom";
 import { Edge } from "../_types/types";
-import { VideoProvider, useVideoContext } from "../_components/Video/VideoContext";
+import {
+  VideoProvider,
+  useVideoContext,
+} from "../_components/Video/VideoContext";
 import VoiceRecorder from "../_components/VoiceRecorder/VoiceRecorder";
 import useSocketHandlers from "../_hooks/useSocketHandlers";
 
@@ -51,23 +54,30 @@ const HomeContent: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nextId, setNextId] = useState("");
 
-  const { newNodeLabel, newNodeContent, nextNodeId, setNewNodeLabel, setNewNodeContent } = useSocketHandlers(edges, addNode);
+  const {
+    newNodeLabel,
+    newNodeContent,
+    nextNodeId,
+    setNewNodeLabel,
+    setNewNodeContent,
+  } = useSocketHandlers(edges, addNode);
 
-  const handleAddNode = useCallback((id: any) => {
-    addNode(id, controlNodeLabel, controlNodeContent, controlNodeColor);
-    setNextId("");
-    setControlNodeLabel("");
-    setControlNodeContent("");
-    setControlNodeColor("#5A5A5A");
-  }, [controlNodeLabel, controlNodeContent, controlNodeColor, addNode]);
-
+  const handleAddNode = useCallback(
+    (id: any) => {
+      addNode(id, controlNodeLabel, controlNodeContent, controlNodeColor);
+      setNextId("");
+      setControlNodeLabel("");
+      setControlNodeContent("");
+      setControlNodeColor("#5A5A5A");
+    },
+    [controlNodeLabel, controlNodeContent, controlNodeColor, addNode]
+  );
 
   useEffect(() => {
     if (controlNodeLabel && controlNodeContent) {
       handleAddNode(nextId);
     }
   }, [controlNodeLabel, controlNodeContent, nextId, handleAddNode]);
-
 
   const handleKeyword = () => {
     socket.emit("summarize", socketContext?.sessionId);
@@ -118,7 +128,11 @@ const HomeContent: React.FC = () => {
           <>
             <div className={styles.appContainer}>
               {sessionId && userName && token ? (
-                <Video sessionId={sessionId} userName={userName} token={token} />
+                <Video
+                  sessionId={sessionId}
+                  userName={userName}
+                  token={token}
+                />
               ) : (
                 <p>Loading...</p>
               )}
@@ -137,7 +151,7 @@ const HomeContent: React.FC = () => {
             selectedNodeId={selectedNodeId}
             onNodeClick={handleNodeClick}
           />
-          <div style={{ flex: 8 }}>
+          <div style={{ flex: 6 }}>
             <NetworkGraph
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
