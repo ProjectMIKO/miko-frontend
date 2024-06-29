@@ -6,7 +6,7 @@ import { Socket } from "socket.io-client";
 const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
   socket: Socket, // 소켓 객체를 매개변수로 받습니다.
-  sessionId: string | null | undefined,
+  sessionId: string | null | undefined
 ) => {
   const [network, setNetwork] = useState<Network | null>(null);
   const [nodes, setNodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
@@ -32,14 +32,14 @@ const useNetwork = (
             to: nodeId,
           };
           edges.add(newEdge);
-          console.log("edge요청 보냄",nodeId, tempEdgeFrom);
+          console.log("edge요청 보냄", nodeId, tempEdgeFrom);
           if (sessionId) {
-            console.log("edge요청 보냄",nodeId, tempEdgeFrom);
+            console.log("edge요청 보냄", nodeId, tempEdgeFrom);
             socket.emit("edge", [
               `${sessionId}`,
               `${tempEdgeFrom}`,
               `${nodeId}`,
-              '$push'
+              "$push",
             ]);
           }
 
@@ -111,7 +111,7 @@ const useNetwork = (
         },
         interaction: {
           dragNodes: true,
-          dragView: false,
+          dragView: true,
           zoomView: true,
         },
       };
