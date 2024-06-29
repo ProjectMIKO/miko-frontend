@@ -5,7 +5,7 @@ import { Socket } from "socket.io-client";
 
 const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
-  socket: Socket, // 소켓 객체를 매개변수로 받습니다.
+  socket: Socket,
   sessionId: string | null | undefined
 ) => {
   const [network, setNetwork] = useState<Network | null>(null);
@@ -32,9 +32,7 @@ const useNetwork = (
             to: nodeId,
           };
           edges.add(newEdge);
-          console.log("edge요청 보냄", nodeId, tempEdgeFrom);
           if (sessionId) {
-            console.log("edge요청 보냄", nodeId, tempEdgeFrom);
             socket.emit("edge", [
               `${sessionId}`,
               `${tempEdgeFrom}`,
@@ -64,9 +62,19 @@ const useNetwork = (
         }
       } else {
         setSelectedNodeId(nodeId);
+        if (nodeId !== null) {
+          const node = nodes.get(nodeId);
+          if (node) {
+            nodes.update({
+              id: nodeId,
+              label: node.label,
+              title: node.content, // 노드의 content를 title로 설정
+            });
+          }
+        }
       }
     },
-    [action, edges, nextEdgeId, tempEdgeFrom]
+    [action, edges, nextEdgeId, tempEdgeFrom, nodes, sessionId, socket]
   );
 
   useEffect(() => {
@@ -153,6 +161,7 @@ const useNetwork = (
       label,
       content,
       color,
+      title: content, // 추가: 노드 생성 시 content를 title로 설정
     };
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
