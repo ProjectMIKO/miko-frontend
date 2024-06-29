@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import VoiceComponent from '../_components/VoiceRecorder/VoiceRecorder';
-import { SocketProvider, useSocket } from '../_components/Socket/SocketContext';
+import { MainSocketProvider, useSocket } from '../_components/Socket/SocketContext';
 import socket from '../_lib/socket';
 
 const Home: React.FC = () => {
@@ -61,9 +61,9 @@ const Home: React.FC = () => {
 };
 
 const WrappedHome: React.FC = () => (
-    <SocketProvider>
+    <MainSocketProvider>
         <Home />
-    </SocketProvider>
+    </MainSocketProvider>
 );
 
 export default WrappedHome;
