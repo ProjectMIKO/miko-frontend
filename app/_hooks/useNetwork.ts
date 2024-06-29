@@ -31,7 +31,8 @@ const useNetwork = (
             from: tempEdgeFrom!,
             to: nodeId,
           };
-          edges.add(newEdge);
+          // edges.add(newEdge);
+          console.log("edge요청 보냄",nodeId, tempEdgeFrom);
           if (sessionId) {
             socket.emit("edge", [
               `${sessionId}`,

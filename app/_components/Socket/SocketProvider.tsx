@@ -7,20 +7,20 @@ import React, {
 } from "react";
 import { useSocket } from "./SocketContext";
 
-interface SocketContextProps {
+interface RoomSocketContextProps {
   sessionId: string | null;
   userName: string | null;
   token: string | null;
   isConnected: boolean;
 }
 
-const SocketContext = createContext<SocketContextProps | null>(null);
+const RoomSocketContext = createContext<RoomSocketContextProps | null>(null);
 
-interface SocketProviderProps {
+interface RoomSocketProviderProps {
   children: ReactNode;
 }
 
-export const SocketProvider = ({ children }: SocketProviderProps) => {
+export const RoomSocketProvider = ({ children }: RoomSocketProviderProps) => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -74,10 +74,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   }, [socket, isConnected, hasEnteredRoom, sessionId]);
 
   return (
-    <SocketContext.Provider value={{ sessionId, userName, token, isConnected }}>
+    <RoomSocketContext.Provider value={{ sessionId, userName, token, isConnected }}>
       {children}
-    </SocketContext.Provider>
+    </RoomSocketContext.Provider>
   );
 };
 
-export const useSocketContext = () => useContext(SocketContext);
+export const RoomuseSocketContext = () => useContext(RoomSocketContext);

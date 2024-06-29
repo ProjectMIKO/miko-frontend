@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../public/styles/globals.css";
 import SessionProvider from "./_components/SessionProvider";
-import { SocketProvider } from "./_components/Socket/SocketContext";
+import { MainSocketProvider } from "./_components/Socket/SocketContext";
 import Header from "./_components/common/Header";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,9 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className}>  
         <SessionProvider>
-          <SocketProvider>{children}</SocketProvider>
+          <MainSocketProvider>{children}</MainSocketProvider>
         </SessionProvider>
       </body>
     </html>

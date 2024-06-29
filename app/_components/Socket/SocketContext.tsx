@@ -16,12 +16,12 @@ const SocketContext = createContext<SocketContextProps | undefined>(undefined);
 export const useSocket = () => {
   const context = useContext(SocketContext);
   if (!context) {
-    throw new Error('useSocket must be used within a SocketProvider');
+    throw new Error('useSocket must be used within a MainSocketProvider');
   }
   return context;
 };
 
-export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const MainSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
