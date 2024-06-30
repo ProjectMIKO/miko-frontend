@@ -104,6 +104,14 @@ const HomeContent: React.FC = () => {
     }
   };
 
+  const handleLeaveSession = () => {
+    if (leaveSessionCallback) {
+      leaveSessionCallback();
+    }
+  };
+
+  const [leaveSessionCallback, setLeaveSessionCallback] = useState<(() => void) | null>(null);
+
   // 그룹 리스트 토글 함수
   const toggleList = () => {
     setIsListOpen(!isListOpen);
@@ -136,6 +144,7 @@ const HomeContent: React.FC = () => {
                           sessionId={sessionId}
                           userName={userName}
                           token={token}
+                          setLeaveSessionCallback={setLeaveSessionCallback}
                       />
                   ) : (
                       <p>Loading...</p>
