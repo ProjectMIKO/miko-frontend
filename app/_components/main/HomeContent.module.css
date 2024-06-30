@@ -44,42 +44,6 @@
   }
 }
 
-.groupedNodeListButton {
-  position: fixed;
-  right: -20px;
-  top: 0;
-  width: 10px;
-  height: 60px;
-  border: none;
-  /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
-  /*background-color: #f9f9f9;*/
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  z-index: 1;
-
-  background-color: #e1e1e1;
-}
-
-.groupedNodeListWrapper {
-  position: relative;
-  transform: translateX(-90%);
-  transition: transform 0.3s ease-out;
-  max-width: 10%;
-  border: none;
-  /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);*/
-  border-radius: 8px;
-  font-family: Arial, sans-serif;
-  /*background-color: #f9f9f9;*/
-  flex: 1;
-  z-index: 1;
-
-  display: flex;
-  flex-direction: row;
-
-  background-color: #e1e1e1
-}
-
 .open {
   transform: translateX(0); /* 원래 위치로 돌아옴 */
 }
@@ -90,7 +54,7 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: rgba(249,249,249,0.70);
+  background-color: rgba(249, 249, 249, 0.7);
   backdrop-filter: blur(5px);
   z-index: 1;
   overflow-y: auto; /* 세로 스크롤은 허용 */

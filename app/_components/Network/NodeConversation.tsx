@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import NodeList from "./NodeList";
 import Conversation from "./Conversation";
 import styles from "./styles/NodeConversation.module.css";
-import { Node } from "../../_types/types";
+import { Node, Edge } from "../../_types/types";
 import { useSocket } from "../Socket/SocketContext";
 
 interface NodeConversationProps {
   nodes: Node[];
+  edges: Edge[];
   selectedNodeId: number | null;
   onNodeClick: (nodeId: number) => void;
   className?: string;
@@ -14,6 +15,7 @@ interface NodeConversationProps {
 
 const NodeConversation: React.FC<NodeConversationProps> = ({
   nodes,
+  edges,
   selectedNodeId,
   onNodeClick,
   className,
@@ -44,6 +46,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
         return (
           <NodeList
             nodes={nodes}
+            edges={edges}
             selectedNodeId={selectedNodeId}
             onNodeClick={onNodeClick}
           />

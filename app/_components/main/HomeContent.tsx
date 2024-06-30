@@ -1,11 +1,9 @@
-// app/main/HomeContent.tsx
 import React from "react";
 import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
-import GroupedNodeList from "../Network/GroupedNodeList";
 import NodeConversation from "../Network/NodeConversation";
 import Video from "../Video/Video";
-import styles from "../../main/Main.module.css";
+import styles from "../main/HomeContent.module.css";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import SharingRoom from "../sharingRoom";
@@ -86,22 +84,10 @@ const HomeContent: React.FC = () => {
         <div className={styles.nodeConversationWrapper}>
           <NodeConversation
             nodes={nodes.get()}
-            selectedNodeId={selectedNodeId}
-            onNodeClick={handleNodeClick}
-          />
-        </div>
-        <div
-          className={`${styles.groupedNodeListWrapper} ${
-            isListOpen ? styles.open : ""
-          }`}
-        >
-          <GroupedNodeList
-            nodes={nodes.get()}
             edges={edges.get()}
             selectedNodeId={selectedNodeId}
             onNodeClick={handleNodeClick}
           />
-          <button className={styles.groupedNodeListButton}></button>
         </div>
       </div>
       <Footer>
