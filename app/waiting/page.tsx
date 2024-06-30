@@ -5,15 +5,17 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useSocket } from "../_components/Socket/SocketContext";
-import Image from 'next/image';
-import logo from '../../public/MIKO_LOGO_Square.png';
-import styles from './Waiting.module.css';
+import Image from "next/image";
+import logo from "../../public/MIKO_LOGO_Square.png";
+import styles from "./Waiting.module.css";
 
-const APPLICATION_SERVER_URL = process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
+const APPLICATION_SERVER_URL =
+  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
 const WaitingPage: React.FC = () => {
   const { data: session } = useSession();
-  const [mySessionId, setMySessionId] = useState<string>("방 제목을 입력하세요.");
+  const [mySessionId, setMySessionId] =
+    useState<string>("방 제목을 입력하세요.");
   const [myUserName, setMyUserName] = useState<string>("");
   const router = useRouter();
 
@@ -41,7 +43,11 @@ const WaitingPage: React.FC = () => {
         const token = await getToken();
         console.log("Token received:", token);
 
-        const url = `/main?sessionId=${encodeURIComponent(mySessionId)}&userName=${encodeURIComponent(myUserName)}&token=${encodeURIComponent(token)}`;
+        const url = `/meetingRoom?sessionId=${encodeURIComponent(
+          mySessionId
+        )}&userName=${encodeURIComponent(
+          myUserName
+        )}&token=${encodeURIComponent(token)}`;
 
         router.push(url);
       } catch (error) {
@@ -81,13 +87,22 @@ const WaitingPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <Image src={logo} alt="MIKO Logo" width={100} height={100} className={styles.logo}/>
+        <Image
+          src={logo}
+          alt="MIKO Logo"
+          width={100}
+          height={100}
+          className={styles.logo}
+        />
         <h1 className={styles.title}>Welcome to MIKO</h1>
         <div id="join">
           <div id="join-dialog">
             {session ? (
               <div>
-                <p className={styles.info}><span className={styles.bold}>{session.user?.name}</span>님 반갑습니다!</p>
+                <p className={styles.info}>
+                  <span className={styles.bold}>{session.user?.name}</span>님
+                  반갑습니다!
+                </p>
               </div>
             ) : (
               <p className={styles.info}>Not logged in</p>
@@ -116,7 +131,12 @@ const WaitingPage: React.FC = () => {
                 />
               </div>
               <div className={styles.formGroup}>
-                <input name="commit" type="submit" value="Join" className={styles.button} />
+                <input
+                  name="commit"
+                  type="submit"
+                  value="Join"
+                  className={styles.button}
+                />
               </div>
             </form>
           </div>

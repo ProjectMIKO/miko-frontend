@@ -3,7 +3,7 @@ import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
 import NodeConversation from "../Network/NodeConversation";
 import Video from "../Video/Video";
-import styles from "../main/HomeContent.module.css";
+import styles from "./MeetingRoom.module.css";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import SharingRoom from "../sharingRoom";

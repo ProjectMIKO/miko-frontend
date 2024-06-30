@@ -3,7 +3,7 @@
 import React from "react";
 import { RoomSocketProvider } from "../_components/Socket/SocketProvider";
 import { VideoProvider } from "../_components/Video/VideoContext";
-import HomeContent from "../_components/main/HomeContent";
+import HomeContent from "../_components/meetingRoom/MeetingRoom";
 
 const Home: React.FC = () => {
   return (
