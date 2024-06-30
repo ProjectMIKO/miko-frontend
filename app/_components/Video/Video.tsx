@@ -34,8 +34,8 @@ const Video: React.FC<Props> = ({ sessionId, userName, token, setLeaveSessionCal
   const handlerLeaveSessionEvent = useCallback(() => {
     console.log("Leave session");
     if (session) {
+      session.unpublish(publisher);
       session.disconnect();
-      session.unsubscribe(subscriber);
       setSession(undefined);
       setSubscribers([]);
       socket.disconnect();

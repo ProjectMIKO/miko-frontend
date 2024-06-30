@@ -1,15 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 import Header from "../_components/common/Header";
 import Footer from "../_components/common/Footer";
 import AudioPlayer from "../_components/AudioPlayer";
 import styles from "./Result.module.css";
-
+import { useSocket } from "../_components/Socket/SocketContext"
 const Page: React.FC = () => {
   const [activeTab, setActiveTab] = useState("tab1");
+
+  const { disconnectSocket } = useSocket();
+
+  useEffect(() => {
+    disconnectSocket();
+  }, [disconnectSocket]);
 
   const renderTabContent = () => {
     switch (activeTab) {
