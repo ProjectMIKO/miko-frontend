@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 import Header from "../_components/common/Header";
@@ -8,8 +8,16 @@ import Footer from "../_components/common/Footer";
 import AudioPlayer from "../_components/AudioPlayer";
 import styles from "./Result.module.css";
 import { useSocket } from "../_components/Socket/SocketContext"
+import NetworkGraph from "../_components/Network/NetworkGraph";
+import useNetwork from "../_hooks/useNetwork";
 const Page: React.FC = () => {
   const [activeTab, setActiveTab] = useState("tab1");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    selectedNodeId,
+    handleNodeClick,
+  } = useNetwork(containerRef, null, null);
 
   const { disconnectSocket } = useSocket();
 
@@ -122,11 +130,11 @@ const Page: React.FC = () => {
         <section className={styles.left}>
           노드 그래프 영역
           <div style={{ position: "relative", width: "100%", height: "500px" }}>
-            <Image
-              src="/temp_node.png"
-              alt="Node Graph"
-              layout="fill"
-              objectFit="contain"
+            <NetworkGraph
+              containerRef={containerRef}
+              selectedNodeId={selectedNodeId}
+              handleNodeClick={handleNodeClick}
+              socket={null}
             />
           </div>
         </section>

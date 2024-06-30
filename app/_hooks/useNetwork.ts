@@ -5,7 +5,7 @@ import { Socket } from "socket.io-client";
 
 const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
-  socket: Socket,
+  socket: Socket | null,
   sessionId: string | null | undefined
 ) => {
   const [network, setNetwork] = useState<Network | null>(null);
@@ -33,7 +33,7 @@ const useNetwork = (
           };
           // edges.add(newEdge);
           console.log("edge요청 보냄",nodeId, tempEdgeFrom);
-          if (sessionId) {
+          if (sessionId && socket) {
             socket.emit("edge", [
               `${sessionId}`,
               `${tempEdgeFrom}`,
@@ -63,7 +63,7 @@ const useNetwork = (
               to: nodeId,
             };
             console.log("edge요청 보냄",nodeId, tempEdgeFrom);
-            if (sessionId) {
+            if (sessionId && socket) {
               socket.emit("edge", [
                 `${sessionId}`,
                 `${tempEdgeFrom}`,

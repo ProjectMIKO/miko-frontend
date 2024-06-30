@@ -31,17 +31,30 @@ const Video: React.FC<Props> = ({ sessionId, userName, token, setLeaveSessionCal
     console.log("Join session");
   };
 
+  useEffect(() => {
+    const handleRoomId = (data : string ) => {
+      console.log("Leave session: ", data);
+      const url = `/result?meetingId=${encodeURIComponent(data)}`;
+      if (session) {
+        session.unpublish(publisher);
+        session.disconnect();
+        setSession(undefined);
+        setSubscribers([]);
+        socket.disconnect();
+        router.push(url);
+      }
+    };
+
+    socket.on("roomId", handleRoomId);
+    
+    return () => {
+      socket.off("roomId", handleRoomId);
+    };
+  }, [session, subscriber, socket, router])
+
   const handlerLeaveSessionEvent = useCallback(() => {
-    console.log("Leave session");
-    if (session) {
-      session.unpublish(publisher);
-      session.disconnect();
-      setSession(undefined);
-      setSubscribers([]);
-      socket.disconnect();
-      router.push("/result");
-    }
-  }, [session, subscriber, socket, router]);
+    socket.emit("roomId", sessionId);
+  }, [socket]);
 
   const handlerErrorEvent = (error: any) => {
     console.log("Error in session", error);
