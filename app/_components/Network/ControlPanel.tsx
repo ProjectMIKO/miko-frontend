@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./styles/ControlPanel.module.css"; // CSS 모듈을 가져옵니다.
+import styles from "./styles/ControlPanel.module.css";
 
 interface ControlPanelProps {
   newNodeLabel: string;
