@@ -9,7 +9,7 @@ interface Props {
   containerRef: React.RefObject<HTMLDivElement>;
   selectedNodeId: number | null;
   handleNodeClick: (nodeId: number | null) => void;
-  socket: Socket;
+  socket: Socket | null;
 }
 
 const NetworkGraph: React.FC<Props> = ({
