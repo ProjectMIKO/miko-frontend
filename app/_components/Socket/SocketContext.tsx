@@ -25,24 +25,28 @@ export const MainSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
-    socket.on('connect', () => {
+    const handleConnect = () => {
       setIsConnected(true);
       console.log("connected");
-    });
+    };
 
-    socket.on('disconnect', () => {
+    const handleDisconnect = () => {
       setIsConnected(false);
       console.log("disconnected");
-    });
+    };
 
-    socket.on('error', (error) => {
+    const handleError = (error: any) => {
       console.error('Error from server:', error);
-    });
+    };
+
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('error', handleError);
 
     return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('error');
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('error', handleError);
     };
   }, []);
 
@@ -52,7 +56,7 @@ export const MainSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   const disconnectSocket = () => {
-    socket.emit('disconnecting');
+    // socket.emit('disconnecting');
     socket.disconnect();
   };
   
