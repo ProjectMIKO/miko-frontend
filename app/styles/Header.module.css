@@ -7,4 +7,6 @@
   color: white;
   position: static;
   width: 100%;
+  height: 3vh;
+  z-index: 1000;
 }
