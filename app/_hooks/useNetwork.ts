@@ -32,7 +32,7 @@ const useNetwork = (
             to: nodeId,
           };
           // edges.add(newEdge);
-          console.log("edge요청 보냄",nodeId, tempEdgeFrom);
+          console.log("edge요청 보냄", nodeId, tempEdgeFrom);
           if (sessionId) {
             socket.emit("edge", [
               `${sessionId}`,
@@ -62,7 +62,7 @@ const useNetwork = (
               from: tempEdgeFrom!,
               to: nodeId,
             };
-            console.log("edge요청 보냄",nodeId, tempEdgeFrom);
+            console.log("edge요청 보냄", nodeId, tempEdgeFrom);
             if (sessionId) {
               socket.emit("edge", [
                 `${sessionId}`,
@@ -83,7 +83,6 @@ const useNetwork = (
             nodes.update({
               id: nodeId,
               label: node.label,
-              title: node.content, // 노드의 content를 title로 설정
             });
           }
         }
@@ -176,7 +175,6 @@ const useNetwork = (
       label,
       content,
       color,
-      title: content, // 추가: 노드 생성 시 content를 title로 설정
     };
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
