@@ -13,7 +13,12 @@ interface Props {
   setLeaveSessionCallback: (callback: () => void) => void;
 }
 
-const Video: React.FC<Props> = ({ sessionId, userName, token, setLeaveSessionCallback }) => {
+const Video: React.FC<Props> = ({
+  sessionId,
+  userName,
+  token,
+  setLeaveSessionCallback,
+}) => {
   const [session, setSession] = useState<any>(undefined);
   const router = useRouter();
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -131,7 +136,6 @@ const Video: React.FC<Props> = ({ sessionId, userName, token, setLeaveSessionCal
     setLeaveSessionCallback(() => handlerLeaveSessionEvent);
   }, [setLeaveSessionCallback, handlerLeaveSessionEvent]);
 
-
   const handleNextPage = () => {
     if (currentPage < Math.ceil(subscribers.length / 5)) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -151,31 +155,15 @@ const Video: React.FC<Props> = ({ sessionId, userName, token, setLeaveSessionCal
 
   return (
     <div id={styles["video-container"]}>
-      <div className={styles["navigation-buttons"]}>
-        <button
-          className={styles["nav-button"]}
-          onClick={handlePreviousPage}
-          disabled={currentPage === 0}
-        >
-          &lt;
-        </button>
-        <button
-          className={styles["nav-button"]}
-          onClick={handleNextPage}
-          disabled={currentPage >= Math.ceil(subscribers.length / 5) - 1}
-        >
-          &gt;
-        </button>
-      </div>
-      <div id={styles["video-wrapper"]}>
-        <div id={styles["local-video"]}>
-          <video ref={localVideoRef} autoPlay={true} />
-          <div className={styles.nicknameContainer}>
-            <span>{userName}</span>
-          </div>
+      <div id={styles["local-video"]}>
+        <video ref={localVideoRef} autoPlay={true} />
+        <div className={styles.nicknameContainer}>
+          <span>{userName}</span>
         </div>
+      </div>
+      <div id={styles["remote-videos-container"]}>
         {getVisibleSubscribers().map((sub) => (
-          <div key={sub.stream.streamId} id={styles["remote-videos"]}>
+          <div key={sub.stream.streamId} className={styles["remote-video"]}>
             <UserVideoComponent streamManager={sub} />
           </div>
         ))}

@@ -4,7 +4,6 @@ import ControlPanel from "../Network/ControlPanel";
 import NodeConversation from "../Network/NodeConversation";
 import Video from "../Video/Video";
 import styles from "./MeetingRoom.module.css";
-import Header from "../common/Header";
 import Footer from "../common/Footer";
 import SharingRoom from "../sharingRoom";
 import VoiceRecorder from "../VoiceRecorder/VoiceRecorder";
@@ -50,7 +49,6 @@ const HomeContent: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <Header>MIKO</Header>
       <div className={styles.mainContainer}>
         <div className={styles.networkGraphContainer}>
           <NetworkGraph
