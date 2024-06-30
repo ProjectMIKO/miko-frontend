@@ -3,7 +3,7 @@
   text-align: center;
   width: 100%;
   z-index: 1000;
-  background-color: rgba(249,249,249,0.70);
+  background-color: transparent; /* 배경색을 투명으로 설정 */
   backdrop-filter: blur(1px);
 }
 

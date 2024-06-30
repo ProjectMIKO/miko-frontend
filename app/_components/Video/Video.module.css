@@ -9,8 +9,10 @@
   padding: 10px;
   overflow: hidden;
   position: relative;
-  z-index: 0;
   background-color: transparent; /* 배경색을 투명으로 설정 */
+  margin-top: 20px;
+  margin-left: 20px;
+  z-index: 5;
 }
 
 #local-video {

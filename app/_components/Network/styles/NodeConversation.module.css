@@ -1,4 +1,3 @@
-/* NodeConversation.module.css */
 .chromeTabs {
   display: flex;
   justify-content: space-between;
@@ -38,7 +37,8 @@
 
 .nodeConversationContainer {
   flex-grow: 1;
-  overflow-y: auto;
+  overflow-y: auto; /* 세로 스크롤 허용 */
+  overflow-x: hidden; /* 가로 스크롤 막기 */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
