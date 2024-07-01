@@ -14,7 +14,7 @@ const UserVideoComponent: React.FC<Props> = ({ streamManager }) => {
     };
 
     return (
-        <div className={`${styles.streamcomponent} ${isSpeaking ? styles.speaking : ''}`}>
+        <div className={styles.streamcomponent} >
             <OpenViduVideoComponent streamManager={streamManager} />
             <div className={styles.nicknameContainer}><span>{getNicknameTag()}</span></div>
         </div>
