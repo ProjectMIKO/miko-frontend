@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import Header from "../_components/common/Header";
 import Footer from "../_components/common/Footer";
 import AudioPlayer from "../_components/AudioPlayer";
@@ -38,7 +37,7 @@ const ResultPage: React.FC = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { addNode, selectedNodeId, handleNodeClick, edges } = useNetwork(
+  const { addNode, selectedNodeId, handleNodeClick, edges, fitToScreen } = useNetwork(
     containerRef,
     null,
     null
@@ -147,8 +146,8 @@ const ResultPage: React.FC = () => {
       <main className={styles.main}>
         <section className={styles.left}>
           노드 그래프 영역
-          <div style={{ position: "relative", width: "100%", height: "500px" }}>
-            <button>fitToScreen</button>
+          <div style={{ position: "relative", width: "100%", height: "900px" }}>
+            <button onClick={fitToScreen}>fitToScreen</button>
             <NetworkGraph
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
