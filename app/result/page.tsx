@@ -10,14 +10,7 @@ import styles from "./Result.module.css";
 import { useSocket } from "../_components/Socket/SocketContext";
 import NetworkGraph from "../_components/Network/NetworkGraph";
 import useNetwork from "../_hooks/useNetwork";
-
-interface Conversation {
-  _id: string;
-  user: string;
-  script: string;
-  timestamp: string;
-  __v: number;
-}
+import { Conversation, Edge } from "../_types/types";
 
 interface Vertex {
   _id: string;
@@ -27,15 +20,25 @@ interface Vertex {
   __v: number;
 }
 
+interface NewEdge {
+  _id: string;
+  vertex1: number;
+  vertex2: number;
+  __v: number;
+}
+
 const ResultPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("tab1");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [vertexes, setVertexes] = useState<Vertex[]>([]);
+  const [newEdges, setNewEdges] = useState<NewEdge[]>([]);
+  const addedNodesRef = useRef<Set<string>>(new Set());
+  const addedEdgesRef = useRef<Set<string|number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { selectedNodeId, handleNodeClick } = useNetwork(
+  const { addNode, selectedNodeId, handleNodeClick, edges } = useNetwork(
     containerRef,
     null,
     null
@@ -53,11 +56,12 @@ const ResultPage: React.FC = () => {
       if (meetingId) {
         try {
           const response = await fetch(
-            `https://miko-dev-a7d3f7eaf040.herokuapp.com/meeting/${meetingId}`
+            `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/${meetingId}`
           );
           const data = await response.json();
           setConversations(data.conversations);
           setVertexes(data.vertexes);
+          setNewEdges(data.edges);
         } catch (error) {
           console.error("Error fetching data: ", error);
         }
@@ -66,6 +70,34 @@ const ResultPage: React.FC = () => {
 
     fetchData();
   }, [searchParams]);
+
+  useEffect(() => {
+    const printMap = () => {
+      if (vertexes && vertexes.length > 0) {
+        vertexes.forEach((vertex) => {
+          if (!addedNodesRef.current.has(vertex._id)) {
+            addNode(vertex._id, vertex.keyword, vertex.subject, "#5A5A5A");
+            addedNodesRef.current.add(vertex._id);
+          }
+        });
+      }
+      if (newEdges && newEdges.length > 0) {
+        newEdges.forEach((edge) => {
+          if(!addedEdgesRef.current.has(edge._id)) {
+            const newEdge: Edge = {
+              id: edge._id,
+              from: edge.vertex1,
+              to: edge.vertex2,
+            };
+      
+            edges.add(newEdge);
+            addedEdgesRef.current.add(edge._id);
+          }
+        });
+      }
+    };
+    printMap();
+  }, [vertexes, addNode, edges, newEdges]);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -95,7 +127,7 @@ const ResultPage: React.FC = () => {
                   {conversation.user}:
                 </span>
                 <span className={styles.conversationScript}>
-                  {conversation.script}
+                  {conversation.content}
                 </span>
                 <span className={styles.conversationTimestamp}>
                   {conversation.timestamp}
@@ -116,6 +148,7 @@ const ResultPage: React.FC = () => {
         <section className={styles.left}>
           노드 그래프 영역
           <div style={{ position: "relative", width: "100%", height: "500px" }}>
+            <button>fitToScreen</button>
             <NetworkGraph
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
