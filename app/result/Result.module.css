@@ -71,6 +71,9 @@
 
 .keywordItem,
 .conversationItem {
+  display: flex; /* Flexbox 사용 */
+  align-items: center; /* 세로 정렬 */
+  justify-content: space-between; /* 양쪽 정렬 */
   padding: 10px 0;
   border-bottom: 1px solid #ddd;
   color: #555;
@@ -99,4 +102,13 @@
 
 .conversationScript {
   color: #555;
+  flex-grow: 1; /* 공간 차지 */
+  margin-right: 8px; /* 간격 */
+}
+
+.conversationTimestamp {
+  font-size: 13px;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
 }
