@@ -68,6 +68,12 @@ const Video: React.FC<Props> = ({
   const initializeSession = async (token: string) => {
     const openvidu = new OpenVidu();
     const mySession = openvidu.initSession();
+      openvidu.setAdvancedConfiguration({
+        publisherSpeakingEventsOptions: {
+            interval: 100,   // Frequency of the polling of audio streams in ms (default 100)
+            threshold: -50  // Threshold volume in dB (default -50)
+        }
+    });
 
     mySession.on("streamCreated", (event: any) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
