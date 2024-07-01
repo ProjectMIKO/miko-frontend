@@ -19,9 +19,18 @@ interface Conversation {
   __v: number;
 }
 
+interface Vertex {
+  _id: string;
+  keyword: string;
+  subject: string;
+  conversationIds: string[];
+  __v: number;
+}
+
 const ResultPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("tab1");
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [vertexes, setVertexes] = useState<Vertex[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -48,6 +57,7 @@ const ResultPage: React.FC = () => {
           );
           const data = await response.json();
           setConversations(data.conversations);
+          setVertexes(data.vertexes);
         } catch (error) {
           console.error("Error fetching data: ", error);
         }
@@ -63,23 +73,30 @@ const ResultPage: React.FC = () => {
         return <div></div>;
       case "tab2":
         return (
-          <div style={{ position: "relative", width: "100%", height: "100%" }}>
-            <Image
-              src="/key_word.png"
-              alt="Keyword Summary"
-              layout="fill"
-              objectFit="contain"
-            />
+          <div>
+            {vertexes.map((vertex) => (
+              <div key={vertex._id} className={styles.keywordItem}>
+                <div className={styles.keywordLabel}>
+                  Label: {vertex.keyword}
+                </div>
+                <div className={styles.keywordContent}>
+                  Content: {vertex.subject}
+                </div>
+              </div>
+            ))}
           </div>
         );
       case "tab3":
         return (
           <div>
             {conversations.map((conversation) => (
-              <div key={conversation._id}>
-                <strong>{conversation.user}:</strong> {conversation.script}
-                <br />
-                <br />
+              <div key={conversation._id} className={styles.conversationItem}>
+                <span className={styles.conversationUser}>
+                  {conversation.user}:
+                </span>
+                <span className={styles.conversationScript}>
+                  {conversation.script}
+                </span>
               </div>
             ))}
           </div>
