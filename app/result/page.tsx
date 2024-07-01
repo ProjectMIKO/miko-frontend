@@ -10,6 +10,7 @@ import { useSocket } from "../_components/Socket/SocketContext";
 import NetworkGraph from "../_components/Network/NetworkGraph";
 import useNetwork from "../_hooks/useNetwork";
 import { Conversation, Edge } from "../_types/types";
+import NodeList from "../_components/Network/NodeList";
 
 interface Vertex {
   _id: string;
@@ -32,12 +33,12 @@ const ResultPage: React.FC = () => {
   const [vertexes, setVertexes] = useState<Vertex[]>([]);
   const [newEdges, setNewEdges] = useState<NewEdge[]>([]);
   const addedNodesRef = useRef<Set<string>>(new Set());
-  const addedEdgesRef = useRef<Set<string|number>>(new Set());
+  const addedEdgesRef = useRef<Set<string | number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { addNode, selectedNodeId, handleNodeClick, edges, fitToScreen } = useNetwork(
+  const { addNode, selectedNodeId, handleNodeClick, edges, fitToScreen, nodes } = useNetwork(
     containerRef,
     null,
     null
@@ -82,13 +83,13 @@ const ResultPage: React.FC = () => {
       }
       if (newEdges && newEdges.length > 0) {
         newEdges.forEach((edge) => {
-          if(!addedEdgesRef.current.has(edge._id)) {
+          if (!addedEdgesRef.current.has(edge._id)) {
             const newEdge: Edge = {
               id: edge._id,
               from: edge.vertex1,
               to: edge.vertex2,
             };
-      
+
             edges.add(newEdge);
             addedEdgesRef.current.add(edge._id);
           }
@@ -101,7 +102,12 @@ const ResultPage: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "tab1":
-        return <div></div>;
+        return <div><NodeList
+          nodes={nodes.get()}
+          edges={edges.get()}
+          selectedNodeId={selectedNodeId}
+          onNodeClick={handleNodeClick}
+        /></div>;
       case "tab2":
         return (
           <div>
@@ -160,25 +166,22 @@ const ResultPage: React.FC = () => {
           <div className={styles.tabs}>
             <button
               onClick={() => setActiveTab("tab1")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab1" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab1" ? styles.activeTab : ""
+                }`}
             >
               그룹
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab2" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab2" ? styles.activeTab : ""
+                }`}
             >
               키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab3")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab3" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab3" ? styles.activeTab : ""
+                }`}
             >
               음성 기록
             </button>
