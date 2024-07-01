@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Header from "../_components/common/Header";
@@ -19,7 +19,7 @@ interface Conversation {
   __v: number;
 }
 
-const Page: React.FC = () => {
+const ResultPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("tab1");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -140,5 +140,11 @@ const Page: React.FC = () => {
     </div>
   );
 };
+
+const Page: React.FC = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <ResultPage />
+  </Suspense>
+);
 
 export default Page;
