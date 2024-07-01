@@ -75,12 +75,13 @@ const ResultPage: React.FC = () => {
         return (
           <div>
             {vertexes.map((vertex) => (
-              <div key={vertex._id}>
-                <strong>Label:</strong> {vertex.keyword}
-                <br />
-                <strong>Content:</strong> {vertex.subject}
-                <br />
-                <br />
+              <div key={vertex._id} className={styles.keywordItem}>
+                <div className={styles.keywordLabel}>
+                  Label: {vertex.keyword}
+                </div>
+                <div className={styles.keywordContent}>
+                  Content: {vertex.subject}
+                </div>
               </div>
             ))}
           </div>
@@ -89,10 +90,13 @@ const ResultPage: React.FC = () => {
         return (
           <div>
             {conversations.map((conversation) => (
-              <div key={conversation._id}>
-                <strong>{conversation.user}:</strong> {conversation.script}
-                <br />
-                <br />
+              <div key={conversation._id} className={styles.conversationItem}>
+                <span className={styles.conversationUser}>
+                  {conversation.user}:
+                </span>
+                <span className={styles.conversationScript}>
+                  {conversation.script}
+                </span>
               </div>
             ))}
           </div>
