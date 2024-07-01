@@ -11,3 +11,11 @@ export interface Edge {
   from: number;
   to: number;
 }
+
+export interface Conversation {
+  _id: string;
+  user: string;
+  content: string;
+  timestamp: string;
+  __v: number;
+}

@@ -68,3 +68,35 @@
     flex-direction: row;
   }
 }
+
+.keywordItem,
+.conversationItem {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  color: #555;
+  transition: background-color 0.3s ease, font-weight 0.3s ease;
+}
+
+.keywordItem:hover,
+.conversationItem:hover {
+  background-color: rgba(150, 160, 254, 0.3);
+  font-weight: bold;
+}
+
+.keywordLabel {
+  color: black;
+}
+
+.keywordContent {
+  color: #555;
+}
+
+.conversationUser {
+  font-weight: bold;
+  color: #333;
+  margin-right: 5px;
+}
+
+.conversationScript {
+  color: #555;
+}
