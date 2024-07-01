@@ -97,6 +97,9 @@ const ResultPage: React.FC = () => {
                 <span className={styles.conversationScript}>
                   {conversation.script}
                 </span>
+                <span className={styles.conversationTimestamp}>
+                  {conversation.timestamp}
+                </span>
               </div>
             ))}
           </div>
