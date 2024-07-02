@@ -75,7 +75,7 @@ const WaitingPage: React.FC = () => {
           mySessionId
         )}&userName=${encodeURIComponent(
           myUserName
-        )}&token=${encodeURIComponent(token)}`;
+        )}&token=${encodeURIComponent(token)}&password=${encodeURIComponent(password)}`;
 
         router.push(url);
       } catch (error) {
@@ -86,11 +86,58 @@ const WaitingPage: React.FC = () => {
 
   const handleCreateSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await joinSession(event, true); // 방 생성
+    const requestData = {
+      // 여기에 필요한 데이터를 추가하세요. 예:
+      nickname: myUserName,
+      room: mySessionId,
+      password: password
+    };
+    console.log(requestData);
+    const response = await fetch(
+      `${APPLICATION_SERVER_URL}create/room`,
+      {
+        method: 'POST', // POST 메소드 사용
+        headers: {
+          'Content-Type': 'application/json' // JSON 형식으로 보냄
+        },
+        body: JSON.stringify(requestData) // JSON 문자열로 변환
+      }
+    );
+  
+    if (response.ok) {
+      await joinSession(event, true); // 방 생성 후 세션에 참가
+    } else {
+      console.error('Failed to create room:', response.statusText); // 에러 처리
+      alert('Failed to create room');
+    }
   };
   
   const handleJoinSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
+    const requestData = {
+      // 여기에 필요한 데이터를 추가하세요. 예:
+      room: mySessionId,
+      password: password
+    };
+  
+    const response = await fetch(
+      `${APPLICATION_SERVER_URL}join/room`,
+      {
+        method: 'POST', // POST 메소드 사용
+        headers: {
+          'Content-Type': 'application/json' // JSON 형식으로 보냄
+        },
+        body: JSON.stringify(requestData) // JSON 문자열로 변환
+      }
+    );
+  
+    if (response.ok) {
+      await joinSession(event, true); // 방 생성 후 세션에 참가
+    } else {
+      console.error('Failed to create room:', response.statusText); // 에러 처리
+      alert('Failed to create room');
+    }
     await joinSession(event, false); // 방 참가
   };
 
