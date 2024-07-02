@@ -32,6 +32,7 @@ const ResultPage: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [vertexes, setVertexes] = useState<Vertex[]>([]);
   const [newEdges, setNewEdges] = useState<NewEdge[]>([]);
+  const [meetingId, setMeetingId] = useState<string | null>(null);
   const addedNodesRef = useRef<Set<string>>(new Set());
   const addedEdgesRef = useRef<Set<string | number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,6 +56,7 @@ const ResultPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const meetingId = searchParams.get("meetingId");
+      setMeetingId(meetingId);
 
       if (meetingId) {
         try {
@@ -213,7 +215,7 @@ const ResultPage: React.FC = () => {
         </section>
       </main>
       <Footer isFixed>
-        <AudioPlayer />
+        {meetingId && <AudioPlayer meetingId={meetingId} />}
       </Footer>
     </div>
   );
