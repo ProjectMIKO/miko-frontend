@@ -102,55 +102,61 @@ const ResultPage: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "tab1":
-        return <div><NodeList
-          nodes={nodes.get()}
-          edges={edges.get()}
-          selectedNodeId={selectedNodeId}
-          onNodeClick={handleNodeClick}
-        /></div>;
-        case "tab2":
-          return (
-            <div>
-              {vertexes && vertexes.length > 0 ? (
-                vertexes.map((vertex) => (
-                  <div key={vertex._id} className={styles.keywordItem}>
-                    <div className={styles.keywordLabel}>
-                      Label: {vertex.keyword}
-                    </div>
-                    <div className={styles.keywordContent}>
-                      Content: {vertex.subject}
-                    </div>
+        return <div>
+          {nodes.get().length > 0 ? (
+            <NodeList
+              nodes={nodes.get()}
+              edges={edges.get()}
+              selectedNodeId={selectedNodeId}
+              onNodeClick={handleNodeClick}
+            />
+          ) : (
+            <div>No vertexes available</div>
+          )}
+        </div>
+      case "tab2":
+        return (
+          <div>
+            {vertexes && vertexes.length > 0 ? (
+              vertexes.map((vertex) => (
+                <div key={vertex._id} className={styles.keywordItem}>
+                  <div className={styles.keywordLabel}>
+                    Label: {vertex.keyword}
                   </div>
-                ))
-              ) : (
-                <div>No vertexes available</div>
-              )}
-            </div>
-          );
-        case "tab3":
-          return (
-            <div>
-              {conversations && conversations.length > 0 ? (
-                conversations.map((conversation) => (
-                  <div key={conversation._id} className={styles.conversationItem}>
-                    <span className={styles.conversationUser}>
-                      {conversation.user}:
-                    </span>
-                    <span className={styles.conversationScript}>
-                      {conversation.script}
-                    </span>
-                    <span className={styles.conversationTimestamp}>
-                      {conversation.timestamp}
-                    </span>
+                  <div className={styles.keywordContent}>
+                    Content: {vertex.subject}
                   </div>
-                ))
-              ) : (
-                <div>No conversations available</div>
-              )}
-            </div>
-          );
-        default:
-          return null;
+                </div>
+              ))
+            ) : (
+              <div>No vertexes available</div>
+            )}
+          </div>
+        );
+      case "tab3":
+        return (
+          <div>
+            {conversations && conversations.length > 0 ? (
+              conversations.map((conversation) => (
+                <div key={conversation._id} className={styles.conversationItem}>
+                  <span className={styles.conversationUser}>
+                    {conversation.user}:
+                  </span>
+                  <span className={styles.conversationScript}>
+                    {conversation.script}
+                  </span>
+                  <span className={styles.conversationTimestamp}>
+                    {conversation.timestamp}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div>No conversations available</div>
+            )}
+          </div>
+        );
+      default:
+        return null;
     }
   };
 
@@ -161,8 +167,8 @@ const ResultPage: React.FC = () => {
         <section className={styles.left}>
           노드 그래프 영역
           <div style={{ position: "relative", width: "100%", height: "900px" }}>
-          <button onClick={fitToScreen} className={styles.button}>fitToScreen</button>
-          <NetworkGraph
+            <button onClick={fitToScreen} className={styles.button}>fitToScreen</button>
+            <NetworkGraph
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
               handleNodeClick={handleNodeClick}
