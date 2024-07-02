@@ -16,6 +16,7 @@ const WaitingPage: React.FC = () => {
   const { data: session } = useSession();
   const [mySessionId, setMySessionId] = useState<string>("방 제목을 입력하세요.");
   const [myUserName, setMyUserName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
   const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState<string | null>(null);
@@ -39,6 +40,11 @@ const WaitingPage: React.FC = () => {
     setMyUserName(e.target.value);
   };
 
+  const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+
   useEffect(() => {
     const getDevices = async () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
@@ -57,12 +63,12 @@ const WaitingPage: React.FC = () => {
     getDevices();
   }, []);
 
-  const joinSession = async (event: FormEvent) => {
+  const joinSession = async (event: FormEvent, isCreate: boolean) => {
     event.preventDefault();
     if (mySessionId && myUserName) {
       console.log("Joining session with ID:", mySessionId);
       try {
-        const token = await getToken();
+        const token = await getToken(isCreate);
         console.log("Token received:", token);
 
         const url = `/meetingRoom?sessionId=${encodeURIComponent(
@@ -78,8 +84,18 @@ const WaitingPage: React.FC = () => {
     }
   };
 
-  const getToken = async () => {
-    const sessionId = await createSession(mySessionId);
+  const handleCreateSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    await joinSession(event, true); // 방 생성
+  };
+  
+  const handleJoinSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    await joinSession(event, false); // 방 참가
+  };
+
+  const getToken = async (isCreate: boolean) => {
+    const sessionId = isCreate ? await createSession(mySessionId) : mySessionId;
     const token = await createToken(sessionId);
     return token;
   };
@@ -134,7 +150,7 @@ const WaitingPage: React.FC = () => {
             ) : (
               <p className={styles.info}>Not logged in</p>
             )}
-            <form onSubmit={joinSession} className={styles.form}>
+            <form className={styles.form}>
               <div className={styles.formGroup}>
                 <label className={styles.label}>이름</label>
                 <input
@@ -153,6 +169,17 @@ const WaitingPage: React.FC = () => {
                   id="sessionId"
                   placeholder={mySessionId}
                   onChange={handleChangeSessionId}
+                  required
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>비밀번호</label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={handleChangePassword}
                   required
                   className={styles.input}
                 />
@@ -190,12 +217,20 @@ const WaitingPage: React.FC = () => {
                 </select>
               </div>
               <div className={styles.formGroup}>
-                <input
-                  name="commit"
-                  type="submit"
-                  value="Join"
+                <button
+                  type="button"
+                  onClick={handleCreateSession}
                   className={styles.button}
-                />
+                >
+                  방 생성
+                </button>
+                <button
+                  type="button"
+                  onClick={handleJoinSession}
+                  className={styles.button}
+                >
+                  방 참가
+                </button>
               </div>
             </form>
           </div>
