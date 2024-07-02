@@ -31,6 +31,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   const audioContextRef = useRef<AudioContext | null>(null);
   const workletNodeRef = useRef<AudioWorkletNode | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
 
   const [recordingMode, setRecordingMode] = useState<boolean>(false);
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.07);
@@ -61,6 +62,10 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
           window.webkitAudioContext)();
         audioContextRef.current = audioContext;
 
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 3; // 오디오 신호를 크게 증폭
+        gainNodeRef.current = gainNode;
+
         try {
           console.log("AudioWorklet 모듈 로드 중...");
           await audioContext.audioWorklet.addModule(
@@ -76,7 +81,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         const mediaStreamSource = audioContext.createMediaStreamSource(stream);
         createWorkletNode(audioContext, silenceThreshold, silenceDuration);
 
-        mediaStreamSource.connect(workletNodeRef.current!);
+        mediaStreamSource.connect(gainNode).connect(workletNodeRef.current!);
         workletNodeRef.current!.connect(audioContext.destination);
 
         mediaRecorderRef.current = new MediaRecorder(stream);
