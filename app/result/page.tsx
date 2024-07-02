@@ -108,41 +108,49 @@ const ResultPage: React.FC = () => {
           selectedNodeId={selectedNodeId}
           onNodeClick={handleNodeClick}
         /></div>;
-      case "tab2":
-        return (
-          <div>
-            {vertexes.map((vertex) => (
-              <div key={vertex._id} className={styles.keywordItem}>
-                <div className={styles.keywordLabel}>
-                  Label: {vertex.keyword}
-                </div>
-                <div className={styles.keywordContent}>
-                  Content: {vertex.subject}
-                </div>
-              </div>
-            ))}
-          </div>
-        );
-      case "tab3":
-        return (
-          <div>
-            {conversations.map((conversation) => (
-              <div key={conversation._id} className={styles.conversationItem}>
-                <span className={styles.conversationUser}>
-                  {conversation.user}:
-                </span>
-                <span className={styles.conversationScript}>
-                  {conversation.script}
-                </span>
-                <span className={styles.conversationTimestamp}>
-                  {conversation.timestamp}
-                </span>
-              </div>
-            ))}
-          </div>
-        );
-      default:
-        return null;
+        case "tab2":
+          return (
+            <div>
+              {vertexes && vertexes.length > 0 ? (
+                vertexes.map((vertex) => (
+                  <div key={vertex._id} className={styles.keywordItem}>
+                    <div className={styles.keywordLabel}>
+                      Label: {vertex.keyword}
+                    </div>
+                    <div className={styles.keywordContent}>
+                      Content: {vertex.subject}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div>No vertexes available</div>
+              )}
+            </div>
+          );
+        case "tab3":
+          return (
+            <div>
+              {conversations && conversations.length > 0 ? (
+                conversations.map((conversation) => (
+                  <div key={conversation._id} className={styles.conversationItem}>
+                    <span className={styles.conversationUser}>
+                      {conversation.user}:
+                    </span>
+                    <span className={styles.conversationScript}>
+                      {conversation.script}
+                    </span>
+                    <span className={styles.conversationTimestamp}>
+                      {conversation.timestamp}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div>No conversations available</div>
+              )}
+            </div>
+          );
+        default:
+          return null;
     }
   };
 
