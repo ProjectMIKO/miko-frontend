@@ -4,19 +4,23 @@ import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useSocket } from "../_components/Socket/SocketContext";
 import Image from "next/image";
 import logo from "../../public/MIKO_LOGO_Square.png";
 import styles from "./Waiting.module.css";
+import WaitingVideoComponent from "./WaitingVideoComponent";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
 const WaitingPage: React.FC = () => {
   const { data: session } = useSession();
-  const [mySessionId, setMySessionId] =
-    useState<string>("방 제목을 입력하세요.");
+  const [mySessionId, setMySessionId] = useState<string>("방 제목을 입력하세요.");
   const [myUserName, setMyUserName] = useState<string>("");
+  const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
+  const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState<string | null>(null);
+  const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState<string | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -34,6 +38,24 @@ const WaitingPage: React.FC = () => {
   const handleChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setMyUserName(e.target.value);
   };
+
+  useEffect(() => {
+    const getDevices = async () => {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      const audioDevices = devices.filter(device => device.kind === 'audioinput');
+      setVideoDevices(videoDevices);
+      setAudioDevices(audioDevices);
+      if (videoDevices.length > 0) {
+        setSelectedVideoDeviceId(videoDevices[0].deviceId);
+      }
+      if (audioDevices.length > 0) {
+        setSelectedAudioDeviceId(audioDevices[0].deviceId);
+      }
+    };
+
+    getDevices();
+  }, []);
 
   const joinSession = async (event: FormEvent) => {
     event.preventDefault();
@@ -85,7 +107,12 @@ const WaitingPage: React.FC = () => {
   };
 
   return (
+    
     <div className={styles.container}>
+      <WaitingVideoComponent 
+        selectedVideoDeviceId={selectedVideoDeviceId} 
+        selectedAudioDeviceId={selectedAudioDeviceId}
+      />
       <div className={styles.card}>
         <Image
           src={logo}
@@ -129,6 +156,38 @@ const WaitingPage: React.FC = () => {
                   required
                   className={styles.input}
                 />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>비디오 장치</label>
+                <select
+                  id="videoDevice"
+                  onChange={(e) => setSelectedVideoDeviceId(e.target.value)}
+                  value={selectedVideoDeviceId || ""}
+                  className={styles.input}
+                >
+                  <option value="off">끄기</option>
+                  {videoDevices.map((device) => (
+                    <option key={device.deviceId} value={device.deviceId}>
+                      {device.label || `Camera ${device.deviceId}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>오디오 장치</label>
+                <select
+                  id="audioDevice"
+                  onChange={(e) => setSelectedAudioDeviceId(e.target.value)}
+                  value={selectedAudioDeviceId || ""}
+                  className={styles.input}
+                >
+                  <option value="off">끄기</option>
+                  {audioDevices.map((device) => (
+                    <option key={device.deviceId} value={device.deviceId}>
+                      {device.label || `Microphone ${device.deviceId}`}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className={styles.formGroup}>
                 <input
