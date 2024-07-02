@@ -36,8 +36,27 @@ const VideoComponent: React.FC<VideoComponentProps> = ({ selectedVideoDeviceId, 
   }, [selectedVideoDeviceId, selectedAudioDeviceId]);
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '20px' }}>
-      <video ref={videoRef} width="640" height="480" autoPlay style={{ border: '1px solid black' }}></video>
+    <div style={{ 
+      width: '100%', 
+      maxWidth: '600px', 
+      height: 'auto', 
+      borderRadius: '12px', 
+      boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)', 
+      overflow: 'hidden', 
+      marginBottom: '20px',
+      textAlign: 'center'
+    }}>
+      <video 
+        ref={videoRef} 
+        width="640" 
+        height="480" 
+        autoPlay 
+        style={{ 
+          width: '100%', 
+          height: 'auto', 
+          borderRadius: '12px' 
+        }} 
+      ></video>
     </div>
   );
 };

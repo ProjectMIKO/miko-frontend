@@ -125,11 +125,12 @@ const WaitingPage: React.FC = () => {
   return (
     
     <div className={styles.container}>
+    <div className={styles.card}>
       <WaitingVideoComponent 
         selectedVideoDeviceId={selectedVideoDeviceId} 
         selectedAudioDeviceId={selectedAudioDeviceId}
       />
-      <div className={styles.card}>
+      <div className={styles.formContainer}>
         <Image
           src={logo}
           alt="MIKO Logo"
@@ -138,7 +139,7 @@ const WaitingPage: React.FC = () => {
           className={styles.logo}
         />
         <h1 className={styles.title}>Welcome to MIKO</h1>
-        <div id="join">
+        <div id="join" className={styles.join}>
           <div id="join-dialog">
             {session ? (
               <div>
@@ -216,7 +217,7 @@ const WaitingPage: React.FC = () => {
                   ))}
                 </select>
               </div>
-              <div className={styles.formGroup}>
+              <div className={styles.buttonGroup}>
                 <button
                   type="button"
                   onClick={handleCreateSession}
@@ -232,12 +233,13 @@ const WaitingPage: React.FC = () => {
                   방 참가
                 </button>
               </div>
-            </form>
+              </form>
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default WaitingPage;
