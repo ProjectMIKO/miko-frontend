@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "../styles/AudioPlayer.module.css";
 
 interface AudioPlayerProps {
   meetingId: string;
+  seekTime: number | null;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ meetingId }) => {
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ meetingId, seekTime }) => {
   const [audioSrc, setAudioSrc] = useState("");
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     const fetchAudio = async () => {
@@ -28,10 +30,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ meetingId }) => {
     fetchAudio();
   }, [meetingId]);
 
+  useEffect(() => {
+    if (seekTime !== null && audioRef.current) {
+      audioRef.current.currentTime = seekTime;
+      audioRef.current.play();
+    }
+  }, [seekTime]);
+
   return (
     <>
       {audioSrc ? (
-        <audio controls className={styles.audio}>
+        <audio controls className={styles.audio} ref={audioRef}>
           <source src={audioSrc} type="audio/webm" />
           Your browser does not support the audio element.
         </audio>
