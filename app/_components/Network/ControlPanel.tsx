@@ -15,7 +15,7 @@ interface ControlPanelProps {
   setNewNodeLabel: (label: string) => void;
   setNewNodeContent: (content: string) => void;
   setNewNodeColor: (color: string) => void;
-  addNode: (id: any) => void;
+  handleKeyword: (id: any) => void;
   setAction: (action: string) => void;
   fitToScreen: () => void;
 }
@@ -27,7 +27,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   setNewNodeLabel,
   setNewNodeContent,
   setNewNodeColor,
-  addNode,
+  handleKeyword,
   setAction,
   fitToScreen,
 }) => {
@@ -53,8 +53,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         onChange={(e) => setNewNodeColor(e.target.value)}
         className={styles.colorInput}
       />
-      <button onClick={addNode} className={styles.button}>
-        <FontAwesomeIcon icon={faPlus} /> Add Node
+      <button onClick={handleKeyword} className={styles.button}>
+        <FontAwesomeIcon icon={faPlus} /> 키워드 추출
       </button>
       <button onClick={() => setAction("connect")} className={styles.button}>
         <FontAwesomeIcon icon={faLink} /> Connect
