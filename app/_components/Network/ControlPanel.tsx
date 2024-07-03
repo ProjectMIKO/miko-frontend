@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./styles/ControlPanel.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -32,38 +31,49 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   fitToScreen,
 }) => {
   return (
-    <div className={styles.controlPanel}>
+    <div className="flex flex-row gap-5 p-2 justify-center items-center bg-white/80 rounded-lg border border-gray-300">
       <input
         type="text"
         placeholder="Node Label"
         value={newNodeLabel}
         onChange={(e) => setNewNodeLabel(e.target.value)}
-        className={styles.input}
+        className="p-2 border border-gray-300 rounded-md text-lg"
       />
       <input
         type="text"
         placeholder="Node Content"
         value={newNodeContent}
         onChange={(e) => setNewNodeContent(e.target.value)}
-        className={styles.input}
+        className="p-2 border border-gray-300 rounded-md text-lg"
       />
-      <input
-        type="color"
-        value={newNodeColor}
-        onChange={(e) => setNewNodeColor(e.target.value)}
-        className={styles.colorInput}
-      />
-      <button onClick={handleKeyword} className={styles.button}>
-        <FontAwesomeIcon icon={faPlus} /> 키워드 추출
+
+      <button
+        onClick={handleKeyword}
+        className="flex items-center justify-center min-w-[100px] h-10 text-white text-xs cursor-pointer transition duration-300 bg-indigo-400 hover:bg-indigo-600 rounded-md"
+      >
+        <FontAwesomeIcon icon={faPlus} className="w-5 h-5 mr-1" />
+        키워드 추출
       </button>
-      <button onClick={() => setAction("connect")} className={styles.button}>
-        <FontAwesomeIcon icon={faLink} /> Connect
+      <button
+        onClick={() => setAction("connect")}
+        className="flex items-center justify-center min-w-[100px] h-10 text-white text-xs cursor-pointer transition duration-300 bg-indigo-400 hover:bg-indigo-600 rounded-md"
+      >
+        <FontAwesomeIcon icon={faLink} className="w-5 h-5 mr-1" />
+        Connect
       </button>
-      <button onClick={() => setAction("disconnect")} className={styles.button}>
-        <FontAwesomeIcon icon={faUnlink} /> Disconnect
+      <button
+        onClick={() => setAction("disconnect")}
+        className="flex items-center justify-center min-w-[100px] h-10 text-white text-xs cursor-pointer transition duration-300 bg-indigo-400 hover:bg-indigo-600 rounded-md"
+      >
+        <FontAwesomeIcon icon={faUnlink} className="w-5 h-5 mr-1" />
+        Disconnect
       </button>
-      <button onClick={fitToScreen} className={styles.button}>
-        <FontAwesomeIcon icon={faExpand} /> Fit to Screen
+      <button
+        onClick={fitToScreen}
+        className="flex items-center justify-center min-w-[100px] h-10 text-white text-xs cursor-pointer transition duration-300 bg-indigo-400 hover:bg-indigo-600 rounded-md"
+      >
+        <FontAwesomeIcon icon={faExpand} className="w-5 h-5 mr-1" />
+        Fit to Screen
       </button>
     </div>
   );
