@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from "react";
 import useNetwork from "../../_hooks/useNetwork";
 import styles from "./styles/NetworkGraph.module.css";
 import { Socket } from "socket.io-client";
+import 'flowbite';
 
 interface Props {
   containerRef: React.RefObject<HTMLDivElement>;

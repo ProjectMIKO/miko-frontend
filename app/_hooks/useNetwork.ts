@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Network, DataSet } from "vis-network/standalone";
 import { Node, Edge } from "../_types/types";
 import { Socket } from "socket.io-client";
+import 'flowbite';
 
 const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
@@ -31,8 +32,7 @@ const useNetwork = (
             from: tempEdgeFrom!,
             to: nodeId,
           };
-          // edges.add(newEdge);
-          console.log("edge요청 보냄",nodeId, tempEdgeFrom);
+          console.log("edge 요청 보냄", nodeId, tempEdgeFrom);
           if (sessionId && socket) {
             socket.emit("edge", [
               `${sessionId}`,
@@ -56,13 +56,7 @@ const useNetwork = (
               (edge.from === nodeId && edge.to === tempEdgeFrom),
           });
           if (edgeToRemove.length > 0) {
-            // edges.remove(edgeToRemove[0].id);
-            const newEdge: Edge = {
-              id: nextEdgeId,
-              from: tempEdgeFrom!,
-              to: nodeId,
-            };
-            console.log("edge요청 보냄",nodeId, tempEdgeFrom);
+            console.log("edge 요청 보냄", nodeId, tempEdgeFrom);
             if (sessionId && socket) {
               socket.emit("edge", [
                 `${sessionId}`,
@@ -171,53 +165,39 @@ const useNetwork = (
   }, [network, nodes, selectedNodeId, prevSelectedNodeId]);
 
   const addNode = (nid: any, label: string, content: string, color: string) => {
+    // Create a div element for the popover
+    const popoverElement = document.createElement("div");
+    popoverElement.setAttribute("data-popover", "");
+    popoverElement.id = `popover-${nid || nextNodeId}`;
+    popoverElement.setAttribute("role", "tooltip");
+    popoverElement.className = "static z-10 inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800";
 
-    var titleElement = document.createElement("div");
-    titleElement.style.position = "absolute";
-    titleElement.style.zIndex = "10";
-    titleElement.style.width = "200px";
-    titleElement.style.padding = "0.5rem";
-    titleElement.style.backgroundColor = "white";
-    titleElement.style.border = "1px solid #ccc";
-    titleElement.style.borderRadius = "0.25rem";
-    titleElement.style.boxShadow = "0 0.5rem 1rem rgba(0, 0, 0, 0.1)";
+    // Add inner content to the popover element
+    popoverElement.innerHTML = `
+      <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+        <h3 class="font-semibold text-gray-900 dark:text-white">Popover title</h3>
+      </div>
+      <div class="px-3 py-2">
+        <p>${content}</p>
+      </div>
+      <div data-popper-arrow></div>
+    `;
 
-    // Create the arrow element
-    var arrowElement = document.createElement("div");
-    arrowElement.style.position = "absolute";
-    arrowElement.style.width = "1rem";
-    arrowElement.style.height = "1rem";
-    arrowElement.style.background = "white";
-    arrowElement.style.border = "1px solid #ccc";
-    arrowElement.style.transform = "rotate(45deg)";
-    arrowElement.style.top = "-0.5rem";
-    arrowElement.style.left = "50%";
-    arrowElement.style.marginLeft = "-0.5rem";
-    titleElement.appendChild(arrowElement);
-
-    // Add inner content to the title element
-    var headerElement = document.createElement("div");
-    headerElement.style.fontWeight = "bold";
-    headerElement.style.paddingBottom = "0.5rem";
-    headerElement.style.borderBottom = "1px solid #eee";
-    headerElement.style.marginBottom = "0.5rem";
-    headerElement.textContent = label;
-    titleElement.appendChild(headerElement);
-
-    var bodyElement = document.createElement("div");
-    bodyElement.style.fontSize = "0.875rem";
-    bodyElement.textContent = content;
-    titleElement.appendChild(bodyElement);
-
+    // Create the new node object
     const newNode: Node = {
       id: nid || nextNodeId,
       label,
       content,
       color,
-      title: titleElement, // 추가: 노드 생성 시 content를 title로 설정
+      title: popoverElement, // Popover 요소를 title로 설정
     };
+
+    // Add the new node to the dataset
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
+
+    // Append the popover element to the document body
+    document.body.appendChild(popoverElement);
   };
 
   const fitToScreen = () => {
