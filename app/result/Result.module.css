@@ -16,7 +16,6 @@
 .left,
 .right {
   padding: 1rem;
-  border: 1px solid #ddd;
   margin: 0.5rem;
 }
 
@@ -30,6 +29,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border: 1px solid #ddd;
 }
 
 .tabs {
@@ -138,4 +138,14 @@
   width: 20px;
   height: 20px;
   margin-right: 3px;
+}
+
+.conversationItem {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.conversationItem.highlighted {
+  background-color: yellow;
 }

@@ -10,8 +10,8 @@ const useNetwork = (
   sessionId: string | null | undefined
 ) => {
   const [network, setNetwork] = useState<Network | null>(null);
-  const [nodes, setNodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
-  const [edges, setEdges] = useState<DataSet<Edge>>(new DataSet<Edge>([]));
+  const [nodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
+  const [edges] = useState<DataSet<Edge>>(new DataSet<Edge>([]));
   const [selectedNodeId, setSelectedNodeId] = useState<number | null>(null);
   const [prevSelectedNodeId, setPrevSelectedNodeId] = useState<number | null>(
     null
@@ -32,7 +32,10 @@ const useNetwork = (
             from: tempEdgeFrom!,
             to: nodeId,
           };
+
           console.log("edge 요청 보냄", nodeId, tempEdgeFrom);
+          // edges.add(newEdge);
+
           if (sessionId && socket) {
             socket.emit("edge", [
               `${sessionId}`,
@@ -57,6 +60,12 @@ const useNetwork = (
           });
           if (edgeToRemove.length > 0) {
             console.log("edge 요청 보냄", nodeId, tempEdgeFrom);
+            // edges.remove(edgeToRemove[0].id);
+            const newEdge: Edge = {
+              id: nextEdgeId,
+              from: tempEdgeFrom!,
+              to: nodeId,
+            };
             if (sessionId && socket) {
               socket.emit("edge", [
                 `${sessionId}`,
@@ -86,63 +95,67 @@ const useNetwork = (
     [action, edges, nextEdgeId, tempEdgeFrom, nodes, sessionId, socket]
   );
 
+  const initializeNetwork = (container: HTMLDivElement) => {
+    const data = {
+      nodes: nodes,
+      edges: edges,
+    };
+    const options = {
+      nodes: {
+        shape: "dot",
+        size: 13,
+        font: {
+          size: 14,
+          color: "#000000",
+        },
+        shadow: true,
+      },
+      edges: {
+        width: 2,
+        shadow: true,
+      },
+      physics: {
+        enabled: true,
+        stabilization: false,
+        minVelocity: 0.75,
+        solver: "forceAtlas2Based",
+        forceAtlas2Based: {
+          gravitationalConstant: -45,
+          centralGravity: 0.007,
+          springLength: 200,
+          springConstant: 0.08,
+          damping: 0.4,
+          avoidOverlap: 1,
+        },
+        boundingBox: {
+          left: -300,
+          right: 300,
+          top: -300,
+          bottom: 300,
+        },
+      },
+      interaction: {
+        dragNodes: true,
+        dragView: true,
+        zoomView: true,
+      },
+    };
+    const net = new Network(container, data, options);
+    setNetwork(net);
+
+    net.on("click", (params) => {
+      if (params.nodes.length > 0) {
+        const nodeId = params.nodes[0];
+        handleNodeClick(nodeId);
+      } else {
+        handleNodeClick(null);
+      }
+    });
+  };
+
   useEffect(() => {
     if (containerRef.current && !network) {
-      const data = {
-        nodes: nodes,
-        edges: edges,
-      };
-      const options = {
-        nodes: {
-          shape: "dot",
-          size: 13,
-          font: {
-            size: 14,
-            color: "#000000",
-          },
-          shadow: true,
-        },
-        edges: {
-          width: 2,
-          shadow: true,
-        },
-        physics: {
-          enabled: true,
-          stabilization: false,
-          minVelocity: 0.75,
-          solver: "forceAtlas2Based",
-          forceAtlas2Based: {
-            gravitationalConstant: -45,
-            centralGravity: 0.007,
-            springLength: 200,
-            springConstant: 0.08,
-            damping: 0.4,
-            avoidOverlap: 1,
-          },
-          boundingBox: {
-            left: -300,
-            right: 300,
-            top: -300,
-            bottom: 300,
-          },
-        },
-        interaction: {
-          dragNodes: true,
-          dragView: true,
-          zoomView: true,
-        },
-      };
-      const net = new Network(containerRef.current, data, options);
-      setNetwork(net);
-
-      net.on("click", (params) => {
-        if (params.nodes.length > 0) {
-          const nodeId = params.nodes[0];
-          handleNodeClick(nodeId);
-        } else {
-          handleNodeClick(null);
-        }
-      });
+      initializeNetwork(containerRef.current);
     }
   }, [containerRef, network, handleNodeClick, nodes, edges]);
 
@@ -220,6 +233,7 @@ const useNetwork = (
     setAction,
     handleNodeClick,
     fitToScreen,
+    initializeNetwork,
   };
 };
 
