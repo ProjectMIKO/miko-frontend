@@ -95,11 +95,33 @@ const Video: React.FC<Props> = ({
     try {
       await mySession.connect(token, { clientData: userName });
 
+      const audioDevice = sessionStorage.getItem("Audio");
+      const videoDevice = sessionStorage.getItem("Video");
+
+      let audioSource: any;
+      let videoSource: any;
+      let publishAudio = true;
+      let publishVideo = true;
+
+      if (audioDevice === "off") {
+        audioSource = false;
+        publishAudio = false;
+      } else if (audioDevice) {
+        audioSource = audioDevice;
+      }
+
+      if (videoDevice === "off") {
+        videoSource = false;
+        publishVideo = false;
+      } else if (videoDevice) {
+        videoSource = videoDevice;
+      }
+
       const publisher = openvidu.initPublisher(undefined, {
-        audioSource: undefined,
-        videoSource: undefined,
-        publishAudio: false,
-        publishVideo: true,
+        audioSource: audioSource,
+        videoSource: videoSource,
+        publishAudio: publishAudio,
+        publishVideo: publishVideo,
         resolution: "640x480",
         frameRate: 30,
         insertMode: "APPEND",
