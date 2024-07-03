@@ -104,24 +104,24 @@ const Video: React.FC<Props> = ({
       let publishVideo = true;
 
       if (audioDevice === "off") {
-        audioSource = false;
+        audioSource = undefined;
         publishAudio = false;
       } else if (audioDevice) {
         audioSource = audioDevice;
       }
 
       if (videoDevice === "off") {
-        videoSource = false;
+        videoSource = undefined;
         publishVideo = false;
       } else if (videoDevice) {
         videoSource = videoDevice;
       }
 
       const publisher = openvidu.initPublisher(undefined, {
-        audioSource: audioSource,
-        videoSource: videoSource,
-        publishAudio: publishAudio,
-        publishVideo: publishVideo,
+        audioSource,
+        videoSource,
+        publishAudio,
+        publishVideo,
         resolution: "640x480",
         frameRate: 30,
         insertMode: "APPEND",
