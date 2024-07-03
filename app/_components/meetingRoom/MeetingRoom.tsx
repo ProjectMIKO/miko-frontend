@@ -110,21 +110,15 @@ const HomeContent: React.FC = () => {
               newNodeLabel={controlNodeLabel}
               newNodeContent={controlNodeContent}
               newNodeColor={controlNodeColor}
-              setNewNodeLabel={setControlNodeLabel}
-              setNewNodeContent={setControlNodeContent}
-              setNewNodeColor={setControlNodeColor}
+              // setNewNodeLabel={setControlNodeLabel}
+              // setNewNodeContent={setControlNodeContent}
+              // setNewNodeColor={setControlNodeColor}
               handleKeyword={handleKeyword}
               setAction={setAction}
               fitToScreen={fitToScreen}
+              handleSharingRoom={handleSharingRoom}
+              handleLeaveSession={handleLeaveSession}
             />
-          </div>
-          <div className={styles.footerRight}>
-            <button onClick={handleSharingRoom} className={styles.iconButton}>
-              <FontAwesomeIcon icon={faShareSquare} />
-            </button>
-            <button onClick={handleLeaveSession} className={styles.leaveButton}>
-              <FontAwesomeIcon icon={faSignOutAlt} />
-            </button>
           </div>
         </div>
       </Footer>
