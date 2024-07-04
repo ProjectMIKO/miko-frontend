@@ -263,6 +263,12 @@ const ResultPage: React.FC = () => {
     }
   };
 
+  const formatPeriod = (period: number) => {
+    const minutes = Math.floor(period / 60000);
+    const seconds = Math.floor((period % 60000) / 1000);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   return (
     <div className={styles.container}>
       <Header>MIKO</Header>
@@ -276,7 +282,7 @@ const ResultPage: React.FC = () => {
                 {new Date(meetingDetails.startTime).toLocaleString()}
               </p>
               <p>
-                <strong>Period:</strong> {meetingDetails.period}
+                <strong>Period:</strong> {formatPeriod(meetingDetails.period)}
               </p>
               <p>
                 <strong>Participants:</strong>{" "}
