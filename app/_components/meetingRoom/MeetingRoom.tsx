@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
 import NodeConversation from "../Network/NodeConversation";
@@ -44,6 +44,21 @@ const HomeContent: React.FC = () => {
     publisher,
     subscriber,
   } = useHomeContent();
+
+  // Add useEffect to handle window close event
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (socket && sessionId) {
+        socket.emit("end_meeting", sessionId);
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [socket, sessionId]);
 
   if (!socketContext) {
     return <p>Error: Socket context is not available.</p>;
