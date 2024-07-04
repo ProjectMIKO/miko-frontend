@@ -184,10 +184,10 @@ const useNetwork = (
     // Add inner content to the popover element
     popoverElement.innerHTML = `
     <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-      <h3 class="font-semibold text-gray-900 dark:text-white">Popover title</h3>
+      <h3 class="font-semibold text-gray-900 dark:text-white">${label}</h3>
     </div>
     <div class="px-3 py-2" style="word-wrap: break-word; overflow-wrap: break-word;">
-      <p>asdasldja;sjd;asjd;asdk;asdkoaihfoisdh</p>
+      <p>${content}</p>
     </div>
     <div data-popper-arrow></div>
   `;
