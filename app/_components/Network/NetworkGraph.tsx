@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useNetwork from "../../_hooks/useNetwork";
 import styles from "./styles/NetworkGraph.module.css";
 import { Socket } from "socket.io-client";
@@ -18,7 +18,8 @@ const NetworkGraph: React.FC<Props> = ({
   handleNodeClick,
   socket,
 }) => {
-  const { network, nodes, edges } = useNetwork(containerRef, socket, null);
+
+  const { network, nodes, edges } = useNetwork(containerRef, socket, null, null);
 
   useEffect(() => {
     if (network) {

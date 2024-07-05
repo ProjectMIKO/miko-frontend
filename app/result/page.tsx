@@ -49,6 +49,13 @@ const ResultPage: React.FC = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const [popoverState, setPopoverState] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    content: '',
+  });
+
   const {
     addNode,
     selectedNodeId,
@@ -58,8 +65,25 @@ const ResultPage: React.FC = () => {
     nodes,
     network,
     initializeNetwork,
-  } = useNetwork(containerRef, null, null);
+    handleNodeHover
+  } = useNetwork(containerRef, null, null, setPopoverState);
   const { disconnectSocket } = useSocket();
+
+  useEffect(() => {
+    if (network) {
+      network.on("hoverNode", (params) => {
+        if (params.node) {
+          handleNodeHover(params.node);
+        } else {
+          handleNodeHover(null);
+        }
+      });
+    }
+  }, [network, handleNodeHover]);
+
+  useEffect(() => {
+    console.log("Popover State:", popoverState);
+  }, [popoverState]);
 
   useEffect(() => {
     disconnectSocket();
@@ -187,11 +211,10 @@ const ResultPage: React.FC = () => {
                 <div
                   id={conversation._id}
                   key={conversation._id}
-                  className={`${styles.conversationItem} ${
-                    highlightedConversation === conversation._id
+                  className={`${styles.conversationItem} ${highlightedConversation === conversation._id
                       ? styles.highlighted
                       : ""
-                  }`}
+                    }`}
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
                   <span className={styles.conversationUser}>
@@ -222,6 +245,24 @@ const ResultPage: React.FC = () => {
               handleNodeClick={handleNodeClick}
               socket={null}
             />
+            {/* 팝오버 요소 */}
+            {popoverState.visible && (
+              <div
+                data-popover
+                id="popover-default"
+                role="tooltip"
+                className="absolute z-1000 inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+                style={{ top: popoverState.y - 50, left: popoverState.x - 100 }}
+              >
+                <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Popover title</h3>
+                </div>
+                <div className="px-3 py-2">
+                  <p>{popoverState.content}</p>
+                </div>
+                <div data-popper-arrow></div>
+              </div>
+            )}
           </div>
         );
       default:
@@ -240,33 +281,29 @@ const ResultPage: React.FC = () => {
           <div className={styles.tabs}>
             <button
               onClick={() => setActiveTab("tab1")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab1" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab1" ? styles.activeTab : ""
+                }`}
             >
               그룹
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab2" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab2" ? styles.activeTab : ""
+                }`}
             >
               키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab3")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab3" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab3" ? styles.activeTab : ""
+                }`}
             >
               음성 기록
             </button>
             <button
               onClick={() => setActiveTab("tab4")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab4" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab4" ? styles.activeTab : ""
+                }`}
             >
               네트워크 그래프
             </button>
