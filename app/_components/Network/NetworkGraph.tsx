@@ -9,6 +9,7 @@ interface Props {
   containerRef: React.RefObject<HTMLDivElement>;
   selectedNodeId: number | null;
   handleNodeClick: (nodeId: number | null) => void;
+  handleNodeHover: (nodeId: number | null) => void;
   socket: Socket | null;
 }
 
@@ -16,10 +17,17 @@ const NetworkGraph: React.FC<Props> = ({
   containerRef,
   selectedNodeId,
   handleNodeClick,
+  handleNodeHover,
   socket,
 }) => {
 
-  const { network, nodes, edges } = useNetwork(containerRef, socket, null, null);
+  const [popoverState, setPopoverState] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    content: '',
+  });
+  const { network, nodes, edges } = useNetwork(containerRef, socket, null, setPopoverState);
 
   useEffect(() => {
     if (network) {
@@ -33,6 +41,22 @@ const NetworkGraph: React.FC<Props> = ({
       });
     }
   }, [network, handleNodeClick]);
+
+  useEffect(() => {
+    if (network) {
+      network.on("hoverNode", (params) => {
+        if (params.node) {
+          handleNodeHover(params.node);
+        } else {
+          handleNodeHover(null);
+        }
+      });
+    }
+  }, [network, handleNodeHover]);
+
+  useEffect(() => {
+    console.log("Popover State:", popoverState);
+  }, [popoverState]);
 
   return (
     <div

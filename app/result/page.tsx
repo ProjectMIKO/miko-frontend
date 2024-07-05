@@ -6,6 +6,7 @@ import React, {
   useRef,
   Suspense,
   useCallback,
+  CSSProperties,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../_components/common/Header";
@@ -207,6 +208,37 @@ const ResultPage: React.FC = () => {
     }
   }, [highlightedConversation]);
 
+  const popoverStyle: CSSProperties = {
+    position: 'absolute',
+    top: `${popoverState.y - 20}px`,
+    left: `${popoverState.x - 100}px`,
+    backgroundColor: '#333', // 더 어두운 회색으로 변경
+    color: 'white',
+    padding: '10px', // 패딩을 늘려 더 보기 좋게 만듦
+    borderRadius: '8px', // 테두리 둥글게
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // 박스 그림자 추가
+    zIndex: 10,
+    visibility: popoverState.visible ? 'visible' : 'hidden',
+    opacity: popoverState.visible ? 1 : 0,
+    transition: 'opacity 0.5s ease-in-out', // 서서히 나타나는 애니메이션 추가
+    fontFamily: 'Arial, sans-serif', // 폰트 변경
+    fontSize: '14px', // 폰트 크기 조정
+  };
+
+  const arrowStyle: CSSProperties = {
+    position: 'absolute',
+    width: '10px',
+    height: '10px',
+    backgroundColor: '#333', // 같은 배경색 적용
+    transform: 'rotate(45deg)',
+    zIndex: -1,
+    top: 'calc(100% - 5px)', // 화살표 위치 조정
+    left: '50%',
+    marginLeft: '-5px',
+  };
+
+
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "tab1":
@@ -252,8 +284,8 @@ const ResultPage: React.FC = () => {
                   id={conversation._id}
                   key={conversation._id}
                   className={`${styles.conversationItem} ${highlightedConversation === conversation._id
-                      ? styles.highlighted
-                      : ""
+                    ? styles.highlighted
+                    : ""
                     }`}
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
@@ -283,24 +315,14 @@ const ResultPage: React.FC = () => {
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
               handleNodeClick={handleNodeClick}
+              handleNodeHover={handleNodeHover}
               socket={null}
             />
             {/* 팝오버 요소 */}
             {popoverState.visible && (
-              <div
-                data-popover
-                id="popover-default"
-                role="tooltip"
-                className="absolute z-1000 inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
-                style={{ top: popoverState.y - 50, left: popoverState.x - 100 }}
-              >
-                <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                  <h3 className="font-semibold text-gray-900 dark:text-white">Popover title</h3>
-                </div>
-                <div className="px-3 py-2">
-                  <p>{popoverState.content}</p>
-                </div>
-                <div data-popper-arrow></div>
+              <div style={popoverStyle}>
+                <p>{popoverState.content}</p>
+                <div style={arrowStyle} data-popper-arrow></div>
               </div>
             )}
           </div>
@@ -339,11 +361,11 @@ const ResultPage: React.FC = () => {
                 <strong>Participants:</strong>{" "}
                 {Array.isArray(meetingDetails.participants)
                   ? meetingDetails.participants
-                      .map(
-                        (participant) =>
-                          `${participant.name} (${participant.role})`
-                      )
-                      .join(", ")
+                    .map(
+                      (participant) =>
+                        `${participant.name} (${participant.role})`
+                    )
+                    .join(", ")
                   : "No participants"}
               </p>
               <p>
