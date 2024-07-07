@@ -154,10 +154,5 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  height: 70%;
-}
-
-.editor-container {
-  height: 90%;
-  overflow-y: auto;
+  height: 600px;
 }
