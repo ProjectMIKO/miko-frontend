@@ -31,8 +31,6 @@ const Video: React.FC<Props> = ({
   const [currentPage, setCurrentPage] = useState(0);
   const currentPublisherRef = useRef<any>(null);
 
-  // Ref to track if initializeSession has already been called
-  const sessionInitializedRef = useRef(false);
 
   const handlerJoinSessionEvent = () => {
     console.log("Join session");
@@ -65,16 +63,10 @@ const Video: React.FC<Props> = ({
 
   const handlerErrorEvent = (error: any) => {
     console.log("Error in session", error);
-    alert("세션 연결 실패!");
+    // alert("세션 연결 실패!");
   };
 
   const initializeSession = async (token: string) => {
-    // 한번만 실행되도록 수정
-    if (sessionInitializedRef.current) {
-      return;
-    }
-    sessionInitializedRef.current = true;
-    
     console.log("initializeSession called");
     const openvidu = new OpenVidu();
     const mySession = openvidu.initSession();
@@ -195,7 +187,7 @@ const Video: React.FC<Props> = ({
     if (token) {
       initializeSession(token);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     subscribers.forEach((subscriber) => {
