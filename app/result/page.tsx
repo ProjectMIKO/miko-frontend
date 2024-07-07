@@ -18,7 +18,6 @@ import NetworkGraph from "../_components/Network/NetworkGraph";
 import useNetwork from "../_hooks/useNetwork";
 import { Conversation, Edge } from "../_types/types";
 import NodeList from "../_components/Network/NodeList";
-import ReactMarkdown from "react-markdown";
 import Tiptap from "../_components/Tiptap";
 
 const APPLICATION_SERVER_URL =
@@ -150,7 +149,9 @@ const ResultPage: React.FC = () => {
   useEffect(() => {
     const fetchMeetingDetails = () => {
       if (meetingId) {
-        const eventSource = new EventSource(`${APPLICATION_SERVER_URL}api/meeting/${meetingId}/mom`);
+        const eventSource = new EventSource(
+          `${APPLICATION_SERVER_URL}api/meeting/${meetingId}/mom`
+        );
 
         eventSource.onmessage = (event) => {
           const data = JSON.parse(event.data);
@@ -212,7 +213,7 @@ const ResultPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeTab === "tab4" && containerRef.current) {
+    if (activeTab === "tab2" && containerRef.current) {
       initializeNetwork(containerRef.current);
       printMap();
     }
@@ -268,21 +269,6 @@ const ResultPage: React.FC = () => {
       case "tab1":
         return (
           <div>
-            {nodes.length > 0 ? (
-              <NodeList
-                nodes={nodes.get()}
-                edges={edges.get()}
-                selectedNodeId={selectedNodeId}
-                onNodeClick={handleNodeClick}
-              />
-            ) : (
-              <div>No vertexes available</div>
-            )}
-          </div>
-        );
-      case "tab2":
-        return (
-          <div>
             {vertexes && vertexes.length > 0 ? (
               vertexes.map((vertex) => (
                 <div key={vertex._id} className={styles.keywordItem}>
@@ -299,7 +285,44 @@ const ResultPage: React.FC = () => {
             )}
           </div>
         );
+      case "tab2":
+        return (
+          <div style={{ position: "relative", width: "100%", height: "90%" }}>
+            <button onClick={fitToScreen} className={styles.button}>
+              fitToScreen
+            </button>
+            <NetworkGraph
+              containerRef={containerRef}
+              selectedNodeId={selectedNodeId}
+              handleNodeClick={handleNodeClick}
+              handleNodeHover={handleNodeHover}
+              socket={null}
+            />
+            {popoverState.visible && (
+              <div style={popoverStyle} ref={popoverRef}>
+                <p>{popoverState.content}</p>
+                <div style={arrowStyle} data-popper-arrow></div>
+              </div>
+            )}
+          </div>
+        );
       case "tab3":
+        return (
+          <div>
+            {nodes.length > 0 ? (
+              <NodeList
+                nodes={nodes.get()}
+                edges={edges.get()}
+                selectedNodeId={selectedNodeId}
+                onNodeClick={handleNodeClick}
+                autoScroll={false} // Disable auto scroll
+              />
+            ) : (
+              <div>No vertexes available</div>
+            )}
+          </div>
+        );
+      case "tab4":
         return (
           <div>
             {conversations && conversations.length > 0 ? (
@@ -326,27 +349,6 @@ const ResultPage: React.FC = () => {
               ))
             ) : (
               <div>No conversations available</div>
-            )}
-          </div>
-        );
-      case "tab4":
-        return (
-          <div style={{ position: "relative", width: "100%", height: "90%" }}>
-            <button onClick={fitToScreen} className={styles.button}>
-              fitToScreen
-            </button>
-            <NetworkGraph
-              containerRef={containerRef}
-              selectedNodeId={selectedNodeId}
-              handleNodeClick={handleNodeClick}
-              handleNodeHover={handleNodeHover}
-              socket={null}
-            />
-            {popoverState.visible && (
-              <div style={popoverStyle} ref={popoverRef}>
-                <p>{popoverState.content}</p>
-                <div style={arrowStyle} data-popper-arrow></div>
-              </div>
             )}
           </div>
         );
@@ -439,28 +441,28 @@ const ResultPage: React.FC = () => {
               className={`${styles.tabButton} ${activeTab === "tab1" ? styles.activeTab : ""
                 }`}
             >
-              그룹
+              키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
               className={`${styles.tabButton} ${activeTab === "tab2" ? styles.activeTab : ""
                 }`}
             >
-              키워드 요약
+              키워드 맵
             </button>
             <button
               onClick={() => setActiveTab("tab3")}
               className={`${styles.tabButton} ${activeTab === "tab3" ? styles.activeTab : ""
                 }`}
             >
-              음성 기록
+              그룹
             </button>
             <button
               onClick={() => setActiveTab("tab4")}
               className={`${styles.tabButton} ${activeTab === "tab4" ? styles.activeTab : ""
                 }`}
             >
-              키워드 맵
+              음성 기록
             </button>
           </div>
           <div className={styles.tabContent}>{renderTabContent()}</div>
