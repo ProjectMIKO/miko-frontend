@@ -1,4 +1,3 @@
-// useSocketHandlers.ts
 import { useEffect, useCallback, useState } from "react";
 import { useSocket } from "../_components/Socket/SocketContext";
 import { Edge } from "../_types/types";
@@ -12,6 +11,9 @@ const useSocketHandlers = (
   const [nextNodeId, setNextNodeId] = useState<string>("");
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
   const [newNodeContent, setNewNodeContent] = useState<string>("");
+
+  const [queue, setQueue] = useState<any[]>([]);
+  const [processing, setProcessing] = useState(false);
 
   const handleAddNode = useCallback(
     (id: any) => {
@@ -81,14 +83,10 @@ const useSocketHandlers = (
 
   useEffect(() => {
     const handleVertexBatch = (data: any[]) => {
-      for (const item of data) {
-        const newNode = {
-          id: item._id,
-          label: item.keyword,
-          content: item.subject,
-        };
-        addNode(newNode.id, newNode.label, newNode.content, "#5A5A5A");
-      }
+      setQueue((prevQueue) => [
+        ...prevQueue,
+        ...data.map((item) => ({ type: "vertex", data: item })),
+      ]);
     };
 
     socket.on("vertexBatch", handleVertexBatch);
@@ -96,20 +94,14 @@ const useSocketHandlers = (
     return () => {
       socket.off("vertexBatch", handleVertexBatch);
     };
-  }, [socket, addNode]);
+  }, [socket]);
 
   useEffect(() => {
     const handleEdgeBatch = (data: any[]) => {
-      for (const item of data) {
-        const newEdge: Edge = {
-          id: item._id,
-          from: item.vertex1,
-          to: item.vertex2,
-        };
-        if (!edges.get(newEdge.id)) {
-          edges.add(newEdge);
-        }
-      }
+      setQueue((prevQueue) => [
+        ...prevQueue,
+        ...data.map((item) => ({ type: "edge", data: item })),
+      ]);
     };
 
     socket.on("edgeBatch", handleEdgeBatch);
@@ -117,7 +109,31 @@ const useSocketHandlers = (
     return () => {
       socket.off("edgeBatch", handleEdgeBatch);
     };
-  }, [socket, edges]);
+  }, [socket]);
+
+  useEffect(() => {
+    if (!processing && queue.length > 0) {
+      setProcessing(true);
+      const { type, data } = queue[0];
+      if (type === "vertex") {
+        setNextNodeId(data._id);
+        setNewNodeLabel(data.keyword);
+        setNewNodeContent(data.subject);
+      } else if (type === "edge") {
+        const newEdge: Edge = {
+          id: data._id,
+          from: data.vertex1,
+          to: data.vertex2,
+        };
+        if (!edges.get(newEdge.id)) {
+          edges.add(newEdge);
+        }
+      }
+
+      setQueue((prevQueue) => prevQueue.slice(1));
+      setProcessing(false);
+    }
+  }, [queue, processing]);
 
   return { newNodeLabel, newNodeContent, nextNodeId, setNewNodeLabel, setNewNodeContent };
 };
