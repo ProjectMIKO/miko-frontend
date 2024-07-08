@@ -65,6 +65,14 @@ const HomeContent: React.FC = () => {
     };
   }, [socket, sessionId]);
 
+  useEffect(() => {
+    if (popoverRef.current && popoverState.visible) {
+      const popoverWidth = popoverRef.current.offsetWidth;
+      const newX = popoverState.x - popoverWidth / 2;
+      setPopoverState((prev) => ({ ...prev, x: newX }));
+    }
+  }, [popoverState.visible]);
+
   if (!socketContext) {
     return <p>Error: Socket context is not available.</p>;
   }
@@ -76,14 +84,6 @@ const HomeContent: React.FC = () => {
   const toggleRecorderVisibility = () => {
     setIsRecorderVisible((prev) => !prev);
   };
-
-  useEffect(() => {
-    if (popoverRef.current && popoverState.visible) {
-      const popoverWidth = popoverRef.current.offsetWidth;
-      const newX = popoverState.x - popoverWidth / 2;
-      setPopoverState((prev) => ({ ...prev, x: newX }));
-    }
-  }, [popoverState.visible]);
 
   const popoverStyle: CSSProperties = {
     position: "absolute",
