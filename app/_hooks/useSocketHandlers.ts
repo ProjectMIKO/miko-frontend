@@ -5,7 +5,8 @@ import { DataSet } from "vis-network";
 
 const useSocketHandlers = (
   edges: DataSet<Edge>,
-  addNode: (id: any, label: string, content: string, color: string) => void
+  addNode: (id: any, label: string, content: string, color: string) => void,
+  delay: number = 200
 ) => {
   const { socket } = useSocket();
   const [nextNodeId, setNextNodeId] = useState<string>("");
@@ -24,6 +25,10 @@ const useSocketHandlers = (
     },
     [newNodeLabel, newNodeContent, addNode]
   );
+
+  const sleep = (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  };
 
   useEffect(() => {
     const handleSummarize = (data: { _id: string; keyword: string; subject: string; conversationIds: [] }) => {
@@ -112,28 +117,34 @@ const useSocketHandlers = (
   }, [socket]);
 
   useEffect(() => {
-    if (!processing && queue.length > 0) {
-      setProcessing(true);
-      const { type, data } = queue[0];
-      if (type === "vertex") {
-        setNextNodeId(data._id);
-        setNewNodeLabel(data.keyword);
-        setNewNodeContent(data.subject);
-      } else if (type === "edge") {
-        const newEdge: Edge = {
-          id: data._id,
-          from: data.vertex1,
-          to: data.vertex2,
-        };
-        if (!edges.get(newEdge.id)) {
-          edges.add(newEdge);
+    const processQueue = async () => {
+      if (!processing && queue.length > 0) {
+        setProcessing(true);
+        const { type, data } = queue[0];
+        if (type === "vertex") {
+          setNextNodeId(data._id);
+          setNewNodeLabel(data.keyword);
+          setNewNodeContent(data.subject);
+        } else if (type === "edge") {
+          const newEdge: Edge = {
+            id: data._id,
+            from: data.vertex1,
+            to: data.vertex2,
+          };
+          if (!edges.get(newEdge.id)) {
+            edges.add(newEdge);
+          }
         }
-      }
 
-      setQueue((prevQueue) => prevQueue.slice(1));
-      setProcessing(false);
-    }
-  }, [queue, processing]);
+        await sleep(delay); // Use the customizable delay here
+
+        setQueue((prevQueue) => prevQueue.slice(1));
+        setProcessing(false);
+      }
+    };
+
+    processQueue();
+  }, [queue, processing, delay]);
 
   return { newNodeLabel, newNodeContent, nextNodeId, setNewNodeLabel, setNewNodeContent };
 };
