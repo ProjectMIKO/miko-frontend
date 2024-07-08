@@ -106,8 +106,8 @@ const HomeContent: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center h-screen overflow-hidden">
+      <Header>MIKO</Header>
       <div className="relative w-full h-full">
-        <Header>MIKO</Header>
         <div className="fixed left-0 w-full h-[calc(100%-3%)] z-20">
           <NetworkGraph
             containerRef={containerRef}
@@ -161,9 +161,9 @@ const HomeContent: React.FC = () => {
         </div>
 
         <div
-          className={`absolute right-0 top-32 mt-10 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
+          className={`absolute right-0 top-3 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
             isRecorderVisible ? "translate-x-0" : "translate-x-full"
-          } w-[20%] h-[20%] p-4`}
+          } w-[20%]`}
         >
           {sessionId && (
             <VoiceRecorder
@@ -175,9 +175,9 @@ const HomeContent: React.FC = () => {
         </div>
 
         <div
-          className={`absolute right-0 top-[38%] mt-2 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
+          className={`absolute right-0 top-40 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
             isConversationVisible ? "translate-x-0" : "translate-x-full"
-          } w-[30%] h-[50%] p-4`}
+          } w-[30%] h-[80%]`}
         >
           <NodeConversation
             nodes={nodes.get()}
@@ -187,7 +187,6 @@ const HomeContent: React.FC = () => {
           />
         </div>
       </div>
-
       <div className="flex justify-between items-center w-full p-2.5 z-50">
         <ControlPanel
           newNodeLabel={controlNodeLabel}
@@ -200,7 +199,6 @@ const HomeContent: React.FC = () => {
           handleLeaveSession={handleLeaveSession}
         />
       </div>
-
       <SharingRoom
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

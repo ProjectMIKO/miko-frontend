@@ -84,7 +84,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         mediaStreamSource.connect(gainNode).connect(workletNodeRef.current!);
         workletNodeRef.current!.connect(audioContext.destination);
 
-        mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/webm; codecs=opus'});
+        mediaRecorderRef.current = new MediaRecorder(stream, {
+          mimeType: "audio/webm; codecs=opus",
+        });
         mediaRecorderRef.current.ondataavailable = (event) => {
           if (event.data.size > 0) {
             audioChunksRef.current.push(event.data);
@@ -219,7 +221,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
       console.log("녹음 중지됨");
 
       if (save && audioChunksRef.current.length > 0) {
-        const blob = new Blob(audioChunksRef.current, { type: "audio/webm; codecs=opus" });
+        const blob = new Blob(audioChunksRef.current, {
+          type: "audio/webm; codecs=opus",
+        });
         const url = URL.createObjectURL(blob);
         setAudioURLs((prev) => [...prev, url]);
         audioChunksRef.current = [];
@@ -230,7 +234,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
     }
   };
 
-  const decodeAudioData = async (arrayBuffer: ArrayBuffer): Promise<AudioBuffer> => {
+  const decodeAudioData = async (
+    arrayBuffer: ArrayBuffer
+  ): Promise<AudioBuffer> => {
     const audioContext = audioContextRef.current!;
     return await audioContext.decodeAudioData(arrayBuffer);
   };
@@ -269,16 +275,17 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
     }
 
     while (pos < length) {
-      for (let i = 0; i < numberOfChannels; i++) { // interleave channels
+      for (let i = 0; i < numberOfChannels; i++) {
+        // interleave channels
         let sample = Math.max(-1, Math.min(1, channels[i][offset])); // clamp
-        sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767); // scale to 16-bit signed int
+        sample = 0.5 + sample < 0 ? sample * 32768 : sample * 32767; // scale to 16-bit signed int
         view.setInt16(pos, sample, true); // write 16-bit sample
         pos += 2;
       }
       offset++; // next source sample
     }
 
-    return new Blob([buffer], { type: 'audio/wav' });
+    return new Blob([buffer], { type: "audio/wav" });
 
     function setUint16(data: number) {
       view.setUint16(pos, data, true);
@@ -332,33 +339,32 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
       {error ? (
         <p>{error}</p>
       ) : (
-        <div className="flex flex-col items-center gap-4 w-full">
-          <div className="flex flex-col items-center gap-4 w-full max-w-md">
-            <SettingsSlider
-              label="음성 인식 감도 :"
-              min={0.01}
-              max={1}
-              step={0.01}
-              value={silenceThreshold}
-              onChange={handleSliderChange}
-            />
-            <SettingsSlider
-              label="침묵 인식(초) :"
-              min={0}
-              max={5}
-              step={0.5}
-              value={silenceDuration / 1000}
-              onChange={(e) =>
-                handleDurationChange({
-                  ...e,
-                  target: {
-                    ...e.target,
-                    value: (parseFloat(e.target.value) * 1000).toString(),
-                  },
-                })
-              }
-            />
-          </div>
+        <div className="flex flex-col items-center gap-1 w-full p-4">
+          <SettingsSlider
+            label="음성 인식 감도 :"
+            min={0.01}
+            max={1}
+            step={0.01}
+            value={silenceThreshold}
+            onChange={handleSliderChange}
+          />
+          <SettingsSlider
+            label="침묵 인식(초) :"
+            min={0}
+            max={5}
+            step={0.5}
+            value={silenceDuration / 1000}
+            onChange={(e) =>
+              handleDurationChange({
+                ...e,
+                target: {
+                  ...e.target,
+                  value: (parseFloat(e.target.value) * 1000).toString(),
+                },
+              })
+            }
+          />
+
           <div className="flex items-center gap-2">
             <button
               className="bg-none border-none text-xl cursor-pointer text-gray-700 hover:text-gray-500"
