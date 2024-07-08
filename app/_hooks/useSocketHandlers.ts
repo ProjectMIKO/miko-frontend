@@ -71,11 +71,51 @@ const useSocketHandlers = (
       } else {
         console.log(`Edge with id ${data._id} already exists`);
       }
-    }
+    };
     socket.on("del_edge", handledDisConnect);
 
     return () => {
-      socket.off("edge", handledDisConnect);
+      socket.off("del_edge", handledDisConnect);
+    };
+  }, [socket, edges]);
+
+  useEffect(() => {
+    const handleVertexBatch = (data: any[]) => {
+      for (const item of data) {
+        const newNode = {
+          id: item._id,
+          label: item.keyword,
+          content: item.subject,
+        };
+        addNode(newNode.id, newNode.label, newNode.content, "#5A5A5A");
+      }
+    };
+
+    socket.on("vertexBatch", handleVertexBatch);
+
+    return () => {
+      socket.off("vertexBatch", handleVertexBatch);
+    };
+  }, [socket, addNode]);
+
+  useEffect(() => {
+    const handleEdgeBatch = (data: any[]) => {
+      for (const item of data) {
+        const newEdge: Edge = {
+          id: item._id,
+          from: item.vertex1,
+          to: item.vertex2,
+        };
+        if (!edges.get(newEdge.id)) {
+          edges.add(newEdge);
+        }
+      }
+    };
+
+    socket.on("edgeBatch", handleEdgeBatch);
+
+    return () => {
+      socket.off("edgeBatch", handleEdgeBatch);
     };
   }, [socket, edges]);
 
