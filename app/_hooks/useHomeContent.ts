@@ -63,7 +63,7 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
 
   const handleAddNode = useCallback(
     (id: any) => {
-      addNode(id, controlNodeLabel, controlNodeContent, controlNodeColor, 10);
+      addNode(id, controlNodeLabel, controlNodeContent, controlNodeColor, false, 10);
       setNextId("");
       setControlNodeLabel("");
       setControlNodeContent("");

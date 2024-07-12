@@ -5,7 +5,7 @@ import { DataSet } from "vis-network";
 
 const useSocketHandlers = (
   edges: DataSet<Edge>,
-  addNode: (id: any, label: string, content: string, color: string, d: number) => void,
+  addNode: (id: any, label: string, content: string, color: string, playSound: boolean, d: number) => void,
   nodes: DataSet<Node>,
   delay: number = 100
 ) => {
@@ -20,7 +20,7 @@ const useSocketHandlers = (
 
   const handleAddNode = useCallback(
     (id: any) => {
-      addNode(id, newNodeLabel, newNodeContent, "#5A5A5A", 10);
+      addNode(id, newNodeLabel, newNodeContent, "#5A5A5A", true, 10);
       setNextNodeId("");
       setNewNodeLabel("");
       setNewNodeContent("");
@@ -154,7 +154,7 @@ const useSocketHandlers = (
         setProcessing(true);
         const { type, data } = queue[0];
         if (type === "vertex") {
-          addNode(data._id, data.keyword, data.subject, "#5A5A5A", 10);
+          addNode(data._id, data.keyword, data.subject, "#5A5A5A", true, 10);
         } else if (type === "edge") {
           const newEdge: Edge = {
             id: data._id,
