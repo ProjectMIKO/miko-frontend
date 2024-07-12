@@ -337,9 +337,8 @@ const ResultPage: React.FC = () => {
                 const userImage = conversation.image; 
 
                 return (
-                  <ul>
+                  <ul key={index}>
                     <li
-                      key={index}
                       className={`py-4 sm:py-5 ${
                         isMyMessage ? 'text-right' : 'text-left'
                       }`}
