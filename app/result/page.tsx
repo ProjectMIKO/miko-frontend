@@ -326,11 +326,8 @@ const ResultPage: React.FC = () => {
           <div>
             {conversations && conversations.length > 0 ? (
               conversations.map((conversation, index) => {
-                const isMyMessage =
-                  conversation.user === localStorage.getItem('userName');
-                const userImage = localStorage.getItem(
-                  `${conversation.user}_image`
-                );
+                const isMyMessage = conversation.user === localStorage.getItem('userName');
+                const userImage = conversation.image; 
 
                 return (
                   <ul>
