@@ -325,28 +325,56 @@ const ResultPage: React.FC = () => {
         return (
           <div>
             {conversations && conversations.length > 0 ? (
-              conversations.map((conversation) => (
-                <div
-                  id={conversation._id}
-                  key={conversation._id}
-                  className={`${styles.conversationItem} ${
-                    highlightedConversation === conversation._id
-                      ? styles.highlighted
-                      : ""
-                  }`}
-                  onClick={() => handleSeek(conversation.time_offset / 1000)}
-                >
-                  <span className={styles.conversationUser}>
-                    {conversation.user}
-                  </span>
-                  <span className={styles.conversationTimestamp}>
-                    {new Date(conversation.timestamp).toLocaleTimeString()}
-                  </span>
-                  <div className={styles.conversationScript}>
-                    {conversation.script}
-                  </div>
-                </div>
-              ))
+              conversations.map((conversation, index) => {
+                const isMyMessage = conversation.user === localStorage.getItem("userName");
+                const userImage = localStorage.getItem(`${conversation.user}_image`);
+
+                return (
+                  <ul>
+                    <li key={index} className={`py-4 sm:py-5 ${isMyMessage ? "text-right" : "text-left"}`}>
+                      <div
+                        id={conversation._id}
+                        key={conversation._id}
+                        className={`flex items-center ${isMyMessage ? "justify-end" : "justify-start "} space-x-2 ${styles.conversationItem} ${
+                          highlightedConversation === conversation._id
+                            ? styles.highlighted
+                            : ""
+                        }`}
+                        onClick={() => handleSeek(conversation.time_offset / 1000)}
+                      >
+                        {!isMyMessage && (
+                          <img
+                            src={userImage || "default-user-image.png"}
+                            alt={conversation.user}
+                            className={styles.userImage}
+                          />
+                        )}
+                        <div className="flex flex-col">
+                          <div>
+                            <span className={`text-lg font-semibold text-gray-900 dark:text-white`}>
+                              {conversation.user}&nbsp;
+                            </span>
+                            <span className={`text-sm text-gray-700 dark:text-white`}>
+                              {new Date(conversation.timestamp).toLocaleTimeString()}
+                            </span>
+                          </div>
+                          <div className={`message ${isMyMessage ? "bg-yellow-300 right" : "bg-white left"} p-3 rounded-lg shadow-md`}>
+                            <div className={`text-base ${isMyMessage ? "text-right" : "text-left"} text-gray-700 dark:text-gray-300 break-words whitespace-pre-wrap`}>{conversation.script}</div>
+                          </div>
+                        </div>
+                        {isMyMessage && (
+                          <img
+                            src={localStorage.getItem("userImage") || "default-user-image.png"}
+                            alt={conversation.user}
+                            className={styles.userImage}
+                          />
+                        )}
+                      </div>
+                      </li>
+                  </ul>
+
+                );
+              })
             ) : (
               <div>No conversations available</div>
             )}
