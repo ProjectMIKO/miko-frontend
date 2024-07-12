@@ -13,17 +13,19 @@ const useSocketHandlers = (
   const [nextNodeId, setNextNodeId] = useState<string>("");
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
   const [newNodeContent, setNewNodeContent] = useState<string>("");
+  const [newDepth, setNewDepth] = useState<number>(10);
 
   const [queue, setQueue] = useState<any[]>([]);
   const [processing, setProcessing] = useState(false);
-  const depth: number[] = [5, 10, 15, 20, 30];
+  const depth: number[] = [20, 15, 14, 13, 12, 11];
 
   const handleAddNode = useCallback(
     (id: any) => {
-      addNode(id, newNodeLabel, newNodeContent, "#5A5A5A", true, 10);
+      addNode(id, newNodeLabel, newNodeContent, "#5A5A5A", true, newDepth);
       setNextNodeId("");
       setNewNodeLabel("");
       setNewNodeContent("");
+      setNewDepth(10);
     },
     [newNodeLabel, newNodeContent, addNode]
   );
@@ -37,11 +39,13 @@ const useSocketHandlers = (
       _id: string;
       keyword: string;
       subject: string;
+      priority: number;
       conversationIds: [];
     }) => {
       setNextNodeId(data._id);
       setNewNodeLabel(data.keyword);
       setNewNodeContent(data.subject);
+      setNewDepth(data.priority);
       console.log("subtitle", data);
     };
 
@@ -56,7 +60,7 @@ const useSocketHandlers = (
     if (newNodeLabel && newNodeContent) {
       handleAddNode(nextNodeId);
     }
-  }, [newNodeLabel, newNodeContent, nextNodeId, handleAddNode]);
+  }, [newNodeLabel, newNodeContent, nextNodeId, newDepth, handleAddNode]);
 
   useEffect(() => {
     const handleConnect = (data: {
@@ -154,7 +158,7 @@ const useSocketHandlers = (
         setProcessing(true);
         const { type, data } = queue[0];
         if (type === "vertex") {
-          addNode(data._id, data.keyword, data.subject, "#5A5A5A", true, 10);
+          addNode(data._id, data.keyword, data.subject, "#5A5A5A", true, data.priority);
         } else if (type === "edge") {
           const newEdge: Edge = {
             id: data._id,

@@ -21,7 +21,7 @@ const useNetwork = (
   const [action, setAction] = useState<string | null>(null);
   const [tempEdgeFrom, setTempEdgeFrom] = useState<number | null>(null);
 
-  const depth: number[] = [5, 10, 15, 20, 30];
+  const depth: number[] = [20, 15, 14, 13, 12, 11];
 
   const handleNodeClick = useCallback(
     (nodeId: number | null) => {
@@ -220,6 +220,10 @@ const useNetwork = (
         size = Math.abs(d) + depth[0];
     } else {
         size = depth[d] || 10; // depth[d]가 유효하지 않으면 기본값 10을 사용합니다.
+    }
+    
+    if (d === 0) {
+      color = "#D0A9F5";
     }
     const newNode: Node = {
       id: nid || nextNodeId,

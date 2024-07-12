@@ -6,9 +6,6 @@ import useNetwork from "../_hooks/useNetwork";
 import useSocketHandlers from "../_hooks/useSocketHandlers";
 import { RoomuseSocketContext } from "../_components/Socket/SocketProvider";
 
-const APPLICATION_SERVER_URL =
-  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
-
 const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
   const socketContext = RoomuseSocketContext();
   const { socket } = useSocket();
