@@ -213,7 +213,7 @@ const useNetwork = (
     }
   }, [network, nodes, selectedNodeId, prevSelectedNodeId]);
 
-  const addNode = (nid: any, label: string, content: string, color: string, d: number) => {
+  const addNode = (nid: any, label: string, content: string, color: string, playSound = true, d: number) => {
     let size: number;
 
     if (d < 0) {
@@ -230,7 +230,13 @@ const useNetwork = (
     };
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
+  
+    if (playSound) {
+      const audio = new Audio('/effect.mp3');
+      audio.play();
+    }
   };
+  
 
   const fitToScreen = () => {
     if (network) {
