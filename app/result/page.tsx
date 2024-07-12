@@ -40,11 +40,18 @@ interface NewEdge {
   __v: number;
 }
 
+interface Owner {
+  name: string;
+  role: string;
+  image: string;
+  __v: number;
+}
+
 interface MeetingDetails {
   title: string;
   startTime: string;
   period: number;
-  owner: string[];
+  owner: Owner[];
   mom: string;
 }
 
@@ -560,7 +567,7 @@ const ResultPage: React.FC = () => {
                       Array.isArray(meetingDetails.owner)
                         ? meetingDetails.owner
                             .map((owner, index) =>
-                              index === 0 ? `${owner}👑` : `${owner}👤`
+                              owner.role === 'host' ? `${owner.name}👑` : `${owner.name}👤`
                             )
                             .join(', ')
                         : 'No participants'
