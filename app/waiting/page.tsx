@@ -122,6 +122,7 @@ const WaitingPage: React.FC = () => {
       nickname: myUserName,
       room: mySessionId,
       password: encodedPassword,
+      image: localStorage.getItem('userImage')
     };
     console.log(requestData);
     const response = await fetch(`${APPLICATION_SERVER_URL}create/room`, {
