@@ -3,6 +3,8 @@ import { Network, DataSet } from "vis-network/standalone";
 import { Node, Edge } from "../_types/types";
 import { Socket } from "socket.io-client";
 
+
+
 const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
   socket: Socket | null,
@@ -18,6 +20,8 @@ const useNetwork = (
   const [nextEdgeId, setNextEdgeId] = useState<number>(1);
   const [action, setAction] = useState<string | null>(null);
   const [tempEdgeFrom, setTempEdgeFrom] = useState<number | null>(null);
+
+  const depth: number[] = [5, 10, 15, 20, 30];
 
   const handleNodeClick = useCallback(
     (nodeId: number | null) => {
@@ -209,12 +213,20 @@ const useNetwork = (
     }
   }, [network, nodes, selectedNodeId, prevSelectedNodeId]);
 
-  const addNode = (nid: any, label: string, content: string, color: string) => {
+  const addNode = (nid: any, label: string, content: string, color: string, d: number) => {
+    let size: number;
+
+    if (d < 0) {
+        size = Math.abs(d) + depth[0];
+    } else {
+        size = depth[d] || 10; // depth[d]가 유효하지 않으면 기본값 10을 사용합니다.
+    }
     const newNode: Node = {
       id: nid || nextNodeId,
       label,
       content,
       color,
+      size
     };
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);

@@ -59,11 +59,11 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
     (() => void) | null
   >(null);
 
-  useSocketHandlers(edges, addNode);
+  useSocketHandlers(edges, addNode, nodes);
 
   const handleAddNode = useCallback(
     (id: any) => {
-      addNode(id, controlNodeLabel, controlNodeContent, controlNodeColor);
+      addNode(id, controlNodeLabel, controlNodeContent, controlNodeColor, 10);
       setNextId("");
       setControlNodeLabel("");
       setControlNodeContent("");
@@ -80,20 +80,6 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
 
   const handleKeyword = () => {
     socket.emit("summarize", socketContext?.sessionId);
-  };
-
-  const getToken = async () => {
-    if (sessionId) {
-      const response = await axios.post(
-        `${APPLICATION_SERVER_URL}api/openvidu/sessions/${sessionId}/connections`,
-        {},
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      return response.data.token;
-    }
-    return null;
   };
 
   const handleSharingRoom = async () => {
