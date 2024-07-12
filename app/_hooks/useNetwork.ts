@@ -3,7 +3,15 @@ import { Network, DataSet } from "vis-network/standalone";
 import { Node, Edge } from "../_types/types";
 import { Socket } from "socket.io-client";
 
-
+// 랜덤 색상을 생성하는 함수 추가
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
@@ -229,8 +237,7 @@ const useNetwork = (
     }
     
     if (d === 0) {
-      color = "#D0A9F5";
-      // mass = size * 5;
+      color = getRandomColor(); // 랜덤 색상을 할당
     }
 
     fontSize = Math.max(size * 1.5, 14);
