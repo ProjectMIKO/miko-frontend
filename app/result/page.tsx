@@ -365,18 +365,38 @@ const ResultPage: React.FC = () => {
                         )}
                         <div className="flex flex-col">
                           <div>
-                            <span
-                              className={`text-lg font-semibold text-gray-900 dark:text-white`}
-                            >
-                              {conversation.user}&nbsp;
-                            </span>
-                            <span
-                              className={`text-sm text-gray-700 dark:text-white`}
-                            >
-                              {new Date(
-                                conversation.timestamp
-                              ).toLocaleTimeString()}
-                            </span>
+                            {isMyMessage ? (
+                              <>
+                                <span
+                                  className={`text-sm text-gray-700 dark:text-white`}
+                                >
+                                  {new Date(
+                                    conversation.timestamp
+                                  ).toLocaleTimeString()}
+                                  &nbsp;
+                                </span>
+                                <span
+                                  className={`text-lg font-semibold text-gray-900 dark:text-white`}
+                                >
+                                  {conversation.user}
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span
+                                  className={`text-lg font-semibold text-gray-900 dark:text-white`}
+                                >
+                                  {conversation.user}&nbsp;
+                                </span>
+                                <span
+                                  className={`text-sm text-gray-700 dark:text-white`}
+                                >
+                                  {new Date(
+                                    conversation.timestamp
+                                  ).toLocaleTimeString()}
+                                </span>
+                              </>
+                            )}
                           </div>
                           <div
                             className={`message ${
