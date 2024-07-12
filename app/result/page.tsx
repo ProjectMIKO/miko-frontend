@@ -335,18 +335,18 @@ const ResultPage: React.FC = () => {
                       <div
                         id={conversation._id}
                         key={conversation._id}
-                        className={`flex items-center ${isMyMessage ? "justify-end" : "justify-start "} space-x-2 ${styles.conversationItem} ${
-                          highlightedConversation === conversation._id
-                            ? styles.highlighted
-                            : ""
-                        }`}
+                        className={`flex items-center ${isMyMessage ? "justify-end" : "justify-start "} space-x-2`}
                         onClick={() => handleSeek(conversation.time_offset / 1000)}
                       >
                         {!isMyMessage && (
                           <img
                             src={userImage || "default-user-image.png"}
                             alt={conversation.user}
-                            className={styles.userImage}
+                            className={`${styles.userImage} ${styles.conversationItem} ${
+                              highlightedConversation === conversation._id
+                                ? styles.highlighted
+                                : ""
+                            }`}
                           />
                         )}
                         <div className="flex flex-col">
@@ -358,7 +358,11 @@ const ResultPage: React.FC = () => {
                               {new Date(conversation.timestamp).toLocaleTimeString()}
                             </span>
                           </div>
-                          <div className={`message ${isMyMessage ? "bg-yellow-300 right" : "bg-white left"} p-3 rounded-lg shadow-md`}>
+                          <div className={`message ${isMyMessage ? "bg-yellow-300 right" : "bg-white left"} p-3 rounded-lg shadow-md ${styles.conversationItem} ${
+                          highlightedConversation === conversation._id
+                            ? styles.highlighted
+                            : ""
+                        }`}>
                             <div className={`text-base ${isMyMessage ? "text-right" : "text-left"} text-gray-700 dark:text-gray-300 break-words whitespace-pre-wrap`}>{conversation.script}</div>
                           </div>
                         </div>
@@ -366,7 +370,11 @@ const ResultPage: React.FC = () => {
                           <img
                             src={localStorage.getItem("userImage") || "default-user-image.png"}
                             alt={conversation.user}
-                            className={styles.userImage}
+                            className={`${styles.userImage} ${styles.conversationItem} ${
+                              highlightedConversation === conversation._id
+                                ? styles.highlighted
+                                : ""
+                            }`}
                           />
                         )}
                       </div>
