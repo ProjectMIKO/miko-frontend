@@ -31,10 +31,12 @@ const Conversation: React.FC<ConversationProps> = ({ messages, className }) => {
     <div ref={scrollContainerRef} className={`relative h-full overflow-auto ${className}`}>
       <ul>
         {messages.map((message, index) => {
-          const [name, ...contentArr] = message.split(": ");
-          const content = contentArr.join(": ");
+          console.log(message);
+          const [name, image, ...contentArr] = message.split("|");
+          const content = contentArr.join("|");
           const isMyMessage = name === myUserName;
-          const userImage = localStorage.getItem(`${name}_image`);
+          const userImage = image;
+
           return (
             <li key={index} className={`py-4 sm:py-5 ${isMyMessage ? "text-right" : "text-left"}`}>
               <div className={`flex items-center ${isMyMessage ? "justify-end" : "justify-start"} space-x-2`}>

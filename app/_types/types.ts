@@ -17,5 +17,6 @@ export interface Conversation {
   script: string;
   timestamp: string;
   time_offset: number;
+  image: string;
   __v: number;
 }
