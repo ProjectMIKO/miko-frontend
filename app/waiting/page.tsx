@@ -40,7 +40,19 @@ const WaitingPage: React.FC = () => {
   }, [session]);
 
   const base64Encode = (str: string) => {
-    return btoa(encodeURIComponent(str));
+    // UTF-8 바이트 배열로 변환
+    const utf8Bytes = new TextEncoder().encode(str);
+
+    // Uint8Array를 문자열로 변환
+    const binaryString = Array.from(utf8Bytes).map(byte => String.fromCharCode(byte)).join('');
+
+    // Base64로 인코딩
+    const base64String = btoa(binaryString);
+
+    // URL-safe Base64로 변환
+    const base64UrlString = base64String.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    return base64UrlString;
   };
 
   const handleChangeSessionId = (e: ChangeEvent<HTMLInputElement>) => {
@@ -171,7 +183,8 @@ const WaitingPage: React.FC = () => {
   };
 
   const getToken = async (isCreate: boolean) => {
-    const sessionId = isCreate ? await createSession(mySessionId) : mySessionId;
+    const encodedSessionId = base64Encode(mySessionId);
+    const sessionId = isCreate ? await createSession(mySessionId) : encodedSessionId;
     const token = await createToken(sessionId);
     return token;
   };
