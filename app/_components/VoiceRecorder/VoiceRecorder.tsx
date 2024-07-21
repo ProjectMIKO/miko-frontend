@@ -41,7 +41,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.34);
   const [silenceDuration, setSilenceDuration] = useState<number>(700);
   const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000);
-  const [minRecordingDuration, setMinRecordingDuration] = useState<number>(1000); // 최소 녹음 시간
+  const [minRecordingDuration, setMinRecordingDuration] = useState<number>(500); // 최소 녹음 시간
   const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null); // 디바운스 타임아웃
 
