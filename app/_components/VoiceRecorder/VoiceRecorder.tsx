@@ -40,12 +40,16 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.34);
   const [silenceDuration, setSilenceDuration] = useState<number>(700);
+  const [minRecordingDuration, setMinRecordingDuration] = useState<number>(1200); // 초기값 1200ms
   const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000);
-  const [minRecordingDuration, setMinRecordingDuration] = useState<number>(500); // 최소 녹음 시간
   const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null); // 디바운스 타임아웃
 
   const { socket } = useSocket();
+
+  useEffect(() => {
+    // silenceDuration이 변경될 때마다 minRecordingDuration 업데이트
+    setMinRecordingDuration(silenceDuration + 500);
+  }, [silenceDuration]);
 
   useEffect(() => {
     async function init() {
@@ -98,7 +102,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         };
 
         mediaRecorderRef.current.onstop = async () => {
-          if (audioChunksRef.current.length > 0) {
+          const elapsedTime = Date.now() - (startTimestampRef.current || 0);
+          if (audioChunksRef.current.length > 0 && elapsedTime >= minRecordingDuration) {
             const timestamp = startTimestampRef.current ?? Date.now();
             const blob = new Blob(audioChunksRef.current, {
               type: "audio/wav",
@@ -106,6 +111,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
             await sendAudioToServer(blob, timestamp);
             audioChunksRef.current = [];
             console.log("녹음 저장됨");
+          } else {
+            audioChunksRef.current = []; // 최소 녹음 시간 미만일 때 버퍼 비우기
           }
         };
       } catch (err: any) {
@@ -137,24 +144,17 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
   useEffect(() => {
     if (workletNodeRef.current) {
-      workletNodeRef.current.port.onmessage = (event) => {
-        if (debounceTimeoutRef.current) {
-          clearTimeout(debounceTimeoutRef.current);
-        }
-
-        debounceTimeoutRef.current = setTimeout(() => {
-          if (recordingMode) {
-            if (event.data.isSilent) {
-              const elapsedTime = Date.now() - (startTimestampRef.current || 0);
-              if (elapsedTime >= minRecordingDuration) {
-                stopRecording(true);
-              }
-            } else {
-              startRecording();
-            }
+      if (recordingMode) {
+        workletNodeRef.current.port.onmessage = (event) => {
+          if (event.data.isSilent) {
+            stopRecording(true);
+          } else {
+            startRecording();
           }
-        }, 200); // 디바운스 시간 설정 (200ms)
-      };
+        };
+      } else {
+        workletNodeRef.current.port.onmessage = null;
+      }
     }
   }, [recordingMode]);
 
@@ -164,7 +164,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
       return;
     }
     publisher.publishAudio(recordingMode);
-  }, [publisher, recordingMode]);
+  }, [recordingMode]);
 
   const createWorkletNode = (
     audioContext: AudioContext,
@@ -184,22 +184,13 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
     );
 
     workletNode.port.onmessage = (event) => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-
-      debounceTimeoutRef.current = setTimeout(() => {
-        if (recordingMode) {
-          if (event.data.isSilent) {
-            const elapsedTime = Date.now() - (startTimestampRef.current || 0);
-            if (elapsedTime >= minRecordingDuration) {
-              stopRecording(true);
-            }
-          } else {
-            startRecording();
-          }
+      if (recordingMode) {
+        if (event.data.isSilent) {
+          stopRecording(true);
+        } else {
+          startRecording();
         }
-      }, 200); // 디바운스 시간 설정 (200ms)
+      }
     };
 
     workletNodeRef.current = workletNode;
