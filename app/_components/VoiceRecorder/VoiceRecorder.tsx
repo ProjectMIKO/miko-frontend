@@ -41,7 +41,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.34);
   const [silenceDuration, setSilenceDuration] = useState<number>(700);
   const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000);
+  const [minRecordingDuration, setMinRecordingDuration] = useState<number>(1000); // 최소 녹음 시간
   const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null); // 디바운스 타임아웃
 
   const { socket } = useSocket();
 
@@ -135,17 +137,24 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
   useEffect(() => {
     if (workletNodeRef.current) {
-      if (recordingMode) {
-        workletNodeRef.current.port.onmessage = (event) => {
-          if (event.data.isSilent) {
-            stopRecording(true);
-          } else {
-            startRecording();
+      workletNodeRef.current.port.onmessage = (event) => {
+        if (debounceTimeoutRef.current) {
+          clearTimeout(debounceTimeoutRef.current);
+        }
+
+        debounceTimeoutRef.current = setTimeout(() => {
+          if (recordingMode) {
+            if (event.data.isSilent) {
+              const elapsedTime = Date.now() - (startTimestampRef.current || 0);
+              if (elapsedTime >= minRecordingDuration) {
+                stopRecording(true);
+              }
+            } else {
+              startRecording();
+            }
           }
-        };
-      } else {
-        workletNodeRef.current.port.onmessage = null;
-      }
+        }, 200); // 디바운스 시간 설정 (200ms)
+      };
     }
   }, [recordingMode]);
 
@@ -155,7 +164,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
       return;
     }
     publisher.publishAudio(recordingMode);
-  }, [recordingMode]);
+  }, [publisher, recordingMode]);
 
   const createWorkletNode = (
     audioContext: AudioContext,
@@ -175,13 +184,22 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
     );
 
     workletNode.port.onmessage = (event) => {
-      if (recordingMode) {
-        if (event.data.isSilent) {
-          stopRecording(true);
-        } else {
-          startRecording();
-        }
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
       }
+
+      debounceTimeoutRef.current = setTimeout(() => {
+        if (recordingMode) {
+          if (event.data.isSilent) {
+            const elapsedTime = Date.now() - (startTimestampRef.current || 0);
+            if (elapsedTime >= minRecordingDuration) {
+              stopRecording(true);
+            }
+          } else {
+            startRecording();
+          }
+        }
+      }, 200); // 디바운스 시간 설정 (200ms)
     };
 
     workletNodeRef.current = workletNode;
